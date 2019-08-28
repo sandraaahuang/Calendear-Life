@@ -24,7 +24,7 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/remindersRecyclerView"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 tools:listitem="@layout/item_reminders"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
