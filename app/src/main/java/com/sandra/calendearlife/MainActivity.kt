@@ -20,15 +20,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        setupToolbar()
+    }
+
+    fun setupToolbar() {
         drawerLayout = binding.drawerLayout
         navView = binding.navView
-        val toolbar = binding.toolbar
+        toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
         // hide ht e title of toolbar
