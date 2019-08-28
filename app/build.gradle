@@ -69,4 +69,7 @@ dependencies {
 
     //round image
     implementation "com.mikhaellopez:circularimageview:4.0.1"
+
+    //lifeCycle
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 }
