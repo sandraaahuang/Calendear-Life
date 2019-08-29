@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
 
-class HomeRemindersAdapter :
-    ListAdapter<Reminders, HomeRemindersAdapter.CountdownViewHolder>(DiffCallback) {
 
-    class CountdownViewHolder(private var binding: ItemRemindersBinding):
+class HomeRemindersAdapter(val fragment: HomeFragment) :
+    ListAdapter<Reminders, HomeRemindersAdapter.RemindersViewHolder>(DiffCallback) {
+
+    class RemindersViewHolder(private var binding: ItemRemindersBinding):
         RecyclerView.ViewHolder(binding.root) {
         fun bind(reminders: Reminders) {
             binding.reminders = reminders
@@ -30,17 +31,18 @@ class HomeRemindersAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): CountdownViewHolder {
-        return CountdownViewHolder(
+                                    viewType: Int): RemindersViewHolder {
+        return RemindersViewHolder(
             ItemRemindersBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
-    override fun onBindViewHolder(holder: CountdownViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RemindersViewHolder, position: Int) {
         val reminders = getItem(position)
         holder.bind(reminders)
     }
 
 }
+
