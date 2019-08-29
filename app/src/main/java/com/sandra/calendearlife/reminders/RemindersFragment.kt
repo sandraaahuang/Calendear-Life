@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
+import kotlinx.android.synthetic.main.reminders_fragment.*
 
 class RemindersFragment : Fragment() {
 
+    private lateinit var binding: RemindersFragmentBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val binding = RemindersFragmentBinding.inflate(inflater, container, false)
+        binding = RemindersFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         val addRemindersAdapter = AddRemindersAdapter()
@@ -31,5 +35,6 @@ class RemindersFragment : Fragment() {
         return binding.root
     }
 }
+
 
 
