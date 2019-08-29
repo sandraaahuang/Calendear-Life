@@ -8,6 +8,6 @@ import kotlinx.android.parcel.Parcelize
 data class Reminders(
     val title: String,
     val remindDate: String,
-    val checked: Boolean,
-    val timeChecked: Boolean
+    val checked: Boolean? = false,
+    val timeChecked: Boolean? = false
 ) : Parcelable

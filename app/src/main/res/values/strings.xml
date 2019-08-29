@@ -6,4 +6,8 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="calendar">Calendar</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="remind_me_on_a_day">Remind me on a day</string>
+    <string name="add_note">Add note</string>
+    <string name="saveReminders">Save</string>
 </resources>
