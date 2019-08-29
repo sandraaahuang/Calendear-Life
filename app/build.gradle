@@ -73,4 +73,6 @@ dependencies {
     //lifeCycle
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
+    // swipe touch
+    implementation 'com.loopeer.library:itemtouchhelperextension:1.0.6'
 }
