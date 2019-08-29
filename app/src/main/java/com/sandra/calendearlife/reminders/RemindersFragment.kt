@@ -8,11 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
-import kotlinx.android.synthetic.main.reminders_fragment.*
+import com.sandra.calendearlife.home.SwipeToDeleteCallback
 
 class RemindersFragment : Fragment() {
 
     private lateinit var binding: RemindersFragmentBinding
+    val mockdata2 = ArrayList<Reminders>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -21,7 +22,12 @@ class RemindersFragment : Fragment() {
 
         val addRemindersAdapter = AddRemindersAdapter()
 
-        val mockdata2 = ArrayList<Reminders>()
+        val itemTouchHelper= ItemTouchHelper(
+            SwipeToDeleteReminders(addRemindersAdapter, this)
+        )
+        itemTouchHelper.attachToRecyclerView(binding.addRemindersRecyclerView)
+
+
         mockdata2.add(Reminders("please remind me!!!", "20201010", false, false))
         mockdata2.add(Reminders("who am I!!!", "20201012", false, false))
 

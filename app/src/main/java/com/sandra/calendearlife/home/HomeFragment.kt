@@ -2,7 +2,6 @@ package com.sandra.calendearlife.home
 
 
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
-import com.sandra.calendearlife.reminders.SwipeToDeleteCallback
 
 class HomeFragment : Fragment() {
 
@@ -32,7 +30,12 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = this
         viewModel
 
-        val itemTouchHelper= ItemTouchHelper(SwipeToDeleteCallback(remindersAdapter, this))
+        val itemTouchHelper= ItemTouchHelper(
+            SwipeToDeleteCallback(
+                remindersAdapter,
+                this
+            )
+        )
         itemTouchHelper.attachToRecyclerView(binding.remindersRecyclerView)
 
         //mock data

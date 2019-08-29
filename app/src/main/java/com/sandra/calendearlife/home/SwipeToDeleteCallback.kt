@@ -1,4 +1,4 @@
-package com.sandra.calendearlife.reminders
+package com.sandra.calendearlife.home
 
 
 import android.graphics.Canvas
