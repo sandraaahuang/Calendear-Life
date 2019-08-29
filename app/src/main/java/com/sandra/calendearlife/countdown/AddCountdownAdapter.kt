@@ -59,7 +59,7 @@ class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(Diff
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind() {
-            binding.countdownDate.setOnClickListener {
+            binding.editCountdownLayout.setOnClickListener {
                 val cal = Calendar.getInstance()
                 val y = cal.get(Calendar.YEAR)
                 val m = cal.get(Calendar.MONTH)
@@ -72,10 +72,7 @@ class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(Diff
                         // Display Selected date in textbox
                         binding.countdownDateInput.text =
                             "${monthOfYear+1}, $dayOfMonth, $year"
-                    },
-                    y,
-                    m,
-                    d
+                    }, y, m, d
                 )
 
                 datepickerdialog.show()
