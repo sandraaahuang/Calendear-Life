@@ -4,9 +4,13 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sandra.calendearlife.DiscardDialog
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemAddCountdownBinding
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
@@ -15,7 +19,8 @@ import java.util.*
 private const val ITEM_VIEW_TYPE_OLD = 0x01
 private const val ITEM_VIEW_TYPE_ADDED = 0x00
 
-class AddCountdownAdapter(val onClickListener: OnClickListener) : ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {
+class AddCountdownAdapter(val onClickListener: OnClickListener, val fragment: CountdownFragment) :
+    ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (countdown: Countdown) -> Unit) {
         fun onClick(countdown: Countdown) = clickListener(countdown)
@@ -57,7 +62,8 @@ class AddCountdownAdapter(val onClickListener: OnClickListener) : ListAdapter<Co
     class AddItemViewHolder(private var binding: ItemAddCountdownBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind() {
+        fun bind(fragment: CountdownFragment) {
+
             binding.editCountdownLayout.setOnClickListener {
                 val cal = Calendar.getInstance()
                 val y = cal.get(Calendar.YEAR)
@@ -70,12 +76,17 @@ class AddCountdownAdapter(val onClickListener: OnClickListener) : ListAdapter<Co
 
                         // Display Selected date in textbox
                         binding.countdownDateInput.text =
-                            "${monthOfYear+1}, $dayOfMonth, $year"
+                            "${monthOfYear + 1}, $dayOfMonth, $year"
                     }, y, m, d
                 )
-
                 datepickerdialog.show()
             }
+
+            binding.removeIcon.setOnClickListener {
+
+                DiscardDialog().show(fragment.fragmentManager!!, "show")
+            }
+
             binding.executePendingBindings()
         }
 
@@ -100,7 +111,7 @@ class AddCountdownAdapter(val onClickListener: OnClickListener) : ListAdapter<Co
 
         when (holder) {
             is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
-            is AddItemViewHolder -> holder.bind()
+            is AddItemViewHolder -> holder.bind(fragment)
         }
 
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sandra.calendearlife.DiscardDialog
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemAddRemindersBinding
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
@@ -19,7 +20,7 @@ import java.util.*
 private const val ITEM_VIEW_TYPE_OLD = 0x01
 private const val ITEM_VIEW_TYPE_ADDED = 0x00
 
-class AddRemindersAdapter(val onClickListener: OnClickListener) : ListAdapter<Reminders, RecyclerView.ViewHolder>(DiffCallback) {
+class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: RemindersFragment) : ListAdapter<Reminders, RecyclerView.ViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (reminders: Reminders) -> Unit) {
         fun onClick(reminders: Reminders) = clickListener(reminders)
@@ -65,7 +66,7 @@ class AddRemindersAdapter(val onClickListener: OnClickListener) : ListAdapter<Re
     class AddItemViewHolder(private var binding: ItemAddRemindersBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind() {
+        fun bind(fragment: RemindersFragment) {
             binding.remindersDateInput.setOnClickListener {
                 val calendar = Calendar.getInstance()
                 val year = calendar.get(Calendar.YEAR)
@@ -111,6 +112,10 @@ class AddRemindersAdapter(val onClickListener: OnClickListener) : ListAdapter<Re
                 ).show()
             }
 
+            binding.removeIcon.setOnClickListener {
+                DiscardDialog().show(fragment.fragmentManager!!, "show")
+            }
+
             binding.executePendingBindings()
         }
     }
@@ -134,7 +139,7 @@ class AddRemindersAdapter(val onClickListener: OnClickListener) : ListAdapter<Re
         when (holder) {
             is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
 
-            is AddItemViewHolder -> holder.bind()
+            is AddItemViewHolder -> holder.bind(fragment)
         }
 
 

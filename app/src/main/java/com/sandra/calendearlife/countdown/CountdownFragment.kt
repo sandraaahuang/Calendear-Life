@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.sandra.calendearlife.DiscardDialog
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Countdown
@@ -21,7 +22,7 @@ import javax.xml.datatype.DatatypeConstants.MONTHS
 
 class CountdownFragment : Fragment() {
 
-    private val viewModel: CountdownViewModel by lazy{
+    private val viewModel: CountdownViewModel by lazy {
         ViewModelProviders.of(this).get(CountdownViewModel::class.java)
     }
 
@@ -33,9 +34,9 @@ class CountdownFragment : Fragment() {
         binding.lifecycleOwner = this
         viewModel
 
-        val addCountdownAdapter = AddCountdownAdapter(AddCountdownAdapter.OnClickListener{
-            findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2())
-        })
+        val addCountdownAdapter = AddCountdownAdapter(AddCountdownAdapter.OnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2()) }
+            ,this)
 
         //mock data
         val mockData = ArrayList<Countdown>()
@@ -46,6 +47,11 @@ class CountdownFragment : Fragment() {
         addCountdownAdapter.submitList(mockData)
         addCountdownAdapter.notifyDataSetChanged()
 
+
+
+
+
         return binding.root
     }
+
 }
