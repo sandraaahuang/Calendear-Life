@@ -73,6 +73,6 @@ dependencies {
     //lifeCycle
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
-    // swipe touch
-    implementation 'com.loopeer.library:itemtouchhelperextension:1.0.6'
+    //multiple fab
+    implementation 'com.github.clans:fab:1.6.0'
 }

@@ -8,10 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
+import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 
 class HomeFragment : Fragment() {
 
@@ -43,7 +46,7 @@ class HomeFragment : Fragment() {
         mockData.add(Countdown("88", "倒數數起來^^", "20200101"))
         mockData.add(Countdown("99", "倒數數起來:D", "20210101"))
 
-        mockdata2 = ArrayList<Reminders>()
+        mockdata2 = ArrayList()
         mockdata2.add(Reminders("please remind me!!!", "20201010", false, false))
         mockdata2.add(Reminders("who am I!!!", "20201012", false, false))
 
@@ -55,6 +58,14 @@ class HomeFragment : Fragment() {
 
 
         Log.d("sandraaa","mockData = $mockData")
+
+        // floating action button
+        binding.remindersFab.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
+        }
+        binding.countdownsFab.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
+        }
 
         return binding.root
     }
