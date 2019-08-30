@@ -7,11 +7,10 @@
             android:layout_height="match_parent">
 
         <EditText
+                android:id="@+id/remindersTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/remindersTitle" android:layout_marginTop="16dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -31,21 +30,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintTop_toBottomOf="@+id/switchRemindDay" android:visibility="gone">
-            <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp" app:srcCompat="@drawable/icon_time"
-                    android:id="@+id/icon_time" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" android:layout_marginTop="16dp"
-                    app:layout_constraintTop_toTopOf="parent"/>
             <TextView
                     android:id="@+id/remindDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
-                    app:layout_constraintTop_toTopOf="@+id/icon_time"
-                    app:layout_constraintBottom_toBottomOf="@+id/icon_time"
                     android:text="8, 30, 2019"
-                    app:layout_constraintEnd_toStartOf="@+id/remindTime" android:layout_marginEnd="8dp"/>
+                    app:layout_constraintEnd_toStartOf="@+id/remindTime" android:layout_marginEnd="8dp"
+                    android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
             <TextView
                     android:text="10 : 25 AM"
                     android:layout_width="wrap_content"
@@ -54,6 +46,14 @@
                     android:id="@+id/remindTime"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp" android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                    android:text="Date"
+                    android:fontFamily="@font/noto_sans"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/date" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" android:layout_marginTop="16dp"
                     app:layout_constraintTop_toTopOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,6 +77,34 @@
                     app:layout_constraintStart_toStartOf="@+id/remindNote" android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/remindNote" android:layout_marginTop="8dp"/>
+            <Button
+                    android:id="@+id/saveButton2"
+                    android:text="@string/saveReminders"
+                    android:fontFamily="@font/noto_sans"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:background="#33691e"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_remindNote"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintEnd_toStartOf="@+id/deleteButton2"/>
+            <Button
+                    android:text="Delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:background="#c62828"
+                    android:id="@+id/deleteButton2" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/editText_remindNote"
+                    app:layout_constraintStart_toEndOf="@+id/saveButton2" app:layout_constraintHorizontal_bias="0.5"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

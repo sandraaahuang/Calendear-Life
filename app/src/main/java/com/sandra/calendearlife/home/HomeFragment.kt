@@ -28,7 +28,9 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val countdownAdapter = HomeCountdownAdapter()
+        val countdownAdapter = HomeCountdownAdapter(HomeCountdownAdapter.OnClickListener{
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2())
+        })
         val remindersAdapter = HomeRemindersAdapter(this, HomeRemindersAdapter.OnClickListener{
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment())
         })
