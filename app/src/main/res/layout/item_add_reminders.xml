@@ -69,6 +69,17 @@
                 app:layout_constraintBottom_toBottomOf="@+id/bellIcon"
                 app:layout_constraintStart_toEndOf="@+id/bellIcon" android:layout_marginStart="16dp"/>
 
+        <TextView
+                android:id="@+id/remindersTimeInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans"
+                android:textColor="#868686"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/remindersDateInput"
+                android:layout_marginStart="4dp"
+                app:layout_constraintTop_toTopOf="@+id/remindersDateInput"
+                app:layout_constraintBottom_toBottomOf="@+id/remindersDateInput"/>
         <View
                 android:id="@+id/view_spacing_line3"
                 android:layout_width="0dp"

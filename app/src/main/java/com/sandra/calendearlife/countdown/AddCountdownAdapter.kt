@@ -66,7 +66,7 @@ class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(Diff
                 val d = cal.get(Calendar.DAY_OF_MONTH)
 
                 val datepickerdialog = DatePickerDialog(
-                    it.context, DatePickerDialog.OnDateSetListener
+                    it.context,android.R.style.Theme_Holo_Dialog, DatePickerDialog.OnDateSetListener
                     { _, year, monthOfYear, dayOfMonth ->
 
                         // Display Selected date in textbox

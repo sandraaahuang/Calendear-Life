@@ -1,6 +1,7 @@
 package com.sandra.calendearlife.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -16,6 +17,9 @@ class HomeRemindersAdapter(val fragment: HomeFragment) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(reminders: Reminders) {
             binding.reminders = reminders
+            binding.remindersTitle.setOnClickListener {
+                binding.remindersInfo.visibility = View.VISIBLE
+            }
             binding.executePendingBindings()
         }
     }
