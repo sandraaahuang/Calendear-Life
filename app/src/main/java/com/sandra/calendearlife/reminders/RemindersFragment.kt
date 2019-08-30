@@ -24,7 +24,7 @@ class RemindersFragment : Fragment() {
 
         val addRemindersAdapter = AddRemindersAdapter(AddRemindersAdapter.OnClickListener{
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment())
-        })
+        }, this)
 
         val itemTouchHelper= ItemTouchHelper(
             SwipeToDeleteReminders(addRemindersAdapter, this)

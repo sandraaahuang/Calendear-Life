@@ -33,5 +33,8 @@
     <action android:id="@+id/action_global_remindersDetailFragment" app:destination="@id/remindersDetailFragment"/>
     <fragment android:id="@+id/countdownDetailFragment"
               android:name="com.sandra.calendearlife.countdown.CountdownDetailFragment"
-              android:label="CountdownDetailFragment"/><action android:id="@+id/action_global_countdownDetailFragment2" app:destination="@id/countdownDetailFragment"/>
+              android:label="CountdownDetailFragment"/>
+    <action android:id="@+id/action_global_countdownDetailFragment2" app:destination="@id/countdownDetailFragment"/>
+    <fragment android:id="@+id/discardDialog" android:name="com.sandra.calendearlife.DiscardDialog"
+              android:label="DiscardDialog"/><action android:id="@+id/action_global_discardDialog" app:destination="@id/discardDialog"/>
 </navigation>
