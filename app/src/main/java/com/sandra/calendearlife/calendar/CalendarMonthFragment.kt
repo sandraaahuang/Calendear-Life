@@ -15,10 +15,6 @@ class CalendarMonthFragment : Fragment() {
 
         val binding = CalendarMonthFragmentBinding.inflate(inflater, container, false)
 
-        binding.hihi.setOnClickListener {
-            findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
-        }
-
         return binding.root
     }
 }

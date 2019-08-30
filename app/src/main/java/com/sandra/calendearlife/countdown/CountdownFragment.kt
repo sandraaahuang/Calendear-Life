@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.CountdownFragmentBinding
@@ -31,7 +33,9 @@ class CountdownFragment : Fragment() {
         binding.lifecycleOwner = this
         viewModel
 
-        val addCountdownAdapter = AddCountdownAdapter()
+        val addCountdownAdapter = AddCountdownAdapter(AddCountdownAdapter.OnClickListener{
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2())
+        })
 
         //mock data
         val mockData = ArrayList<Countdown>()

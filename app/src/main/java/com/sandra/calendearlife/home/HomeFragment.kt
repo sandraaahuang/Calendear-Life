@@ -15,6 +15,7 @@ import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
+import kotlinx.android.synthetic.main.item_reminders.view.*
 
 class HomeFragment : Fragment() {
 
@@ -27,8 +28,12 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val countdownAdapter = HomeCountdownAdapter()
-        val remindersAdapter = HomeRemindersAdapter(this)
+        val countdownAdapter = HomeCountdownAdapter(HomeCountdownAdapter.OnClickListener{
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2())
+        })
+        val remindersAdapter = HomeRemindersAdapter(this, HomeRemindersAdapter.OnClickListener{
+            findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment())
+        })
         binding = HomeFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         viewModel

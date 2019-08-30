@@ -15,10 +15,6 @@ class CalendarDayFragment : Fragment() {
 
         val binding = CalendarDayFragmentBinding.inflate(inflater, container, false)
 
-        binding.hihi.setOnClickListener {
-            findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
-        }
-
         return binding.root
     }
 }

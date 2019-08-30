@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" android:id="@+id/countDownLayout">
 
 
         <TextView
@@ -46,6 +46,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/countdownTitle" android:layout_marginTop="8dp"/>
+                app:layout_constraintTop_toBottomOf="@+id/countdownTitle" android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

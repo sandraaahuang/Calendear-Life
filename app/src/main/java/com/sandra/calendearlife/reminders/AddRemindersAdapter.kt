@@ -1,8 +1,10 @@
 package com.sandra.calendearlife.reminders
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,17 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemAddRemindersBinding
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
+import kotlinx.android.synthetic.main.item_reminders.view.*
 import java.util.*
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
-import android.widget.TimePicker
-import com.sandra.calendearlife.MainActivity
-
 
 
 private const val ITEM_VIEW_TYPE_OLD = 0x01
 private const val ITEM_VIEW_TYPE_ADDED = 0x00
 
-class AddRemindersAdapter : ListAdapter<Reminders, RecyclerView.ViewHolder>(DiffCallback) {
+class AddRemindersAdapter(val onClickListener: OnClickListener) : ListAdapter<Reminders, RecyclerView.ViewHolder>(DiffCallback) {
+
+    class OnClickListener(val clickListener: (reminders: Reminders) -> Unit) {
+        fun onClick(reminders: Reminders) = clickListener(reminders)
+    }
 
 //    var reminders: ArrayList<Reminders>? = null
 
@@ -48,8 +51,12 @@ class AddRemindersAdapter : ListAdapter<Reminders, RecyclerView.ViewHolder>(Diff
     class ItemViewHolder(private var binding: ItemRemindersBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(reminders: Reminders?) {
+        fun bind(reminders: Reminders, onClickListener: OnClickListener) {
             binding.reminders = reminders
+            binding.remindersTitle.setOnClickListener {
+                binding.remindersInfo.visibility = View.VISIBLE
+            }
+            binding.root.setOnClickListener { onClickListener.onClick(reminders) }
             binding.executePendingBindings()
 
         }
@@ -72,14 +79,14 @@ class AddRemindersAdapter : ListAdapter<Reminders, RecyclerView.ViewHolder>(Diff
                     else -> "PM"
                 }
 
-                TimePickerDialog(it.context,android.R.style.Theme_Holo_Dialog, TimePickerDialog.OnTimeSetListener
+                TimePickerDialog(it.context,AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
                 { view, hour, minute ->
                     binding.remindersTimeInput.text =
                         "$hour:$minute $transferAm" }, hour, minute, false
                 ).show()
 
                 val datePickerDialog = DatePickerDialog(
-                    it.context,android.R.style.Theme_Holo_Dialog, DatePickerDialog.OnDateSetListener
+                    it.context,AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                     { _, year, monthOfYear, dayOfMonth ->
                         // Display Selected date in textbox
                         binding.remindersDateInput.text=
@@ -97,10 +104,10 @@ class AddRemindersAdapter : ListAdapter<Reminders, RecyclerView.ViewHolder>(Diff
                     0 -> "AM"
                     else -> "PM"
                 }
-                TimePickerDialog(it.context,android.R.style.Theme_Holo_Dialog, TimePickerDialog.OnTimeSetListener
+                TimePickerDialog(it.context,AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
                 { view, hour, minute ->
                     binding.remindersTimeInput.text =
-                        "$hour:$minute $transferAm" }, hour, minute, false
+                        "$hour : $minute $transferAm" }, hour, minute, false
                 ).show()
             }
 
@@ -124,11 +131,12 @@ class AddRemindersAdapter : ListAdapter<Reminders, RecyclerView.ViewHolder>(Diff
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
-            is ItemViewHolder -> holder.bind(getItem(position))
+            is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
+
             is AddItemViewHolder -> holder.bind()
         }
+
 
 
     }

@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
 import com.sandra.calendearlife.home.SwipeToDeleteCallback
@@ -20,7 +22,9 @@ class RemindersFragment : Fragment() {
         binding = RemindersFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
-        val addRemindersAdapter = AddRemindersAdapter()
+        val addRemindersAdapter = AddRemindersAdapter(AddRemindersAdapter.OnClickListener{
+            findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment())
+        })
 
         val itemTouchHelper= ItemTouchHelper(
             SwipeToDeleteReminders(addRemindersAdapter, this)

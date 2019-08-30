@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
 
-class HomeCountdownAdapter :
+class HomeCountdownAdapter(val onClickListener: OnClickListener) :
     ListAdapter<Countdown, HomeCountdownAdapter.CountdownViewHolder>(DiffCallback) {
 
     class CountdownViewHolder(private var binding: ItemCountdownBinding):
@@ -40,7 +40,14 @@ class HomeCountdownAdapter :
 
     override fun onBindViewHolder(holder: CountdownViewHolder, position: Int) {
         val countdown = getItem(position)
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(countdown)
+        }
         holder.bind(countdown)
+    }
+
+    class OnClickListener(val clickListener: (countdown: Countdown) -> Unit) {
+        fun onClick(countdown: Countdown) = clickListener(countdown)
     }
 
 }

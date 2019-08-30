@@ -1,27 +1,25 @@
 package com.sandra.calendearlife.countdown
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.data.Countdown
-import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemAddCountdownBinding
-import com.sandra.calendearlife.databinding.ItemAddRemindersBinding
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
-import com.sandra.calendearlife.databinding.ItemRemindersBinding
 import java.util.*
-import javax.xml.datatype.DatatypeConstants.MONTHS
 
 private const val ITEM_VIEW_TYPE_OLD = 0x01
 private const val ITEM_VIEW_TYPE_ADDED = 0x00
 
-class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {
+class AddCountdownAdapter(val onClickListener: OnClickListener) : ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {
 
+    class OnClickListener(val clickListener: (countdown: Countdown) -> Unit) {
+        fun onClick(countdown: Countdown) = clickListener(countdown)
+    }
 //    var reminders: ArrayList<Countdowns>? = null
 
 //    override fun getItemCount(): Int {
@@ -48,8 +46,9 @@ class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(Diff
     class ItemViewHolder(private var binding: ItemCountdownBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(countdown: Countdown?) {
+        fun bind(countdown: Countdown, onClickListener: OnClickListener) {
             binding.countdown = countdown
+            binding.root.setOnClickListener { onClickListener.onClick(countdown) }
             binding.executePendingBindings()
 
         }
@@ -66,7 +65,7 @@ class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(Diff
                 val d = cal.get(Calendar.DAY_OF_MONTH)
 
                 val datepickerdialog = DatePickerDialog(
-                    it.context,android.R.style.Theme_Holo_Dialog, DatePickerDialog.OnDateSetListener
+                    it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                     { _, year, monthOfYear, dayOfMonth ->
 
                         // Display Selected date in textbox
@@ -100,7 +99,7 @@ class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(Diff
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is ItemViewHolder -> holder.bind(getItem(position))
+            is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
             is AddItemViewHolder -> holder.bind()
         }
 
