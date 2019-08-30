@@ -1,5 +1,6 @@
 package com.sandra.calendearlife.home
 
+import android.service.autofill.OnClickAction
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +9,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
+import kotlinx.android.synthetic.main.item_reminders.view.*
 
 
-class HomeRemindersAdapter(val fragment: HomeFragment) :
+class HomeRemindersAdapter(val fragment: HomeFragment, val onClickListener: OnClickListener) :
     ListAdapter<Reminders, HomeRemindersAdapter.RemindersViewHolder>(DiffCallback) {
 
     class RemindersViewHolder(private var binding: ItemRemindersBinding):
@@ -45,7 +47,14 @@ class HomeRemindersAdapter(val fragment: HomeFragment) :
 
     override fun onBindViewHolder(holder: RemindersViewHolder, position: Int) {
         val reminders = getItem(position)
+        holder.itemView.remindersInfo.setOnClickListener {
+            onClickListener.onClick(reminders)
+        }
         holder.bind(reminders)
+    }
+
+    class OnClickListener(val clickListener: (reminders: Reminders) -> Unit) {
+        fun onClick(reminders: Reminders) = clickListener(reminders)
     }
 
 }

@@ -1,5 +1,6 @@
 package com.sandra.calendearlife.countdown
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.util.Log
 import android.view.LayoutInflater
@@ -66,7 +67,7 @@ class AddCountdownAdapter : ListAdapter<Countdown, RecyclerView.ViewHolder>(Diff
                 val d = cal.get(Calendar.DAY_OF_MONTH)
 
                 val datepickerdialog = DatePickerDialog(
-                    it.context,android.R.style.Theme_Holo_Dialog, DatePickerDialog.OnDateSetListener
+                    it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                     { _, year, monthOfYear, dayOfMonth ->
 
                         // Display Selected date in textbox

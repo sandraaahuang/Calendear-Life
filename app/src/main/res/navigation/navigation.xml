@@ -27,4 +27,7 @@
               android:label="RemindersFragment"/><action android:id="@+id/action_global_remindersFragment" app:destination="@id/remindersFragment"/>
     <fragment android:id="@+id/countdownFragment" android:name="com.sandra.calendearlife.countdown.CountdownFragment"
               android:label="CountdownFragment"/><action android:id="@+id/action_global_countdownFragment" app:destination="@id/countdownFragment"/>
+    <fragment android:id="@+id/remindersDetailFragment"
+              android:name="com.sandra.calendearlife.reminders.RemindersDetailFragment"
+              android:label="RemindersDetailFragment"/><action android:id="@+id/action_global_remindersDetailFragment" app:destination="@id/remindersDetailFragment"/>
 </navigation>
