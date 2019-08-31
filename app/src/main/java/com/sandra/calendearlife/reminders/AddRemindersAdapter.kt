@@ -100,15 +100,11 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
                 val calendar = Calendar.getInstance()
                 val hour = calendar.get(Calendar.HOUR_OF_DAY)
                 val minute = calendar.get(Calendar.MINUTE)
-                val am = calendar.get(Calendar.AM_PM)
-                val transferAm = when ( am ){
-                    0 -> "AM"
-                    else -> "PM"
-                }
+
                 TimePickerDialog(it.context,AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
                 { view, hour, minute ->
                     binding.remindersTimeInput.text =
-                        "$hour : $minute $transferAm" }, hour, minute, false
+                        "$hour : $minute" }, hour, minute, true
                 ).show()
             }
 

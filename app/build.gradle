@@ -75,4 +75,7 @@ dependencies {
 
     //multiple fab
     implementation 'com.github.clans:fab:1.6.0'
+
+    implementation 'androidx.room:room-runtime:2.1.0'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0'
 }

@@ -9,7 +9,7 @@
               android:label="CalendarDayFragment"/>
     <action android:id="@+id/action_global_calendarDayFragment" app:destination="@id/calendarDayFragment"/>
     <fragment android:id="@+id/calendarMonthFragment"
-              android:name="com.sandra.calendearlife.calendar.CalendarMonthFragment"
+              android:name="com.sandra.calendearlife.calendar.month.CalendarMonthFragment"
               android:label="CalendarMonthFragment"/>
     <action android:id="@+id/action_global_calendarMonthFragment" app:destination="@id/calendarMonthFragment"/>
     <fragment android:id="@+id/calendarScheduleFragment"
@@ -37,4 +37,7 @@
     <action android:id="@+id/action_global_countdownDetailFragment2" app:destination="@id/countdownDetailFragment"/>
     <fragment android:id="@+id/discardDialog" android:name="com.sandra.calendearlife.DiscardDialog"
               android:label="DiscardDialog"/><action android:id="@+id/action_global_discardDialog" app:destination="@id/discardDialog"/>
+    <fragment android:id="@+id/calendarEventFragment"
+              android:name="com.sandra.calendearlife.calendar.CalendarEventFragment"
+              android:label="CalendarEventFragment"/><action android:id="@+id/action_global_calendarEventFragment" app:destination="@id/calendarEventFragment"/>
 </navigation>
