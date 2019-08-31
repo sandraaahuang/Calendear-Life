@@ -72,6 +72,10 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
+        binding.calendarFab.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
+        }
+
         return binding.root
     }
 }

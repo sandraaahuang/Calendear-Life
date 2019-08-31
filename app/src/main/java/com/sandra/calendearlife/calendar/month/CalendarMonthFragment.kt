@@ -1,4 +1,4 @@
-package com.sandra.calendearlife.calendar
+package com.sandra.calendearlife.calendar.month
 
 import android.os.Bundle
 import android.view.LayoutInflater
