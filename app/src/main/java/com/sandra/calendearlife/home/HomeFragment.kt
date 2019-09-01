@@ -1,21 +1,26 @@
 package com.sandra.calendearlife.home
 
 
+import android.accounts.AccountManager
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.provider.FontsContractCompat.FontRequestCallback.RESULT_OK
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.android.gms.auth.GoogleAuthUtil
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.AccountPicker
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
-import com.sandra.calendearlife.databinding.NavHeaderMainBinding
-import kotlinx.android.synthetic.main.item_reminders.view.*
 
 class HomeFragment : Fragment() {
 
@@ -76,8 +81,35 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
+        binding.linkToGoogle.setOnClickListener {
+            // Google Account Picker
+                val googlePicker = AccountPicker
+                    .newChooseAccountIntent(
+                        null, null, arrayOf(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE),
+                        true, null, null, null, null
+                    )
+                startActivityForResult(googlePicker, REQUEST_CODE)
+
+        }
+
         return binding.root
     }
+
+    override fun onActivityResult(
+        requestCode: Int, resultCode: Int,
+        data: Intent?
+    ) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            val accountName = data!!.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
+        Log.d("sandraaa","accountName = $accountName")
+        }
+        else{Log.d("sandraaa","accountName = null")}
+    }
+
+    companion object {
+        const val REQUEST_CODE = 12345
+    }
+
 }
 
 

@@ -2,6 +2,7 @@ package com.sandra.calendearlife.calendar.month
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.GridView
 import android.widget.ImageView
@@ -15,13 +16,12 @@ import java.util.*
 
 class CustomMonthCalendar : ConstraintLayout {
 
-
-
     private lateinit var previous_month: ImageView
     private lateinit var last_month: ImageView
     private lateinit var currentMonth: TextView
     private lateinit var gridView: GridView
     private lateinit var gridAdapter: GridAdapter
+    private lateinit var goToToday: ImageView
     var calendar = Calendar.getInstance(Locale.ENGLISH)
     var dates = ArrayList<Date>()
     var dateFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
@@ -32,9 +32,7 @@ class CustomMonthCalendar : ConstraintLayout {
         const val MAX_CALENDAR_DAYS = 35
     }
 
-    constructor(context: Context?) : super(context){
-
-    }
+    constructor(context: Context?) : super(context)
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
         intializeLayout()
@@ -46,24 +44,34 @@ class CustomMonthCalendar : ConstraintLayout {
             calendar.add(Calendar.MONTH, 1)
             setupCalendar()
         }
-
+        goToToday.setOnClickListener {
+            calendar.get(Calendar.DATE)
+            Log.d("sandraaa","${calendar.get(Calendar.DATE)}")
+        }
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
     fun intializeLayout(){
+
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val binding = ItemCalendarMonthBinding.inflate(inflater, this, true)
         previous_month = binding.previousMonth
         last_month = binding.lastMonth
         currentMonth = binding.currentMonth
         gridView = binding.gridView
+        goToToday = binding.goToToday
+        setupDates()
     }
 
     fun setupCalendar(){
         val currentDate: String = dateFormat.format(calendar.time)
         currentMonth.text = currentDate
+        setupDates()
+    }
+
+    fun setupDates(){
         dates.clear()
         val monthCalendar = calendar.clone() as Calendar
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
@@ -77,7 +85,5 @@ class CustomMonthCalendar : ConstraintLayout {
 
         gridAdapter = GridAdapter(context, dates, calendar)
         gridView.adapter = gridAdapter
-
-
     }
 }

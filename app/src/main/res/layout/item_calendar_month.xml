@@ -17,6 +17,14 @@
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp"/>
         <ImageView
+                android:text="td"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/goToToday" app:layout_constraintEnd_toStartOf="@+id/last_month"
+                android:layout_marginEnd="8dp" android:background="@drawable/icon_today"
+                app:layout_constraintTop_toTopOf="@+id/currentMonth"
+                app:layout_constraintBottom_toBottomOf="@+id/currentMonth"/>
+        <ImageView
                 android:id="@+id/last_month"
                 android:layout_width="30dp"
                 android:layout_height="30dp" app:srcCompat="@drawable/icon_right"
@@ -31,10 +39,10 @@
                 android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@+id/last_month"
-                android:layout_marginEnd="16dp" app:layout_constraintStart_toEndOf="@+id/previous_month"
+                app:layout_constraintStart_toEndOf="@+id/previous_month"
                 android:layout_marginStart="16dp" android:layout_marginTop="16dp"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/goToToday"/>
 
         <LinearLayout
                 android:id="@+id/calendarHeader"

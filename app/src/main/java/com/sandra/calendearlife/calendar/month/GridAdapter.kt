@@ -13,6 +13,8 @@ import com.sandra.calendearlife.R
 import java.util.*
 
 
+
+
 class GridAdapter(context: Context, dates: ArrayList<Date>, currentDate: Calendar) :
     ArrayAdapter<Date>(context, R.layout.cell_month, dates) {
 
@@ -29,7 +31,7 @@ class GridAdapter(context: Context, dates: ArrayList<Date>, currentDate: Calenda
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        val monthDate = dates.get(position)
+        val monthDate = dates[position]
         val dateCalendar = Calendar.getInstance()
         dateCalendar.time = monthDate
         val dayNo = dateCalendar.get(Calendar.DAY_OF_MONTH)
@@ -45,9 +47,9 @@ class GridAdapter(context: Context, dates: ArrayList<Date>, currentDate: Calenda
 
         if (displayMonth == currentMonth && displayYear == currentYear){
             view?.setBackgroundColor(context.resources.getColor(R.color.white))
-
         }
-        else{
+
+        else  {
             view?.setBackgroundColor(Color.parseColor("#cccccc"))
         }
 

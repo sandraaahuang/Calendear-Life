@@ -72,10 +72,17 @@
                     android:layout_height="wrap_content"/>
 
             <com.github.clans.fab.FloatingActionButton
-                    android:id="@+id/calendarFab"
-                    app:fab_label="Add Calendar"
+                android:id="@+id/calendarFab"
+                app:fab_label="Add Calendar"
+                app:fab_colorNormal="@color/black"
+                android:src="@drawable/icon_add_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/linkToGoogle"
+                    app:fab_label="link to google"
                     app:fab_colorNormal="@color/black"
-                    android:src="@drawable/icon_add_calendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
