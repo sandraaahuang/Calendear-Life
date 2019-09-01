@@ -13,4 +13,11 @@
     <string name="are_you_sure_you_wat_to_discard_this_event">Are you sure you wat to discard this event ?</string>
     <string name="discard">discard</string>
     <string name="keep_editing">Keep editing</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tues</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thur</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
 </resources>

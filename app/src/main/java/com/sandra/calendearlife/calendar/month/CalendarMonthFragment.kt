@@ -15,6 +15,17 @@ class CalendarMonthFragment : Fragment() {
 
         val binding = CalendarMonthFragmentBinding.inflate(inflater, container, false)
 
+        binding.calendarFab.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
+        }
+        binding.countdownsFab.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
+        }
+        binding.remindersFab.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
+        }
+
+
         return binding.root
     }
 }
