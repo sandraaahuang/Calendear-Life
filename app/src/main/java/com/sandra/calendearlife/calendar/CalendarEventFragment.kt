@@ -110,8 +110,7 @@ class CalendarEventFragment : Fragment() {
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(fragmentManager!!, "bottom")
         }
-
-
+        
         return binding.root
     }
 
