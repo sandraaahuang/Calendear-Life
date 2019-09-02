@@ -1,4 +1,4 @@
-package com.sandra.calendearlife.countdown
+package com.sandra.calendearlife.reminders
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -8,15 +8,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 
-class CountdownViewModel : ViewModel() {
+class RemindersViewModel : ViewModel(){
     var db = FirebaseFirestore.getInstance()
 
-    lateinit var countdownAdd: Countdown
+    lateinit var remindAdd: Reminders
 
-    val countdownItem = ArrayList<Countdown>()
-    val _liveCountdown = MutableLiveData<List<Countdown>>()
-    val liveCountdown: LiveData<List<Countdown>>
-        get() = _liveCountdown
+    val remindersItem = ArrayList<Reminders>()
+    val _liveReminders = MutableLiveData<List<Reminders>>()
+    val liveReminders : LiveData<List<Reminders>>
+        get() = _liveReminders
 
     init {
         getItem()
@@ -45,7 +45,7 @@ class CountdownViewModel : ViewModel() {
                                         .document(data.id)
                                         .collection("calendar")
                                         .document(calendar.id)
-                                        .collection("countdowns")
+                                        .collection("reminders")
                                         .add(item)
                                         .addOnSuccessListener { documentReference ->
                                             Log.d(
@@ -70,8 +70,7 @@ class CountdownViewModel : ViewModel() {
             }
     }
 
-
-    fun getItem() {
+    fun getItem(){
         //connect to countdown data
         db.collection("data")
             .get()
@@ -89,27 +88,28 @@ class CountdownViewModel : ViewModel() {
                                 for (calendar in documents) {
                                     Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                                    // get countdowns
+                                    // get reminders
+
                                     db.collection("data")
                                         .document(data.id)
                                         .collection("calendar")
                                         .document(calendar.id)
-                                        .collection("countdowns")
+                                        .collection("reminders")
                                         .get()
                                         .addOnSuccessListener { documents ->
 
-                                            for (countdown in documents) {
-                                                Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
-                                                countdownAdd = countdown.toObject(Countdown::class.java)
+                                            for (reminder in documents) {
+                                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
-                                                countdownItem.add(countdownAdd)
+                                                remindAdd = reminder.toObject(Reminders::class.java)
+
+                                                remindersItem.add(remindAdd)
                                             }
-
-                                            _liveCountdown.value = countdownItem
+                                            _liveReminders.value = remindersItem
                                         }
 
                                         .addOnFailureListener { exception ->
-                                            Log.w("getAllcountdown", "Error getting documents: ", exception)
+                                            Log.w("getAllreminders", "Error getting documents: ", exception)
                                         }
                                 }
                             }

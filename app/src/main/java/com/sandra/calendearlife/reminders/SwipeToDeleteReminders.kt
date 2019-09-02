@@ -30,7 +30,7 @@ class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val fragment: Rem
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        fragment.mockdata2.removeAt(position)
+
         adapter.notifyDataSetChanged()
     }
 

@@ -3,16 +3,17 @@ package com.sandra.calendearlife.reminders
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemAddRemindersBinding
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
+import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.dialog.RepeatDialog
 import java.util.*
 
@@ -20,24 +21,15 @@ import java.util.*
 private const val ITEM_VIEW_TYPE_OLD = 0x01
 private const val ITEM_VIEW_TYPE_ADDED = 0x00
 
-class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: RemindersFragment) : ListAdapter<Reminders, RecyclerView.ViewHolder>(DiffCallback) {
+class AddRemindersAdapter(val onClickListener: OnClickListener,
+                          val fragment: RemindersFragment,
+                          val viewModel: RemindersViewModel) : ListAdapter<Reminders, RecyclerView.ViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (reminders: Reminders) -> Unit) {
         fun onClick(reminders: Reminders) = clickListener(reminders)
     }
 
-//    var reminders: ArrayList<Reminders>? = null
-
-//    override fun getItemCount(): Int {
-//
-//        reminders?.let {
-//            return when (it.size) {
-//                it.size + 1
-//            }
-//        }
-//        Log.d("sandraaa","reminders = $reminders")
-//        return 0
-//    }
+    var reminders: ArrayList<Reminders>? = null
 
     companion object DiffCallback : DiffUtil.ItemCallback<Reminders>() {
         override fun areItemsTheSame(oldItem: Reminders, newItem: Reminders): Boolean {
@@ -66,7 +58,7 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
     class AddItemViewHolder(private var binding: ItemAddRemindersBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(fragment: RemindersFragment) {
+        fun bind(fragment: RemindersFragment, viewModel: RemindersViewModel) {
 
             binding.setReminderswitch.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -79,6 +71,7 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
 
             binding.repeatChoose.setOnClickListener {
                 RepeatDialog().show(fragment.fragmentManager!!, "center")
+
             }
 
             binding.remindersDateInput.setOnClickListener {
@@ -129,6 +122,24 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
                 DiscardDialog().show(fragment.fragmentManager!!, "show")
             }
 
+            binding.saveText.setOnClickListener {
+                val calendar = Calendar.getInstance()
+
+                val reminders = hashMapOf(
+                    "setDate" to "${calendar.get(Calendar.MONTH)+1}," +
+                            " ${calendar.get(Calendar.DAY_OF_MONTH)}, ${calendar.get(Calendar.YEAR)}",
+                    "title" to "${binding.remindersTitleInput.text}",
+                    "setRemindDate" to binding.setReminderswitch.isChecked,
+                    "remindDate" to "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}",
+                    "isChecked" to false,
+                    "note" to "${binding.remindersNoteInput.text}",
+                    "frequency" to RepeatDialog.value
+                )
+
+                viewModel.writeItem(reminders)
+
+            }
+
             binding.executePendingBindings()
         }
     }
@@ -152,7 +163,7 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
         when (holder) {
             is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
 
-            is AddItemViewHolder -> holder.bind(fragment)
+            is AddItemViewHolder -> holder.bind(fragment,viewModel)
         }
 
 
