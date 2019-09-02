@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sandra.calendearlife.DiscardDialog
+import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemAddRemindersBinding
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
-import kotlinx.android.synthetic.main.item_reminders.view.*
+import com.sandra.calendearlife.dialog.RepeatDialog
 import java.util.*
 
 
@@ -67,6 +67,20 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(fragment: RemindersFragment) {
+
+            binding.setReminderswitch.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    binding.setRemindLayout.visibility = View.VISIBLE
+                }
+                else {
+                    binding.setRemindLayout.visibility = View.GONE
+                }
+            }
+
+            binding.repeatChoose.setOnClickListener {
+                RepeatDialog().show(fragment.fragmentManager!!, "center")
+            }
+
             binding.remindersDateInput.setOnClickListener {
                 val calendar = Calendar.getInstance()
                 val year = calendar.get(Calendar.YEAR)
@@ -80,6 +94,9 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
                     else -> "PM"
                 }
 
+                binding.remindersDateInput.text = "${monthOfYear + 1}, $dayOfMonth, $year "
+                binding.remindersTimeInput.text = "$hour : $minute"
+
                 TimePickerDialog(it.context,AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
                 { view, hour, minute ->
                     binding.remindersTimeInput.text =
@@ -91,7 +108,7 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
                     { _, year, monthOfYear, dayOfMonth ->
                         // Display Selected date in textbox
                         binding.remindersDateInput.text=
-                            "${monthOfYear + 1}, $dayOfMonth, $year, " }, year, monthOfYear, dayOfMonth
+                            "${monthOfYear + 1}, $dayOfMonth, $year " }, year, monthOfYear, dayOfMonth
                 )
                 datePickerDialog.show()
             }

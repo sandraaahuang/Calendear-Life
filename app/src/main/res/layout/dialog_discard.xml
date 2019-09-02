@@ -22,7 +22,7 @@
 
             <TextView
                     android:id="@+id/makesureText"
-                    android:text="@string/are_you_sure_you_wat_to_discard_this_event"
+                    android:text="@string/are_you_sure_you_want_to_discard_this_event"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"

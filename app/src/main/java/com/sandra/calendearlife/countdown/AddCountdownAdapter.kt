@@ -4,13 +4,10 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sandra.calendearlife.DiscardDialog
-import com.sandra.calendearlife.MainActivity
+import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemAddCountdownBinding
 import com.sandra.calendearlife.databinding.ItemCountdownBinding

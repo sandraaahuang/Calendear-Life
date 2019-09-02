@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1">
+
+
+            <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="38dp" app:srcCompat="@color/white"
+                    android:id="@+id/buttonBack" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="1dp" android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            />
+            <TextView
+                    android:text="Repeat"
+                    android:fontFamily="@font/noto_sans"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/repeatText"
+                    app:layout_constraintTop_toTopOf="@+id/imageView2"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                    app:layout_constraintStart_toEndOf="@+id/imageView2" android:layout_marginStart="16dp"/>
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" app:srcCompat="@drawable/icon_left"
+                    android:id="@+id/imageView2" app:layout_constraintStart_toStartOf="@+id/buttonBack"
+                    android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonBack"/>
+            <Button
+                    android:text="Does not repeat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/buttonDoesNotRepeat"
+                    android:background="@color/white"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="1dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="1dp"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonBack" android:layout_marginTop="1dp"/>
+            <Button
+                    android:text="Every day"
+                    android:layout_width="0dp"
+                    android:background="@color/white"
+                    android:textAllCaps="false"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/noto_sans"
+                    android:id="@+id/buttonEveryDay" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="1dp" android:layout_marginStart="1dp"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonDoesNotRepeat"/>
+            <Button
+                    android:text="Every week"
+                    android:layout_width="0dp"
+                    android:background="@color/white"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/noto_sans"
+                    android:layout_height="wrap_content" android:id="@+id/buttonEveryWeek"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="1dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp" app:layout_constraintTop_toBottomOf="@+id/buttonEveryDay"/>
+            <Button
+                    android:text="Every month"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/noto_sans"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="1dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp" app:layout_constraintTop_toBottomOf="@+id/buttonEveryWeek"
+                    android:id="@+id/buttonEveryMonth"/>
+            <Button
+                    android:text="Every year"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/noto_sans"
+                    android:id="@+id/buttonEveryYear" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="1dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp" app:layout_constraintTop_toBottomOf="@+id/buttonEveryMonth"
+                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="1dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
