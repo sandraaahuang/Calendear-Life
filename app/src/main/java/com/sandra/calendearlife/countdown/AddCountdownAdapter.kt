@@ -13,27 +13,12 @@ import com.sandra.calendearlife.databinding.ItemAddCountdownBinding
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
 import java.util.*
 
-private const val ITEM_VIEW_TYPE_OLD = 0x01
-private const val ITEM_VIEW_TYPE_ADDED = 0x00
-
-class AddCountdownAdapter(val onClickListener: OnClickListener, val fragment: CountdownFragment) :
+class AddCountdownAdapter(val onClickListener: OnClickListener) :
     ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (countdown: Countdown) -> Unit) {
         fun onClick(countdown: Countdown) = clickListener(countdown)
     }
-//    var reminders: ArrayList<Countdowns>? = null
-
-//    override fun getItemCount(): Int {
-//
-//        reminders?.let {
-//            return when (it.size) {
-//                it.size + 1
-//            }
-//        }
-//        Log.d("sandraaa","Countdown = $Countdown")
-//        return 0
-//    }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Countdown>() {
         override fun areItemsTheSame(oldItem: Countdown, newItem: Countdown): Boolean {
@@ -56,51 +41,13 @@ class AddCountdownAdapter(val onClickListener: OnClickListener, val fragment: Co
         }
     }
 
-    class AddItemViewHolder(private var binding: ItemAddCountdownBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(fragment: CountdownFragment) {
-
-            binding.editCountdownLayout.setOnClickListener {
-                val cal = Calendar.getInstance()
-                val y = cal.get(Calendar.YEAR)
-                val m = cal.get(Calendar.MONTH)
-                val d = cal.get(Calendar.DAY_OF_MONTH)
-
-                val datepickerdialog = DatePickerDialog(
-                    it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-                    { _, year, monthOfYear, dayOfMonth ->
-
-                        // Display Selected date in textbox
-                        binding.countdownDateInput.text =
-                            "${monthOfYear + 1}, $dayOfMonth, $year"
-                    }, y, m, d
-                )
-                datepickerdialog.show()
-            }
-
-            binding.removeIcon.setOnClickListener {
-
-                DiscardDialog().show(fragment.fragmentManager!!, "show")
-            }
-
-            binding.executePendingBindings()
-        }
-
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return when (viewType) {
-            ITEM_VIEW_TYPE_OLD -> ItemViewHolder(
-                ItemCountdownBinding.inflate
-                    (LayoutInflater.from(parent.context), parent, false)
+        return ItemViewHolder(
+            ItemCountdownBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
             )
-            else -> AddItemViewHolder(
-                ItemAddCountdownBinding.inflate
-                    (LayoutInflater.from(parent.context), parent, false)
-            )
-        }
+        )
 
     }
 
@@ -108,16 +55,6 @@ class AddCountdownAdapter(val onClickListener: OnClickListener, val fragment: Co
 
         when (holder) {
             is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
-            is AddItemViewHolder -> holder.bind(fragment)
-        }
-
-
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            1 -> ITEM_VIEW_TYPE_ADDED
-            else -> ITEM_VIEW_TYPE_OLD
         }
     }
 }

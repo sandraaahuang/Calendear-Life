@@ -13,7 +13,7 @@ import com.sandra.calendearlife.home.HomeFragment
 import com.sandra.calendearlife.home.HomeRemindersAdapter
 
 
-class SwipeToDeleteCallback(val adapter: HomeRemindersAdapter, val fragment: HomeFragment) :
+class SwipeToDeleteCallback(val adapter: HomeRemindersAdapter, val viewModel: HomeViewModel) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private lateinit var icon: Drawable
@@ -32,7 +32,7 @@ class SwipeToDeleteCallback(val adapter: HomeRemindersAdapter, val fragment: Hom
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        fragment.mockdata2.removeAt(position)
+        viewModel.remindersItem.removeAt(position)
         adapter.notifyDataSetChanged()
     }
 

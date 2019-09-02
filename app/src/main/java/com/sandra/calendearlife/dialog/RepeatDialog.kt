@@ -25,7 +25,34 @@ class RepeatDialog: AppCompatDialogFragment() {
             this.dismiss()
         }
 
+        binding.buttonDoesNotRepeat.setOnClickListener {
+            value = frequency[0]
+            this.dismiss()
+        }
+        binding.buttonEveryDay.setOnClickListener {
+            value = frequency[1]
+            this.dismiss()
+        }
+        binding.buttonEveryWeek.setOnClickListener {
+            value = frequency[2]
+            this.dismiss()
+        }
+        binding.buttonEveryMonth.setOnClickListener {
+            value = frequency[3]
+            this.dismiss()
+        }
+        binding.buttonEveryYear.setOnClickListener {
+            value = frequency[4]
+            this.dismiss()
+        }
+
         return binding.root
+    }
+
+    companion object {
+        lateinit var value: String
+        var frequency = listOf("does not repeat"
+            , "every day", "every week", "every month", "every year")
     }
 
 }
