@@ -11,6 +11,8 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
 import com.sandra.calendearlife.home.SwipeToDeleteCallback
+import kotlinx.android.synthetic.main.calendar_event_fragment.view.*
+import kotlinx.android.synthetic.main.item_add_reminders.view.*
 
 class RemindersFragment : Fragment() {
 
@@ -30,7 +32,6 @@ class RemindersFragment : Fragment() {
             SwipeToDeleteReminders(addRemindersAdapter, this)
         )
         itemTouchHelper.attachToRecyclerView(binding.addRemindersRecyclerView)
-
 
         mockdata2.add(Reminders("please remind me!!!", "20201010", false, false))
         mockdata2.add(Reminders("who am I!!!", "20201012", false, false))

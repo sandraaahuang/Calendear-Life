@@ -39,6 +39,8 @@ class GridAdapter(context: Context, dates: ArrayList<Date>, currentDate: Calenda
         val displayYear = dateCalendar.get(Calendar.YEAR)
         val currentMonth = currentDate.get(Calendar.MONTH) +1
         val currentYear = currentDate.get(Calendar.YEAR)
+        val displayDate = dateCalendar.get(Calendar.DATE)
+        val today = currentDate.get(Calendar.DATE)
 
         var view = convertView
         if (view == null){
@@ -47,9 +49,7 @@ class GridAdapter(context: Context, dates: ArrayList<Date>, currentDate: Calenda
 
         if (displayMonth == currentMonth && displayYear == currentYear){
             view?.setBackgroundColor(context.resources.getColor(R.color.white))
-        }
-
-        else  {
+        } else  {
             view?.setBackgroundColor(Color.parseColor("#cccccc"))
         }
 
@@ -71,4 +71,6 @@ class GridAdapter(context: Context, dates: ArrayList<Date>, currentDate: Calenda
     override fun getItem(position: Int): Date? {
         return dates[position]
     }
+
+
 }

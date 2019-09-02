@@ -4,12 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.findNavController
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.ItemCalendarMonthBinding
+import kotlinx.android.synthetic.main.cell_month.view.*
 import kotlinx.android.synthetic.main.item_calendar_month.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,6 +25,7 @@ class CustomMonthCalendar : ConstraintLayout {
     private lateinit var goToToday: ImageView
     var calendar = Calendar.getInstance(Locale.ENGLISH)
     var dates = ArrayList<Date>()
+//    var events = ArrayList<Events>()
     var dateFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
     var monthFormat = SimpleDateFormat("MMMM", Locale.ENGLISH)
     var yearFormat = SimpleDateFormat("yyyy", Locale.ENGLISH)
@@ -36,22 +38,32 @@ class CustomMonthCalendar : ConstraintLayout {
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs){
         intializeLayout()
+        Log.d("sandraaa","calendar = $calendar")
         previous_month.setOnClickListener {
             calendar.add(Calendar.MONTH, -1)
             setupCalendar()
+            Log.d("sandraaa","calendar = $calendar")
         }
         last_month.setOnClickListener {
             calendar.add(Calendar.MONTH, 1)
             setupCalendar()
+            Log.d("sandraaa","calendar = $calendar")
         }
         goToToday.setOnClickListener {
-            calendar.get(Calendar.DATE)
-            Log.d("sandraaa","${calendar.get(Calendar.DATE)}")
+            Log.d("sandraaa","calendar = $calendar")
+            val substractMonth = calendar.get(Calendar.MONTH) - Calendar.getInstance().get(Calendar.MONTH)
+            val substractYear = calendar.get(Calendar.YEAR) - Calendar.getInstance().get(Calendar.YEAR)
+            Log.d ("sandraaa", " substract = $substractMonth")
+            calendar.add(Calendar.MONTH, - substractMonth)
+            calendar.add(Calendar.YEAR, - substractYear)
+            setupCalendar()
+        }
+        gridView.setOnItemClickListener { adapterView, view, position, id ->
+            findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
 
     fun intializeLayout(){
 

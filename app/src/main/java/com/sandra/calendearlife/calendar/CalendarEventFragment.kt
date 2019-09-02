@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.sandra.calendearlife.DiscardDialog
+import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.databinding.CalendarEventFragmentBinding
 import java.text.SimpleDateFormat
 import java.util.*

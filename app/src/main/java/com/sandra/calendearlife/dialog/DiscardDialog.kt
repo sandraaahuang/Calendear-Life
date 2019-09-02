@@ -1,4 +1,4 @@
-package com.sandra.calendearlife
+package com.sandra.calendearlife.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
