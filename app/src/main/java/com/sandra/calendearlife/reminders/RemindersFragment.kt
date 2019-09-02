@@ -33,8 +33,7 @@ class RemindersFragment : Fragment() {
         )
         itemTouchHelper.attachToRecyclerView(binding.addRemindersRecyclerView)
 
-        mockdata2.add(Reminders("please remind me!!!", "20201010", false, false))
-        mockdata2.add(Reminders("who am I!!!", "20201012", false, false))
+        mockdata2.add(Reminders())
 
         binding.addRemindersRecyclerView.adapter = addRemindersAdapter
         addRemindersAdapter.submitList(mockdata2)

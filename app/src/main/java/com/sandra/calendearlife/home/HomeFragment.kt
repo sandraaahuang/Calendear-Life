@@ -14,9 +14,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.gms.auth.GoogleAuthUtil
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.AccountPicker
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
@@ -29,7 +28,6 @@ class HomeFragment : Fragment() {
     }
 
     lateinit var binding: HomeFragmentBinding
-    lateinit var mockdata2: ArrayList<Reminders>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -41,33 +39,18 @@ class HomeFragment : Fragment() {
         })
         binding = HomeFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        viewModel
+        binding.viewModel = viewModel
 
         val itemTouchHelper= ItemTouchHelper(
             SwipeToDeleteCallback(
                 remindersAdapter,
-                this
+                viewModel
             )
         )
         itemTouchHelper.attachToRecyclerView(binding.remindersRecyclerView)
 
-        //mock data
-        val mockData = ArrayList<Countdown>()
-        mockData.add(Countdown("88", "倒數數起來^^", "20200101"))
-        mockData.add(Countdown("99", "倒數數起來:D", "20210101"))
-
-        mockdata2 = ArrayList()
-        mockdata2.add(Reminders("please remind me!!!", "20201010", false, false))
-        mockdata2.add(Reminders("who am I!!!", "20201012", false, false))
-
         binding.countdownRecyclerView.adapter = countdownAdapter
         binding.remindersRecyclerView.adapter = remindersAdapter
-
-        countdownAdapter.submitList(mockData)
-        remindersAdapter.submitList(mockdata2)
-
-
-        Log.d("sandraaa","mockData = $mockData")
 
         // floating action button
         binding.remindersFab.setOnClickListener {

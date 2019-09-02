@@ -106,7 +106,7 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val fragment: Re
                 val datePickerDialog = DatePickerDialog(
                     it.context,AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                     { _, year, monthOfYear, dayOfMonth ->
-                        // Display Selected date in textbox
+                        // Display Selected setDate in textbox
                         binding.remindersDateInput.text=
                             "${monthOfYear + 1}, $dayOfMonth, $year " }, year, monthOfYear, dayOfMonth
                 )

@@ -32,8 +32,7 @@ class CountdownFragment : Fragment() {
 
         //mock data
         val mockData = ArrayList<Countdown>()
-        mockData.add(Countdown("88", "倒數數起來^^", "20200101"))
-        mockData.add(Countdown("99", "倒數數起來:D", "20210101"))
+        mockData.add(Countdown())
 
         binding.addCountdownRecyclerView.adapter = addCountdownAdapter
         addCountdownAdapter.submitList(mockData)

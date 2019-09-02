@@ -71,7 +71,7 @@ class AddCountdownAdapter(val onClickListener: OnClickListener, val fragment: Co
                     it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                     { _, year, monthOfYear, dayOfMonth ->
 
-                        // Display Selected date in textbox
+                        // Display Selected setDate in textbox
                         binding.countdownDateInput.text =
                             "${monthOfYear + 1}, $dayOfMonth, $year"
                     }, y, m, d

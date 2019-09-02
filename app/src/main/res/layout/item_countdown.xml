@@ -14,8 +14,7 @@
 
         <TextView
                 android:id="@+id/countdownDate"
-                android:text="@{countdown.date}"
-                tools:text="88"
+                android:text="88"
                 android:textSize="80sp"
                 android:fontFamily="@font/noto_sans"
                 android:textStyle="bold"
