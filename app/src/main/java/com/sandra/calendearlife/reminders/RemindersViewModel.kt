@@ -186,7 +186,7 @@ class RemindersViewModel : ViewModel(){
 
     fun showValue(){
 
-            _repeatChoose.value = RepeatDialog.value?.value
+            _repeatChoose.value = RepeatDialog.value
     }
 
 }

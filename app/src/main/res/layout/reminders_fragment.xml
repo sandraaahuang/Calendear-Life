@@ -111,7 +111,7 @@
                     android:id="@+id/repeatChoose"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.displayChoose}"
+                    android:text="Never"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="#868686"
                     android:textSize="16sp"

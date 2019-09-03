@@ -1,17 +1,38 @@
 package com.sandra.calendearlife.dialog
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.DialogRepeatBinding
+import com.sandra.calendearlife.reminders.RemindersFragment
 import com.sandra.calendearlife.reminders.RemindersViewModel
 
+
+
 class RepeatDialog: AppCompatDialogFragment() {
+
+    var RESPONSE_EVALUATE = "response_evaluate"
+
+    fun setResult(){
+        if (targetFragment == null){
+            Log.d("sandraaa", "fail")
+            return
+        }
+        else {
+            val intent = Intent()
+            intent.putExtra(RESPONSE_EVALUATE, value)
+            targetFragment?.onActivityResult(RemindersFragment().REQUEST_EVALUATE, Activity.RESULT_OK,intent)
+            Log.d("sandraaa", "value = $value")
+        }
+    }
 
     lateinit var binding: DialogRepeatBinding
 
@@ -31,38 +52,40 @@ class RepeatDialog: AppCompatDialogFragment() {
         }
 
         binding.buttonDoesNotRepeat.setOnClickListener {
-            value?.value = frequency[0]
-            Log.d("sandraaa","value = ${RemindersViewModel().displayChoose.value}")
+            value = frequency[0]
+            setResult()
             this.dismiss()
         }
         binding.buttonEveryDay.setOnClickListener {
-            value?.value = frequency[1]
-            RemindersViewModel().showValue()
+            value = frequency[1]
+            setResult()
             this.dismiss()
         }
         binding.buttonEveryWeek.setOnClickListener {
-            value?.value = frequency[2]
-            RemindersViewModel().showValue()
+            value = frequency[2]
+            setResult()
             this.dismiss()
         }
         binding.buttonEveryMonth.setOnClickListener {
-            value?.value = frequency[3]
-            RemindersViewModel().showValue()
+            value = frequency[3]
+            setResult()
             this.dismiss()
         }
         binding.buttonEveryYear.setOnClickListener {
-            value?.value = frequency[4]
-            RemindersViewModel().showValue()
+            value = frequency[4]
+            setResult()
             this.dismiss()
         }
 
         return binding.root
+
+
     }
 
     companion object {
-        var value: MutableLiveData<String>? = null
-        var frequency = listOf("does not repeat"
-            , "every day", "every week", "every month", "every year")
+        lateinit var value: String
+        var frequency = listOf("Does not repeat"
+            , "Every day", "Every week", "Every month", "Every year")
     }
 
 }

@@ -1,13 +1,13 @@
 package com.sandra.calendearlife.reminders
 
-import android.app.AlertDialog
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -17,6 +17,7 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.dialog.RepeatDialog
+import kotlinx.android.synthetic.main.dialog_repeat.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,6 +26,12 @@ import java.util.*
 
 class RemindersFragment : Fragment() {
 
+    var ARGUMENT = "argument";
+    var RESPONSE = "response";
+    var EVALUATE_DIALOG = "evaluate_dialog";
+    var REQUEST_EVALUATE = 0X110
+
+
     private val viewModel: RemindersViewModel by lazy{
         ViewModelProviders.of(this).get(RemindersViewModel::class.java)
     }
@@ -32,10 +39,11 @@ class RemindersFragment : Fragment() {
     lateinit var binding: RemindersFragmentBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         binding = RemindersFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+
 
         val addRemindersAdapter = AddRemindersAdapter(AddRemindersAdapter.OnClickListener{
             viewModel.displayReminderDetails(it)
@@ -70,7 +78,10 @@ class RemindersFragment : Fragment() {
         }
 
         binding.repeatChoose.setOnClickListener {
-            RepeatDialog().show(this.fragmentManager!!, "center")
+            val dialog = RepeatDialog()
+            //注意setTargetFragment
+            dialog.setTargetFragment(this, REQUEST_EVALUATE);
+            dialog.show(fragmentManager!!, EVALUATE_DIALOG)
         }
 
         binding.remindersDateInput.setOnClickListener {
@@ -120,6 +131,8 @@ class RemindersFragment : Fragment() {
             ).show()
         }
 
+
+
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(this.fragmentManager!!, "show")
         }
@@ -145,7 +158,25 @@ class RemindersFragment : Fragment() {
 
         return binding.root
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_EVALUATE)
+        {
+            val evaluate = data?.getStringExtra(RepeatDialog().RESPONSE_EVALUATE)
+
+            binding.repeatChoose.text = evaluate
+            val intent = Intent()
+            intent.putExtra(RESPONSE, evaluate);
+            activity?.setResult(Activity.RESULT_OK, intent)
+        }
+    }
+
 }
+
+
 
 
 
