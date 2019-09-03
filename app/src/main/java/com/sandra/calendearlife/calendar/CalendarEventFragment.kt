@@ -51,59 +51,65 @@ class CalendarEventFragment : Fragment() {
             else -> "Sunday"
         }
 
-        val chooseDate = "$transferDay ${monthOfYear + 1 } / $dayOfMonth"
+        val chooseDate = "$transferDay/${monthOfYear + 1 }/$dayOfMonth"
 
         binding.beginDate.text = chooseDate
         binding.endDate.text = chooseDate
 
         binding.beginDate.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("EEEE")
+            val simpleDateFormat = SimpleDateFormat("EEEE MM/dd")
             val datePickerDialog= DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year, monthOfYear, dayOfMonth)
-                    val dateOfWeek = simpleDateFormat.format(date)
-                    binding.beginDate.text = "$dateOfWeek ${monthOfYear + 1 } / $dayOfMonth" }, year, monthOfYear, dayOfMonth
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val stringDate = simpleDateFormat.format(date)
+                    binding.beginDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
 
             datePickerDialog.show()
         }
 
         binding.endDate.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("EEEE")
+            val simpleDateFormat = SimpleDateFormat("EEEE MM/dd")
             val datePickerDialog= DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year, monthOfYear, dayOfMonth)
-                    val dateOfWeek = simpleDateFormat.format(date)
-                    binding.endDate.text = "$dateOfWeek ${monthOfYear + 1 } / $dayOfMonth" }, year, monthOfYear, dayOfMonth
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val stringDate = simpleDateFormat.format(date)
+                    binding.endDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
         }
 
         binding.remindersInput.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("EEEE")
+            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
             val datePickerDialog= DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year, monthOfYear, dayOfMonth)
-                    val dateOfWeek = simpleDateFormat.format(date)
-                    binding.remindersInput.text = "$dateOfWeek ${monthOfYear + 1 } / $dayOfMonth" }, year, monthOfYear, dayOfMonth
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val stringDate = simpleDateFormat.format(date)
+                    binding.remindersInput.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
         }
 
         binding.beginTime.setOnClickListener {
+            val simpleDateFormat = SimpleDateFormat("h:mm a")
             TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
-                binding.beginTime.text = "$hour:$minute" }, hour, minute, false
+                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
+                val stringTime = simpleDateFormat.format(date)
+                binding.beginTime.text = "$stringTime" }, hour, minute, false
             ).show()
         }
 
         binding.endTime.setOnClickListener {
+            val simpleDateFormat = SimpleDateFormat("h:mm a")
             TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
-                binding.endTime.text = "$hour:$minute" }, hour, minute, false
+                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
+                val stringTime = simpleDateFormat.format(date)
+                binding.endTime.text = "$stringTime" }, hour, minute, false
             ).show()
         }
 
