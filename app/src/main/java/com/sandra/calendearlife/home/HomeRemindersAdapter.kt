@@ -19,9 +19,6 @@ class HomeRemindersAdapter(val fragment: HomeFragment, val onClickListener: OnCl
         RecyclerView.ViewHolder(binding.root) {
         fun bind(reminders: Reminders) {
             binding.reminders = reminders
-            binding.remindersTitle.setOnClickListener {
-                binding.remindersInfo.visibility = View.VISIBLE
-            }
             binding.executePendingBindings()
         }
     }
@@ -47,7 +44,7 @@ class HomeRemindersAdapter(val fragment: HomeFragment, val onClickListener: OnCl
 
     override fun onBindViewHolder(holder: RemindersViewHolder, position: Int) {
         val reminders = getItem(position)
-        holder.itemView.remindersInfo.setOnClickListener {
+        holder.itemView.setOnClickListener {
             onClickListener.onClick(reminders)
         }
         holder.bind(reminders)
