@@ -84,4 +84,7 @@ dependencies {
 
     //FireBase
     implementation 'com.google.firebase:firebase-firestore:20.1.0'
+
+    //scrolling paging indicator
+    implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.0.6"
 }
