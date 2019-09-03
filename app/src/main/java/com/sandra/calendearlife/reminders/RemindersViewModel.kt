@@ -1,11 +1,20 @@
 package com.sandra.calendearlife.reminders
 
+import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Reminders
+import com.sandra.calendearlife.databinding.DialogRepeatBinding
+import com.sandra.calendearlife.dialog.RepeatDialog
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -71,6 +80,13 @@ class RemindersViewModel : ViewModel(){
                                                 "AddCountdownsIntoDB",
                                                 "DocumentSnapshot added with ID: " + documentReference.id
                                             )
+                                            db.collection("data")
+                                                .document(data.id)
+                                                .collection("calendar")
+                                                .document(calendar.id)
+                                                .collection("reminders")
+                                                .document(documentReference.id)
+                                                .update("documentID", documentReference.id)
                                         }
                                         .addOnFailureListener { e ->
                                             Log.w("AddCountdownsIntoDB", "Error adding document", e)
@@ -130,7 +146,8 @@ class RemindersViewModel : ViewModel(){
                                                     simpleDateFormat.format(remindDate.seconds*1000),
                                                     reminder.data["isChecked"].toString().toBoolean(),
                                                     reminder.data["note"].toString(),
-                                                    reminder.data["frequency"].toString())
+                                                    reminder.data["frequency"].toString(),
+                                                    reminder.data["documentID"].toString())
 
                                                 remindersItem.add(remindAdd)
                                             }
@@ -153,4 +170,23 @@ class RemindersViewModel : ViewModel(){
                 }
             }
     }
+
+    private val _repeatChoose = MutableLiveData<String>()
+
+    val repeatChoose: LiveData<String>
+        get() = _repeatChoose
+
+    init {
+        _repeatChoose.value = "never"
+    }
+
+    val displayChoose= Transformations.map(repeatChoose) {
+        it
+    }
+
+    fun showValue(){
+
+            _repeatChoose.value = RepeatDialog.value?.value
+    }
+
 }

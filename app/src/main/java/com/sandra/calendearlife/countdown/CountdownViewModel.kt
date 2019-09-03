@@ -70,6 +70,13 @@ class CountdownViewModel : ViewModel() {
                                                 "AddcountdownsIntoDB",
                                                 "DocumentSnapshot added with ID: " + documentReference.id
                                             )
+                                            db.collection("data")
+                                                .document(data.id)
+                                                .collection("calendar")
+                                                .document(calendar.id)
+                                                .collection("countdowns")
+                                                .document(documentReference.id)
+                                                .update("documentID", documentReference.id)
                                         }
                                         .addOnFailureListener { e ->
                                             Log.w("AddcountdownsIntoDB", "Error adding document", e)
@@ -118,15 +125,19 @@ class CountdownViewModel : ViewModel() {
 
                                             for (countdown in documents) {
                                                 Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
-                                                val setDate = (countdown.data["setDate"]as com.google.firebase.Timestamp)
-                                                val targetDate = (countdown.data["targetDate"]as com.google.firebase.Timestamp)
+                                                val setDate =
+                                                    (countdown.data["setDate"] as com.google.firebase.Timestamp)
+                                                val targetDate =
+                                                    (countdown.data["targetDate"] as com.google.firebase.Timestamp)
 
                                                 countdownAdd = Countdown(
-                                                    simpleDateFormat.format(setDate.seconds*1000),
+                                                    simpleDateFormat.format(setDate.seconds * 1000),
                                                     countdown.data["title"].toString(),
                                                     countdown.data["note"].toString(),
-                                                    simpleDateFormat.format(targetDate.seconds*1000),
-                                                    countdown.data["overdue"].toString().toBoolean())
+                                                    simpleDateFormat.format(targetDate.seconds * 1000),
+                                                    countdown.data["overdue"].toString().toBoolean(),
+                                                    countdown.data["documentID"].toString()
+                                                )
 
                                                 countdownItem.add(countdownAdd)
                                             }
@@ -149,12 +160,5 @@ class CountdownViewModel : ViewModel() {
                     Log.w("getAllDate", "Error getting documents.", task.exception)
                 }
             }
-    }
-
-    fun Date.getStringTimeStampWithDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            Locale.getDefault())
-        dateFormat.timeZone = TimeZone.getTimeZone("GMT")
-        return dateFormat.format(this)
     }
 }
