@@ -29,9 +29,9 @@ data class Calendar (
     val hasLocation: Boolean = false,
     val location: String? = null,
     val hasReminders: Boolean = false,
-    val reminders: ArrayList<Reminders>? = null,
+    val reminders: List<Reminders>? = null,
     val hasCountdown: Boolean = false,
-    val countdowns: ArrayList<Countdown>? = null
+    val countdowns: List<Countdown>? = null
 
 ) : Parcelable
 

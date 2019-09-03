@@ -31,7 +31,7 @@ class CountdownDetailFragment : Fragment() {
             val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year, monthOfYear, dayOfMonth)
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
                     val stringDate = simpleDateFormat.format(date)
                     binding.remindDate.text=
                         "$stringDate" }, year, monthOfYear, dayOfMonth

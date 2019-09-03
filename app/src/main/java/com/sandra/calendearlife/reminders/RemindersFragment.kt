@@ -11,11 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.dialog.RepeatDialog
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.LocalTime
 import java.util.*
+
+
 
 class RemindersFragment : Fragment() {
 
@@ -65,27 +71,26 @@ class RemindersFragment : Fragment() {
             val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
-            val am = calendar.get(Calendar.AM_PM)
-            val transferAm = when ( am ){
-                0 -> "AM"
-                else -> "PM"
-            }
 
-            binding.remindersDateInput.text = "${monthOfYear + 1}, $dayOfMonth, $year "
-            binding.remindersTimeInput.text = "$hour : $minute"
+            binding.remindersDateInput.text = "${year}/${monthOfYear+1}/$dayOfMonth"
+            binding.remindersTimeInput.text = "$hour:$minute AM"
 
             TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
+                val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
+                val stringTime = SimpleDateFormat("hh:mm a").format(date)
                 binding.remindersTimeInput.text =
-                    "$hour:$minute $transferAm" }, hour, minute, false
+                    "$stringTime" }, hour, minute, false
             ).show()
 
             val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected setDate in textbox
+                    val date = Date(year -1900, monthOfYear, dayOfMonth, hour, minute)
+                    val stringTime = SimpleDateFormat("yyyy/MM/dd").format(date)
                     binding.remindersDateInput.text=
-                        "${monthOfYear + 1}, $dayOfMonth, $year " }, year, monthOfYear, dayOfMonth
+                        "$stringTime" }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
         }
@@ -94,11 +99,15 @@ class RemindersFragment : Fragment() {
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
-
+            val year = calendar.get(Calendar.YEAR)
+            val monthOfYear = calendar.get(Calendar.MONTH)
+            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
             TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
+                val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
+                val stringTime = SimpleDateFormat("hh:mm a").format(date)
                 binding.remindersTimeInput.text =
-                    "$hour : $minute" }, hour, minute, true
+                    "$stringTime" }, hour, minute, false
             ).show()
         }
 
@@ -107,14 +116,15 @@ class RemindersFragment : Fragment() {
         }
 
         binding.saveText.setOnClickListener {
-            val calendar = Calendar.getInstance()
+            val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
+            val dateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
+            val parsedDate = dateFormat.parse(remindDate)
 
             val reminders = hashMapOf(
-                "setDate" to "${calendar.get(Calendar.MONTH)+1}," +
-                        " ${calendar.get(Calendar.DAY_OF_MONTH)}, ${calendar.get(Calendar.YEAR)}",
+                "setDate" to FieldValue.serverTimestamp(),
                 "title" to "${binding.remindersTitleInput.text}",
                 "setRemindDate" to binding.setReminderswitch.isChecked,
-                "remindDate" to "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}",
+                "remindDate" to Timestamp(parsedDate.time),
                 "isChecked" to false,
                 "note" to "${binding.remindersNoteInput.text}",
                 "frequency" to RepeatDialog.value
