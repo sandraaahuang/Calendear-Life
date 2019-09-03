@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
         val countdownAdapter = HomeCountdownAdapter(HomeCountdownAdapter.OnClickListener{
             findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
         })
+
         val remindersAdapter = HomeRemindersAdapter(this, HomeRemindersAdapter.OnClickListener{
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
         })
@@ -51,6 +52,9 @@ class HomeFragment : Fragment() {
 
         binding.countdownRecyclerView.adapter = countdownAdapter
         binding.remindersRecyclerView.adapter = remindersAdapter
+
+        val recyclerIndicator = binding.indicator
+        recyclerIndicator.attachToRecyclerView(binding.countdownRecyclerView)
 
         // floating action button
         binding.remindersFab.setOnClickListener {

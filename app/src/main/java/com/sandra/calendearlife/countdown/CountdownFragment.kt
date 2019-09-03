@@ -89,6 +89,10 @@ class CountdownFragment : Fragment() {
 
             viewModel.writeItem(countdown)
         }
+
+        val recyclerIndicator = binding.indicator
+        recyclerIndicator.attachToRecyclerView(binding.addCountdownRecyclerView)
+
         return binding.root
     }
 }
