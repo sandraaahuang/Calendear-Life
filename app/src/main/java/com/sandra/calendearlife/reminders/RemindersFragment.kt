@@ -71,7 +71,6 @@ class RemindersFragment : Fragment() {
 
         binding.repeatChoose.setOnClickListener {
             RepeatDialog().show(this.fragmentManager!!, "center")
-
         }
 
         binding.remindersDateInput.setOnClickListener {
@@ -147,6 +146,10 @@ class RemindersFragment : Fragment() {
         return binding.root
     }
 }
+
+
+
+
 
 
 

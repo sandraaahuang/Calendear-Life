@@ -4,11 +4,14 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.RemindersDetailFragmentBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,11 +27,11 @@ class RemindersDetailFragment : Fragment() {
         binding.lifecycleOwner = this
 
         val application = requireNotNull(activity).application
-
         val reminders = RemindersDetailFragmentArgs.fromBundle(arguments!!).remindersProperty
         val viewModelFactory = DetailViewModelFactory(reminders, application)
-        binding.viewModel = ViewModelProviders.of(
+        val viewModel = ViewModelProviders.of(
             this, viewModelFactory).get(RemindersDetailViewModel::class.java)
+        binding.viewModel = viewModel
 
         binding.switchRemindDay.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -66,6 +69,26 @@ class RemindersDetailFragment : Fragment() {
                         "$stringDate" }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
+        }
+
+        binding.saveButton2.setOnClickListener {
+            val remindDate = binding.remindDate.text.toString()
+            val putInDate = Date(remindDate)
+
+            val updateItem = hashMapOf(
+                "title" to "${binding.remindersTitle.text}",
+                "note" to "${binding.editTextRemindNote.text}",
+                "remindDate" to java.sql.Timestamp(putInDate.time)
+            )
+
+            Log.d("sandraaa", " update = $updateItem")
+            viewModel.updateItem(updateItem, reminders.documentID)
+            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+        }
+
+        binding.deleteButton2.setOnClickListener {
+            viewModel.deleteItem(reminders.documentID)
+            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
         return binding.root

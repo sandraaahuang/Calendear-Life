@@ -31,7 +31,8 @@ data class Calendar (
     val hasReminders: Boolean = false,
     val reminders: List<Reminders>? = null,
     val hasCountdown: Boolean = false,
-    val countdowns: List<Countdown>? = null
+    val countdowns: List<Countdown>? = null,
+    val documentID: String? = null
 
 ) : Parcelable
 
@@ -43,7 +44,8 @@ data class Reminders(
     val remindDate: String? = null,
     val isChecked: Boolean = false,
     val note: String? = null,
-    val frequency: String? = null
+    val frequency: String? = null,
+    val documentID: String
 ) : Parcelable
 
 @Parcelize
@@ -52,5 +54,6 @@ data class Countdown(
     val title: String? = null,
     val note: String? = null,
     val targetDate: String? = null,
-    val overdue: Boolean = false
+    val overdue: Boolean = false,
+    val documentID: String
 ) : Parcelable

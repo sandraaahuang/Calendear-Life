@@ -72,7 +72,8 @@ class HomeViewModel : ViewModel() {
                                             countdown.data["title"].toString(),
                                             countdown.data["note"].toString(),
                                             simpleDateFormat.format(targetDate.seconds*1000),
-                                            countdown.data["overdue"].toString().toBoolean())
+                                            countdown.data["overdue"].toString().toBoolean(),
+                                            countdown.data["documentID"].toString())
 
                                         countdownItem.add(countdownAdd)
                                     }
@@ -106,7 +107,8 @@ class HomeViewModel : ViewModel() {
                                             simpleDateFormat.format(remindDate.seconds*1000),
                                             reminder.data["isChecked"].toString().toBoolean(),
                                             reminder.data["note"].toString(),
-                                            reminder.data["frequency"].toString())
+                                            reminder.data["frequency"].toString(),
+                                            reminder.data["documentID"].toString())
 
                                         remindersItem.add(remindAdd)
                                     }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
+import com.sandra.calendearlife.dialog.RepeatDialog
 
 class AddRemindersAdapter(val onClickListener: OnClickListener) :
     ListAdapter<Reminders, AddRemindersAdapter.ItemViewHolder>(DiffCallback) {
