@@ -40,7 +40,7 @@ class RemindersViewModel : ViewModel(){
                                 for (calendar in documents) {
                                     Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                                    // get countdowns
+                                    // add countdowns
                                     db.collection("data")
                                         .document(data.id)
                                         .collection("calendar")
@@ -49,12 +49,12 @@ class RemindersViewModel : ViewModel(){
                                         .add(item)
                                         .addOnSuccessListener { documentReference ->
                                             Log.d(
-                                                "AddArticleIntoDataBase",
+                                                "AddCountdownsIntoDB",
                                                 "DocumentSnapshot added with ID: " + documentReference.id
                                             )
                                         }
                                         .addOnFailureListener { e ->
-                                            Log.w("AddArticleIntoDataBase", "Error adding document", e)
+                                            Log.w("AddCountdownsIntoDB", "Error adding document", e)
                                         }
                                 }
                             }

@@ -1,35 +1,19 @@
 package com.sandra.calendearlife.reminders
 
-import android.app.AlertDialog
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Reminders
-import com.sandra.calendearlife.databinding.ItemAddRemindersBinding
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
-import com.sandra.calendearlife.dialog.DiscardDialog
-import com.sandra.calendearlife.dialog.RepeatDialog
-import java.util.*
 
-
-private const val ITEM_VIEW_TYPE_OLD = 0x01
-private const val ITEM_VIEW_TYPE_ADDED = 0x00
-
-class AddRemindersAdapter(val onClickListener: OnClickListener,
-                          val fragment: RemindersFragment,
-                          val viewModel: RemindersViewModel) : ListAdapter<Reminders, RecyclerView.ViewHolder>(DiffCallback) {
+class AddRemindersAdapter(val onClickListener: OnClickListener) :
+    ListAdapter<Reminders, AddRemindersAdapter.ItemViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (reminders: Reminders) -> Unit) {
         fun onClick(reminders: Reminders) = clickListener(reminders)
     }
-
-    var reminders: ArrayList<Reminders>? = null
 
     companion object DiffCallback : DiffUtil.ItemCallback<Reminders>() {
         override fun areItemsTheSame(oldItem: Reminders, newItem: Reminders): Boolean {
@@ -44,136 +28,28 @@ class AddRemindersAdapter(val onClickListener: OnClickListener,
     class ItemViewHolder(private var binding: ItemRemindersBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(reminders: Reminders, onClickListener: OnClickListener) {
+        fun bind(reminders: Reminders) {
             binding.reminders = reminders
-            binding.remindersTitle.setOnClickListener {
-                binding.remindersInfo.visibility = View.VISIBLE
-            }
-            binding.root.setOnClickListener { onClickListener.onClick(reminders) }
             binding.executePendingBindings()
 
         }
     }
 
-    class AddItemViewHolder(private var binding: ItemAddRemindersBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
 
-        fun bind(fragment: RemindersFragment, viewModel: RemindersViewModel) {
-
-            binding.setReminderswitch.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    binding.setRemindLayout.visibility = View.VISIBLE
-                }
-                else {
-                    binding.setRemindLayout.visibility = View.GONE
-                }
-            }
-
-            binding.repeatChoose.setOnClickListener {
-                RepeatDialog().show(fragment.fragmentManager!!, "center")
-
-            }
-
-            binding.remindersDateInput.setOnClickListener {
-                val calendar = Calendar.getInstance()
-                val year = calendar.get(Calendar.YEAR)
-                val monthOfYear = calendar.get(Calendar.MONTH)
-                val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-                val hour = calendar.get(Calendar.HOUR_OF_DAY)
-                val minute = calendar.get(Calendar.MINUTE)
-                val am = calendar.get(Calendar.AM_PM)
-                val transferAm = when ( am ){
-                    0 -> "AM"
-                    else -> "PM"
-                }
-
-                binding.remindersDateInput.text = "${monthOfYear + 1}, $dayOfMonth, $year "
-                binding.remindersTimeInput.text = "$hour : $minute"
-
-                TimePickerDialog(it.context,AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-                { view, hour, minute ->
-                    binding.remindersTimeInput.text =
-                        "$hour:$minute $transferAm" }, hour, minute, false
-                ).show()
-
-                val datePickerDialog = DatePickerDialog(
-                    it.context,AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-                    { _, year, monthOfYear, dayOfMonth ->
-                        // Display Selected setDate in textbox
-                        binding.remindersDateInput.text=
-                            "${monthOfYear + 1}, $dayOfMonth, $year " }, year, monthOfYear, dayOfMonth
-                )
-                datePickerDialog.show()
-            }
-
-            binding.remindersTimeInput.setOnClickListener {
-                val calendar = Calendar.getInstance()
-                val hour = calendar.get(Calendar.HOUR_OF_DAY)
-                val minute = calendar.get(Calendar.MINUTE)
-
-                TimePickerDialog(it.context,AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-                { view, hour, minute ->
-                    binding.remindersTimeInput.text =
-                        "$hour : $minute" }, hour, minute, true
-                ).show()
-            }
-
-            binding.removeIcon.setOnClickListener {
-                DiscardDialog().show(fragment.fragmentManager!!, "show")
-            }
-
-            binding.saveText.setOnClickListener {
-                val calendar = Calendar.getInstance()
-
-                val reminders = hashMapOf(
-                    "setDate" to "${calendar.get(Calendar.MONTH)+1}," +
-                            " ${calendar.get(Calendar.DAY_OF_MONTH)}, ${calendar.get(Calendar.YEAR)}",
-                    "title" to "${binding.remindersTitleInput.text}",
-                    "setRemindDate" to binding.setReminderswitch.isChecked,
-                    "remindDate" to "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}",
-                    "isChecked" to false,
-                    "note" to "${binding.remindersNoteInput.text}",
-                    "frequency" to RepeatDialog.value
-                )
-
-                viewModel.writeItem(reminders)
-
-            }
-
-            binding.executePendingBindings()
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
-        return when (viewType) {
-            ITEM_VIEW_TYPE_OLD -> ItemViewHolder(
-                ItemRemindersBinding.inflate
-                    (LayoutInflater.from(parent.context), parent, false)
+        return ItemViewHolder(
+            ItemRemindersBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
             )
-            else -> AddItemViewHolder(
-                ItemAddRemindersBinding.inflate
-                    (LayoutInflater.from(parent.context), parent, false)
-            )
-        }
+        )
 
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
-
-            is AddItemViewHolder -> holder.bind(fragment,viewModel)
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        val reminders = getItem(position)
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(reminders)
         }
-
-
-
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            1 -> ITEM_VIEW_TYPE_ADDED
-            else -> ITEM_VIEW_TYPE_OLD
-        }
+        holder.bind(reminders)
     }
 }
