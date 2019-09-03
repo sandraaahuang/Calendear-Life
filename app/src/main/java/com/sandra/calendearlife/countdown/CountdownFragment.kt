@@ -10,12 +10,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
-import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.CountdownFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
+
+
 
 class CountdownFragment : Fragment() {
 
@@ -47,11 +52,10 @@ class CountdownFragment : Fragment() {
             val datepickerdialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val stringDate = SimpleDateFormat("yyyy/MM/dd").format(date)
                     // Display Selected setDate in textbox
-                    binding.countdownDateInput.text =
-                        "${monthOfYear + 1}, $dayOfMonth, $year"
-                }, y, m, d
+                    binding.countdownDateInput.text = "$stringDate" }, y, m, d
             )
             datepickerdialog.show()
         }
@@ -60,25 +64,21 @@ class CountdownFragment : Fragment() {
             DiscardDialog().show(this.fragmentManager!!, "show")
         }
 
-
-
         binding.saveLayout.setOnClickListener {
 
+            val targetDate = binding.countdownDateInput.text.toString()
+            val putInDate = Date(targetDate)
+
             val countdown = hashMapOf(
-                "setDate" to "${cal.get(Calendar.MONTH)+1}," +
-                        " ${cal.get(Calendar.DAY_OF_MONTH)}, ${cal.get(Calendar.YEAR)}",
+                "setDate" to FieldValue.serverTimestamp(),
                 "title" to "${binding.countdownTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
-                "targetDate" to "${binding.countdownDateInput.text}",
+                "targetDate" to java.sql.Timestamp(putInDate.time),
                 "overdue" to false
             )
 
             viewModel.writeItem(countdown)
         }
-
-
-
         return binding.root
     }
-
 }

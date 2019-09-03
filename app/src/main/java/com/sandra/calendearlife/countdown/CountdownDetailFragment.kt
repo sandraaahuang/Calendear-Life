@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sandra.calendearlife.databinding.CountdownDetailFragmentBinding
+import java.text.SimpleDateFormat
 import java.util.*
 
 class CountdownDetailFragment : Fragment() {
@@ -20,6 +21,8 @@ class CountdownDetailFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.remindLayout.setOnClickListener {
+            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val monthOfYear = calendar.get(Calendar.MONTH)
@@ -28,9 +31,10 @@ class CountdownDetailFragment : Fragment() {
             val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    // Display Selected setDate in textbox
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val stringDate = simpleDateFormat.format(date)
                     binding.remindDate.text=
-                        "${monthOfYear + 1}, $dayOfMonth, $year, " }, year, monthOfYear, dayOfMonth
+                        "$stringDate" }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
         }

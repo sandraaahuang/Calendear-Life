@@ -7,9 +7,16 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
+
+    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
+
 
     lateinit var countdownAdd: Countdown
     lateinit var remindAdd: Reminders
@@ -57,7 +64,15 @@ class HomeViewModel : ViewModel() {
 
                                     for (countdown in documents) {
                                         Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
-                                        countdownAdd = countdown.toObject(Countdown::class.java)
+                                        val setDate = (countdown.data["setDate"]as com.google.firebase.Timestamp)
+                                        val targetDate = (countdown.data["targetDate"]as com.google.firebase.Timestamp)
+
+                                        countdownAdd = Countdown(
+                                            simpleDateFormat.format(setDate.seconds*1000),
+                                            countdown.data["title"].toString(),
+                                            countdown.data["note"].toString(),
+                                            simpleDateFormat.format(targetDate.seconds*1000),
+                                            countdown.data["overdue"].toString().toBoolean())
 
                                         countdownItem.add(countdownAdd)
                                     }
@@ -68,8 +83,8 @@ class HomeViewModel : ViewModel() {
                                 .addOnFailureListener { exception ->
                                     Log.w("getAllcountdown", "Error getting documents: ", exception)
                                 }
-                            // get reminders
 
+                            //get reminders
                             db.collection("data")
                                 .document(data.id)
                                 .collection("calendar")
@@ -81,7 +96,17 @@ class HomeViewModel : ViewModel() {
                                     for (reminder in documents) {
                                         Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
-                                        remindAdd = reminder.toObject(Reminders::class.java)
+                                        val setDate = (reminder.data["setDate"]as com.google.firebase.Timestamp)
+                                        val remindDate = (reminder.data["remindDate"]as com.google.firebase.Timestamp)
+
+                                        remindAdd = Reminders(
+                                            simpleDateFormat.format(setDate.seconds*1000),
+                                            reminder.data["title"].toString(),
+                                            reminder.data["setReminderDate"].toString().toBoolean(),
+                                            simpleDateFormat.format(remindDate.seconds*1000),
+                                            reminder.data["isChecked"].toString().toBoolean(),
+                                            reminder.data["note"].toString(),
+                                            reminder.data["frequency"].toString())
 
                                         remindersItem.add(remindAdd)
                                     }
@@ -103,4 +128,5 @@ class HomeViewModel : ViewModel() {
             Log.w("getAllDate", "Error getting documents.", task.exception)
         }
     }
-}}
+}
+}

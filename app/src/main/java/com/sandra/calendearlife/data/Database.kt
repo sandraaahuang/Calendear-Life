@@ -1,9 +1,7 @@
 package com.sandra.calendearlife.data
 
 import android.os.Parcelable
-import com.google.firebase.firestore.FieldValue
 import kotlinx.android.parcel.Parcelize
-import kotlin.collections.ArrayList
 
 
 @Parcelize
@@ -31,9 +29,9 @@ data class Calendar (
     val hasLocation: Boolean = false,
     val location: String? = null,
     val hasReminders: Boolean = false,
-    val reminders: ArrayList<Reminders>? = null,
+    val reminders: List<Reminders>? = null,
     val hasCountdown: Boolean = false,
-    val countdowns: ArrayList<Countdown>? = null
+    val countdowns: List<Countdown>? = null
 
 ) : Parcelable
 

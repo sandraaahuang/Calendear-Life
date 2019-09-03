@@ -1,17 +1,12 @@
 package com.sandra.calendearlife.countdown
 
-import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.data.Countdown
-import com.sandra.calendearlife.databinding.ItemAddCountdownBinding
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
-import java.util.*
 
 class AddCountdownAdapter(val onClickListener: OnClickListener) :
     ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {

@@ -6,10 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Countdown
-import com.sandra.calendearlife.data.Reminders
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class CountdownViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
+
+    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
     lateinit var countdownAdd: Countdown
 
@@ -40,7 +45,7 @@ class CountdownViewModel : ViewModel() {
                                 for (calendar in documents) {
                                     Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                                    // get countdowns
+                                    // add countdowns
                                     db.collection("data")
                                         .document(data.id)
                                         .collection("calendar")
@@ -49,12 +54,12 @@ class CountdownViewModel : ViewModel() {
                                         .add(item)
                                         .addOnSuccessListener { documentReference ->
                                             Log.d(
-                                                "AddArticleIntoDataBase",
+                                                "AddcountdownsIntoDB",
                                                 "DocumentSnapshot added with ID: " + documentReference.id
                                             )
                                         }
                                         .addOnFailureListener { e ->
-                                            Log.w("AddArticleIntoDataBase", "Error adding document", e)
+                                            Log.w("AddcountdownsIntoDB", "Error adding document", e)
                                         }
                                 }
                             }
@@ -100,7 +105,15 @@ class CountdownViewModel : ViewModel() {
 
                                             for (countdown in documents) {
                                                 Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
-                                                countdownAdd = countdown.toObject(Countdown::class.java)
+                                                val setDate = (countdown.data["setDate"]as com.google.firebase.Timestamp)
+                                                val targetDate = (countdown.data["targetDate"]as com.google.firebase.Timestamp)
+
+                                                countdownAdd = Countdown(
+                                                    simpleDateFormat.format(setDate.seconds*1000),
+                                                    countdown.data["title"].toString(),
+                                                    countdown.data["note"].toString(),
+                                                    simpleDateFormat.format(targetDate.seconds*1000),
+                                                    countdown.data["overdue"].toString().toBoolean())
 
                                                 countdownItem.add(countdownAdd)
                                             }
@@ -123,5 +136,12 @@ class CountdownViewModel : ViewModel() {
                     Log.w("getAllDate", "Error getting documents.", task.exception)
                 }
             }
+    }
+
+    fun Date.getStringTimeStampWithDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+            Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("GMT")
+        return dateFormat.format(this)
     }
 }
