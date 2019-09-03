@@ -29,11 +29,15 @@
               android:label="CountdownFragment"/><action android:id="@+id/action_global_countdownFragment" app:destination="@id/countdownFragment"/>
     <fragment android:id="@+id/remindersDetailFragment"
               android:name="com.sandra.calendearlife.reminders.RemindersDetailFragment"
-              android:label="RemindersDetailFragment"/>
+              android:label="RemindersDetailFragment">
+        <argument android:name="remindersProperty" app:argType="com.sandra.calendearlife.data.Reminders"/>
+    </fragment>
     <action android:id="@+id/action_global_remindersDetailFragment" app:destination="@id/remindersDetailFragment"/>
     <fragment android:id="@+id/countdownDetailFragment"
               android:name="com.sandra.calendearlife.countdown.CountdownDetailFragment"
-              android:label="CountdownDetailFragment"/>
+              android:label="CountdownDetailFragment">
+        <argument android:name="countdownProperty" app:argType="com.sandra.calendearlife.data.Countdown"/>
+    </fragment>
     <action android:id="@+id/action_global_countdownDetailFragment2" app:destination="@id/countdownDetailFragment"/>
     <fragment android:id="@+id/discardDialog" android:name="com.sandra.calendearlife.dialog.DiscardDialog"
               android:label="DiscardDialog"/><action android:id="@+id/action_global_discardDialog" app:destination="@id/discardDialog"/>

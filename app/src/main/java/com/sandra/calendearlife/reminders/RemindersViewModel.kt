@@ -28,6 +28,19 @@ class RemindersViewModel : ViewModel(){
         getItem()
     }
 
+    private val _navigateToReminderProperty = MutableLiveData<Reminders>()
+
+    val navigateToReminderProperty: LiveData<Reminders>
+        get() = _navigateToReminderProperty
+
+    fun displayReminderDetails(reminders: Reminders) {
+        _navigateToReminderProperty.value = reminders
+    }
+
+    fun displayReminderDetailsComplete() {
+        _navigateToReminderProperty.value = null
+    }
+
     fun writeItem(item: Any){
 
         db.collection("data")
@@ -113,7 +126,7 @@ class RemindersViewModel : ViewModel(){
                                                 remindAdd = Reminders(
                                                     simpleDateFormat.format(setDate.seconds*1000),
                                                     reminder.data["title"].toString(),
-                                                    reminder.data["setReminderDate"].toString().toBoolean(),
+                                                    reminder.data["setRemindDate"].toString().toBoolean(),
                                                     simpleDateFormat.format(remindDate.seconds*1000),
                                                     reminder.data["isChecked"].toString().toBoolean(),
                                                     reminder.data["note"].toString(),

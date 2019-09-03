@@ -102,7 +102,7 @@ class HomeViewModel : ViewModel() {
                                         remindAdd = Reminders(
                                             simpleDateFormat.format(setDate.seconds*1000),
                                             reminder.data["title"].toString(),
-                                            reminder.data["setReminderDate"].toString().toBoolean(),
+                                            reminder.data["setRemindDate"].toString().toBoolean(),
                                             simpleDateFormat.format(remindDate.seconds*1000),
                                             reminder.data["isChecked"].toString().toBoolean(),
                                             reminder.data["note"].toString(),

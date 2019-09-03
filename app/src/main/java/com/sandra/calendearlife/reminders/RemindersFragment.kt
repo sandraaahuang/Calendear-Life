@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.dialog.RepeatDialog
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.time.LocalTime
 import java.util.*
 
 
@@ -38,7 +38,17 @@ class RemindersFragment : Fragment() {
         binding.viewModel = viewModel
 
         val addRemindersAdapter = AddRemindersAdapter(AddRemindersAdapter.OnClickListener{
-            findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment())
+            viewModel.displayReminderDetails(it)
+            Log.d("sandraaa","it = $it")
+        })
+
+        viewModel.navigateToReminderProperty.observe(this, androidx.lifecycle.Observer {
+            if ( null != it ) {
+                // Must find the NavController from the Fragment
+                this.findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
+                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
+                viewModel.displayReminderDetailsComplete()
+            }
         })
 
         val itemTouchHelper= ItemTouchHelper(

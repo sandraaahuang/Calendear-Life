@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.sandra.calendearlife.databinding.RemindersDetailFragmentBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,6 +22,13 @@ class RemindersDetailFragment : Fragment() {
 
         binding = RemindersDetailFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
+
+        val application = requireNotNull(activity).application
+
+        val reminders = RemindersDetailFragmentArgs.fromBundle(arguments!!).remindersProperty
+        val viewModelFactory = DetailViewModelFactory(reminders, application)
+        binding.viewModel = ViewModelProviders.of(
+            this, viewModelFactory).get(RemindersDetailViewModel::class.java)
 
         binding.switchRemindDay.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {

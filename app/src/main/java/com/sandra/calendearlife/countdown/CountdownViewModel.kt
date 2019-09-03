@@ -27,6 +27,19 @@ class CountdownViewModel : ViewModel() {
         getItem()
     }
 
+    private val _navigateToCountdownProperty = MutableLiveData<Countdown>()
+
+    val navigateToCountdownProperty: LiveData<Countdown>
+        get() = _navigateToCountdownProperty
+
+    fun displayCountdownDetails(countdown: Countdown) {
+        _navigateToCountdownProperty.value = countdown
+    }
+
+    fun displayCountdownDetailsComplete() {
+        _navigateToCountdownProperty.value = null
+    }
+
     fun writeItem(item: Any){
 
         db.collection("data")
