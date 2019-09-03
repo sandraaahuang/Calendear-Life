@@ -37,7 +37,17 @@ class CountdownFragment : Fragment() {
         binding.viewModel = viewModel
 
         val addCountdownAdapter = AddCountdownAdapter(AddCountdownAdapter.OnClickListener {
-            findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2())
+            viewModel.displayCountdownDetails(it)
+            Log.d("sandraaa","it = $it")
+        })
+
+        viewModel.navigateToCountdownProperty.observe(this, androidx.lifecycle.Observer {
+            if ( null != it ) {
+                // Must find the NavController from the Fragment
+                this.findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
+                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
+                viewModel.displayCountdownDetailsComplete()
+            }
         })
 
         binding.addCountdownRecyclerView.adapter = addCountdownAdapter
