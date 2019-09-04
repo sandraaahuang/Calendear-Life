@@ -40,57 +40,49 @@ class CountdownViewModel : ViewModel() {
         _navigateToCountdownProperty.value = null
     }
 
-    fun writeItem(item: Any){
-
+    fun writeItem(calendar: Any, countdown: Any) {
         db.collection("data")
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (data in task.result!!) {
-                        Log.d("getAllDate", data.id + " => " + data.data)
 
                         db.collection("data")
                             .document(data.id)
                             .collection("calendar")
-                            .get()
-                            .addOnSuccessListener { documents ->
+                            .add(calendar)
+                            .addOnSuccessListener { documentReference ->
+                                Log.d(
+                                    "AddCalendarIntoDB",
+                                    "DocumentSnapshot added with ID: " + documentReference.id
+                                )
+                                db.collection("data")
+                                    .document(data.id)
+                                    .collection("calendar")
+                                    .document(documentReference.id)
+                                    .update("documentID", documentReference.id)
 
-                                for (calendar in documents) {
-                                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
-
-                                    // add countdowns
-                                    db.collection("data")
-                                        .document(data.id)
-                                        .collection("calendar")
-                                        .document(calendar.id)
-                                        .collection("countdowns")
-                                        .add(item)
-                                        .addOnSuccessListener { documentReference ->
-                                            Log.d(
-                                                "AddcountdownsIntoDB",
-                                                "DocumentSnapshot added with ID: " + documentReference.id
-                                            )
-                                            db.collection("data")
-                                                .document(data.id)
-                                                .collection("calendar")
-                                                .document(calendar.id)
-                                                .collection("countdowns")
-                                                .document(documentReference.id)
-                                                .update("documentID", documentReference.id)
-                                        }
-                                        .addOnFailureListener { e ->
-                                            Log.w("AddcountdownsIntoDB", "Error adding document", e)
-                                        }
-                                }
+                                db.collection("data")
+                                    .document(data.id)
+                                    .collection("calendar")
+                                    .document(documentReference.id)
+                                    .collection("countdowns")
+                                    .add(countdown)
+                                    .addOnSuccessListener { countdownID ->
+                                        Log.d(
+                                            "AddCountdownsIntoDB",
+                                            "DocumentSnapshot added with ID: " + countdownID.id
+                                        )
+                                        db.collection("data")
+                                            .document(data.id)
+                                            .collection("calendar")
+                                            .document(documentReference.id)
+                                            .collection("countdowns")
+                                            .document(countdownID.id)
+                                            .update("documentID", countdownID.id)
+                                    }
                             }
-
-                            .addOnFailureListener { exception ->
-                                Log.w("getAllCalendar", "Error getting documents: ", exception)
-                            }
-
                     }
-                } else {
-                    Log.w("getAllDate", "Error getting documents.", task.exception)
                 }
             }
     }

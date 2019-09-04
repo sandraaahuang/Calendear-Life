@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.calendar.CalendarEventFragment
 import com.sandra.calendearlife.databinding.DialogRepeatBinding
 import com.sandra.calendearlife.reminders.RemindersFragment
 import com.sandra.calendearlife.reminders.RemindersViewModel
@@ -20,6 +21,7 @@ import com.sandra.calendearlife.reminders.RemindersViewModel
 class RepeatDialog: AppCompatDialogFragment() {
 
     var RESPONSE_EVALUATE = "response_evaluate"
+    var RESPONSE_EVALUATE2 = "response_evaluate"
 
     fun setResult(){
         if (targetFragment == null){
@@ -30,6 +32,19 @@ class RepeatDialog: AppCompatDialogFragment() {
             val intent = Intent()
             intent.putExtra(RESPONSE_EVALUATE, value)
             targetFragment?.onActivityResult(RemindersFragment().REQUEST_EVALUATE, Activity.RESULT_OK,intent)
+            Log.d("sandraaa", "value = $value")
+        }
+    }
+
+    fun setResult2(){
+        if (targetFragment == null){
+            Log.d("sandraaa", "fail")
+            return
+        }
+        else {
+            val intent = Intent()
+            intent.putExtra(RESPONSE_EVALUATE2, value)
+            targetFragment?.onActivityResult(CalendarEventFragment().REQUEST_EVALUATE, Activity.RESULT_OK,intent)
             Log.d("sandraaa", "value = $value")
         }
     }
@@ -48,38 +63,43 @@ class RepeatDialog: AppCompatDialogFragment() {
         binding = DialogRepeatBinding.inflate(inflater, container, false)
 
         binding.buttonBack.setOnClickListener {
+            value = frequency[0]
+            setResult()
+            setResult2()
             this.dismiss()
         }
 
         binding.buttonDoesNotRepeat.setOnClickListener {
             value = frequency[0]
             setResult()
+            setResult2()
             this.dismiss()
         }
         binding.buttonEveryDay.setOnClickListener {
             value = frequency[1]
             setResult()
+            setResult2()
             this.dismiss()
         }
         binding.buttonEveryWeek.setOnClickListener {
             value = frequency[2]
             setResult()
+            setResult2()
             this.dismiss()
         }
         binding.buttonEveryMonth.setOnClickListener {
             value = frequency[3]
             setResult()
+            setResult2()
             this.dismiss()
         }
         binding.buttonEveryYear.setOnClickListener {
             value = frequency[4]
             setResult()
+            setResult2()
             this.dismiss()
         }
-
         return binding.root
-
-
     }
 
     companion object {

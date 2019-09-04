@@ -26,9 +26,8 @@ import java.util.*
 
 class RemindersFragment : Fragment() {
 
-    var ARGUMENT = "argument";
-    var RESPONSE = "response";
-    var EVALUATE_DIALOG = "evaluate_dialog";
+    var RESPONSE = "response"
+    var EVALUATE_DIALOG = "evaluate_dialog"
     var REQUEST_EVALUATE = 0X110
 
 
@@ -79,7 +78,6 @@ class RemindersFragment : Fragment() {
 
         binding.repeatChoose.setOnClickListener {
             val dialog = RepeatDialog()
-            //注意setTargetFragment
             dialog.setTargetFragment(this, REQUEST_EVALUATE);
             dialog.show(fragmentManager!!, EVALUATE_DIALOG)
         }
@@ -142,6 +140,13 @@ class RemindersFragment : Fragment() {
             val dateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
             val parsedDate = dateFormat.parse(remindDate)
 
+            val calendar = hashMapOf(
+                "setDate" to FieldValue.serverTimestamp(),
+                "title" to "${binding.remindersTitleInput.text}",
+                "note" to "${binding.remindersNoteInput.text}",
+                "hasReminders" to true
+            )
+
             val reminders = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),
                 "title" to "${binding.remindersTitleInput.text}",
@@ -152,7 +157,7 @@ class RemindersFragment : Fragment() {
                 "frequency" to RepeatDialog.value
             )
 
-            viewModel.writeItem(reminders)
+            viewModel.writeItem(calendar,reminders)
 
         }
 

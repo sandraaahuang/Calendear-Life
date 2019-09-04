@@ -76,6 +76,13 @@ class CountdownFragment : Fragment() {
 
         binding.saveLayout.setOnClickListener {
 
+            val calendar = hashMapOf(
+                "setDate" to FieldValue.serverTimestamp(),
+                "title" to "${binding.countdownTitleInput.text}",
+                "note" to "${binding.noteInput.text}",
+                "hasReminders" to true
+            )
+
             val targetDate = binding.countdownDateInput.text.toString()
             val putInDate = Date(targetDate)
 
@@ -87,7 +94,7 @@ class CountdownFragment : Fragment() {
                 "overdue" to false
             )
 
-            viewModel.writeItem(countdown)
+            viewModel.writeItem(calendar,countdown)
         }
 
         val recyclerIndicator = binding.indicator
