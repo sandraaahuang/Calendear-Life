@@ -36,8 +36,6 @@ class CountdownDetailFragment : Fragment() {
             this, viewModelFactory).get(CountdownDetailViewModel::class.java)
         binding.viewModel = viewModel
 
-        val tempTitle = binding.editTextCountdown.text.toString()
-
         binding.remindLayout.setOnClickListener {
             val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 

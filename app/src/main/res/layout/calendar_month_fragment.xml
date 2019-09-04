@@ -1,22 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="viewModel" type="com.sandra.calendearlife.calendar.month.CalenderMonthViewModel"/>
+    </data>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:clickable="true"
+            android:focusable="true">
 
-        <com.sandra.calendearlife.calendar.month.CustomMonthCalendar
-                android:orientation="vertical"
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/customMonthCalendar">
+                android:layout_height="match_parent">
 
-        </com.sandra.calendearlife.calendar.month.CustomMonthCalendar>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                <com.kizitonwose.calendarview.CalendarView
+                        android:id="@+id/calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cv_dayViewResource="@layout/calendar_month_day"
+                        app:cv_monthHeaderResource="@layout/calendar_month_header"
+                        app:cv_orientation="horizontal"
+                        app:cv_scrollMode="paged"/>
+
+                <TextView
+                        android:id="@+id/selectedDateText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="#EEEEEE"
+                        android:fontFamily="@font/noto_sans"
+                        android:paddingStart="20dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="12dp"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        tools:text="7 Jan, 2019"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        listEvent="@{viewModel.liveCalendar}"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:nestedScrollingEnabled="false"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <com.github.clans.fab.FloatingActionMenu
+                android:id="@+id/floatingButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:menu_colorNormal="@color/black"
@@ -25,9 +68,9 @@
                 app:menu_labels_colorRipple="@color/white"
                 app:menu_labels_colorNormal="@color/white"
                 app:menu_labels_textColor="@color/black"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:layout_marginBottom="16dp"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="20dp">
 
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/remindersFab"
@@ -55,6 +98,5 @@
 
         </com.github.clans.fab.FloatingActionMenu>
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 </layout>

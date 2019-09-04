@@ -24,7 +24,7 @@ data class Calendar (
     val title: String? = null,
     val note: String? = null,
     val hasGuests: Boolean = false,
-    val guest: ArrayList<String>,
+    val guest: ArrayList<String>? = null,
     val isAllDay: Boolean = false,
     val hasLocation: Boolean = false,
     val location: String? = null,
