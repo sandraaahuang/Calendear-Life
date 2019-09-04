@@ -190,7 +190,7 @@ class CalendarEventFragment : Fragment() {
             val beginDate: String
             val endDate: String
             val dateFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a")
-
+            val remindFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
 
             if (binding.allDaySwitch.isChecked){
                 beginDate = "${binding.beginDate.text} 00:01 AM"
@@ -200,8 +200,28 @@ class CalendarEventFragment : Fragment() {
                 endDate = "${binding.endDate.text} ${binding.endTime.text}"
             }
 
+            val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
+
+
             val parsedBeginDate = dateFormat.parse(beginDate)
             val parsedEndDate = dateFormat.parse(endDate)
+            val parsedRemindDate = remindFormat.parse(remindDate)
+
+            val countdown = hashMapOf(
+                "setDate" to FieldValue.serverTimestamp(),
+                "title" to "${binding.eventTitleInput.text}",
+                "note" to "${binding.noteInput.text}",
+                "targetDate" to Timestamp(parsedEndDate.time),
+                "overdue" to false)
+
+            val reminders = hashMapOf(
+                "setDate" to FieldValue.serverTimestamp(),
+                "title" to "${binding.eventTitleInput.text}",
+                "setRemindDate" to true,
+                "remindDate" to Timestamp(parsedRemindDate.time),
+                "isChecked" to false,
+                "note" to "${binding.noteInput.text}",
+                "frequency" to RepeatDialog.value)
 
             val item = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),
@@ -210,42 +230,11 @@ class CalendarEventFragment : Fragment() {
                 "title" to "${binding.eventTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
                 "isAllDay" to "${binding.allDaySwitch.isChecked}",
-                "hasReminders" to "${binding.switchSetAsReminder.isChecked}",
-                "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}"
+                "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
+                "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean()
             )
 
-            viewModel.writeItem(item)
-
-            if (binding.switchSetAsReminder.isChecked){
-                val remindFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
-                val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
-                val parsedRemindDate = remindFormat.parse(remindDate)
-
-                val reminders = hashMapOf(
-                    "setDate" to FieldValue.serverTimestamp(),
-                    "title" to "${binding.eventTitleInput.text}",
-                    "setRemindDate" to true,
-                    "remindDate" to Timestamp(parsedRemindDate.time),
-                    "isChecked" to false,
-                    "note" to "${binding.noteInput.text}",
-                    "frequency" to RepeatDialog.value
-                )
-
-                viewModel.writeReminders(reminders)
-            }
-
-            if (binding.switchSetAsCountdown.isChecked){
-
-                val countdown = hashMapOf(
-                    "setDate" to FieldValue.serverTimestamp(),
-                    "title" to "${binding.eventTitleInput.text}",
-                    "note" to "${binding.noteInput.text}",
-                    "targetDate" to Timestamp(parsedEndDate.time),
-                    "overdue" to false
-
-                )
-                viewModel.writeCountdown(countdown)
-            }
+            viewModel.writeItem(item, countdown, reminders)
         }
         
         return binding.root
