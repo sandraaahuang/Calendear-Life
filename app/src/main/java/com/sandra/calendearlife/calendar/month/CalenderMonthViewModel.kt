@@ -21,6 +21,10 @@ class CalenderMonthViewModel : ViewModel() {
 
     lateinit var calenderAdd: com.sandra.calendearlife.data.Calendar
 
+    val _allCalendar = MutableLiveData<List<com.sandra.calendearlife.data.Calendar>>()
+    val allCalendar: LiveData<List<com.sandra.calendearlife.data.Calendar>>
+        get() = _allCalendar
+
 
     val _liveCalendar = MutableLiveData<List<com.sandra.calendearlife.data.Calendar>>()
     val liveCalendar: LiveData<List<com.sandra.calendearlife.data.Calendar>>
@@ -44,34 +48,34 @@ class CalenderMonthViewModel : ViewModel() {
                             .collection("calendar")
                             .get()
                             .addOnSuccessListener { documents ->
-
+                                val calendarItem = ArrayList<com.sandra.calendearlife.data.Calendar>()
                                 for (calendar in documents) {
                                     Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-//                                    val date = (calendar.data["date"] as Timestamp)
-//                                    val setDate = (calendar.data["setDate"] as Timestamp)
-//                                    val beginDate = (calendar.data["beginDate"] as Timestamp)
-//                                    val endDate = (calendar.data["endDate"] as Timestamp)
-//
-//                                    calenderAdd = com.sandra.calendearlife.data.Calendar(
-//                                        simpleDateFormat.format(date.seconds * 1000),
-//                                        simpleDateFormat.format(setDate.seconds * 1000),
-//                                        simpleDateFormat.format(beginDate.seconds * 1000),
-//                                        simpleDateFormat.format(endDate.seconds * 1000),
-//                                        calendar.data["title"].toString(),
-//                                        calendar.data["note"].toString(),
-//                                        calendar.data["hasGuests"].toString().toBoolean(),
-//                                        null,
-//                                        calendar.data["isAllDay"].toString().toBoolean(),
-//                                        calendar.data["hasLocation"].toString().toBoolean(),
-//                                        calendar.data["location"].toString(),
-//                                        calendar.data["hasReminders"].toString().toBoolean(),
-//                                        calendar.data["hasCountdown"].toString().toBoolean(),
-//                                        null
-//                                    )
-//                                    calendarItem.add(calenderAdd)
-//                                    _liveCalendar.value = calendarItem
-//                                    Log.d("sandraaa", "data = ${liveCalendar.value}")
+                                    val date = (calendar.data["date"] as Timestamp)
+                                    val setDate = (calendar.data["setDate"] as Timestamp)
+                                    val beginDate = (calendar.data["beginDate"] as Timestamp)
+                                    val endDate = (calendar.data["endDate"] as Timestamp)
+
+                                    calenderAdd = com.sandra.calendearlife.data.Calendar(
+                                        simpleDateFormat.format(date.seconds * 1000),
+                                        simpleDateFormat.format(setDate.seconds * 1000),
+                                        simpleDateFormat.format(beginDate.seconds * 1000),
+                                        simpleDateFormat.format(endDate.seconds * 1000),
+                                        calendar.data["title"].toString(),
+                                        calendar.data["note"].toString(),
+                                        calendar.data["hasGuests"].toString().toBoolean(),
+                                        null,
+                                        calendar.data["isAllDay"].toString().toBoolean(),
+                                        calendar.data["hasLocation"].toString().toBoolean(),
+                                        calendar.data["location"].toString(),
+                                        calendar.data["hasReminders"].toString().toBoolean(),
+                                        calendar.data["hasCountdown"].toString().toBoolean(),
+                                        null
+                                    )
+                                    calendarItem.add(calenderAdd)
+                                    _allCalendar.value = calendarItem
+                                    Log.d("sandraaa", "data = ${liveCalendar.value}")
                                 }
 
 

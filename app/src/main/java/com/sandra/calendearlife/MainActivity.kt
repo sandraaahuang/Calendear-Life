@@ -82,6 +82,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHomeFragment())
             }
+            R.id.addCalendar ->{
+                findNavController(R.id.myNavHostFragment)
+                    .navigate(NavigationDirections.actionGlobalCalendarEventFragment())
+            }
+            R.id.addCountdown ->{
+                findNavController(R.id.myNavHostFragment)
+                    .navigate(NavigationDirections.actionGlobalCountdownFragment())
+            }
+            R.id.addReminder ->{
+                findNavController(R.id.myNavHostFragment)
+                    .navigate(NavigationDirections.actionGlobalRemindersFragment())
+            }
         }
 
         drawerLayout.closeDrawer(GravityCompat.START)
