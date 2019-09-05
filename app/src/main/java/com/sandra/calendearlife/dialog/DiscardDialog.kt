@@ -4,7 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.sandra.calendearlife.MainActivity
+import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.DialogDiscardBinding
 
 class DiscardDialog : BottomSheetDialogFragment() {
@@ -21,6 +26,10 @@ class DiscardDialog : BottomSheetDialogFragment() {
         binding.keepEditingLayout.setOnClickListener {
             this.dismiss()
         }
+
+        binding.discardLayout.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+            this.dismiss()}
 
         return binding.root
     }

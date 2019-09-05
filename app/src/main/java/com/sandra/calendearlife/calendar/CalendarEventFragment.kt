@@ -10,8 +10,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.databinding.CalendarEventFragmentBinding
@@ -260,6 +262,8 @@ class CalendarEventFragment : Fragment() {
             activity?.setResult(Activity.RESULT_OK, intent)
         }
     }
+
+
 
 }
 

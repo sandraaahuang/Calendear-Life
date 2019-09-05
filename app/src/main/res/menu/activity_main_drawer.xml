@@ -3,6 +3,8 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:showIn="navigation_view">
 
+    <group android:checkableBehavior="single">
+
     <item
             android:id="@+id/schedule"
             android:icon="@drawable/icon_schedule"
@@ -27,5 +29,23 @@
             android:id="@+id/home"
             android:icon="@drawable/icon_home"
             android:title="Home"/>
+
+    </group>
+
+    <item android:title="Add Event">
+        <menu>
+            <item
+                    android:id="@+id/addCalendar"
+                    android:icon="@drawable/icon_add_calendar"
+                    android:title="Add Calendar"/>
+            <item
+                    android:id="@+id/addReminder"
+                    android:icon="@drawable/icon_add_reminder"
+                    android:title="Add Reminder"/>
+            <item   android:id="@+id/addCountdown"
+                    android:icon="@drawable/icon_add_countdown"
+                    android:title="Add Countdown"/>
+        </menu>
+    </item>
 
 </menu>

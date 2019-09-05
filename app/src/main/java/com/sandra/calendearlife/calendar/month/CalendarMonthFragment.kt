@@ -125,7 +125,7 @@ class CalendarMonthFragment : Fragment() {
                         else -> {
                             textView.setTextColorRes(R.color.black)
                             textView.background = null
-                            dotView.isVisible = container.textView.toString() != ""
+                            dotView.isVisible = viewModel.liveCalendar.value?.isNotEmpty() ?: false
                         }
                     }
                 } else {
