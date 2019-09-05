@@ -6,11 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorRes
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -19,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -30,12 +26,12 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.databinding.CalendarMonthFragmentBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
 import kotlinx.android.synthetic.main.calendar_month_fragment.*
 import kotlinx.android.synthetic.main.calendar_month_header.view.*
+import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.YearMonth
@@ -51,7 +47,6 @@ class CalendarMonthFragment : Fragment() {
     private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMMM")
     private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy")
     private val selectionFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
-    private val events = mutableMapOf<LocalDate, List<Calendar>>()
 
     private val viewModel: CalenderMonthViewModel by lazy{
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
@@ -59,7 +54,8 @@ class CalendarMonthFragment : Fragment() {
 
     lateinit var binding: CalendarMonthFragmentBinding
 
-    val adapter = CalendarMonthAdapter()
+    private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener{
+    })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -68,8 +64,10 @@ class CalendarMonthFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.recyclerView.adapter = adapter
 
-        return binding.root
+        return  binding.root
+
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -127,7 +125,7 @@ class CalendarMonthFragment : Fragment() {
                         else -> {
                             textView.setTextColorRes(R.color.black)
                             textView.background = null
-                            dotView.isVisible = events[day.date].orEmpty().isNotEmpty()
+                            dotView.isVisible = container.textView.toString() != ""
                         }
                     }
                 } else {
@@ -182,6 +180,14 @@ class CalendarMonthFragment : Fragment() {
         if (selectedDate != date) {
             val oldDate = selectedDate
             selectedDate = date
+
+            val localDate = DateTimeUtils.toSqlDate(date)
+
+            viewModel.queryToday(Timestamp(localDate))
+            adapter.notifyDataSetChanged()
+            Log.d("sandraaa", "Timestamp(localDate) = ${Timestamp(localDate)}, liveDate = ${viewModel.liveCalendar.value}")
+
+
             oldDate?.let { calendar.notifyDateChanged(it) }
             calendar.notifyDateChanged(date)
             updateAdapterForDate(date)
@@ -191,8 +197,6 @@ class CalendarMonthFragment : Fragment() {
 
     private fun updateAdapterForDate(date: LocalDate) {
         selectedDateText.text = selectionFormatter.format(date)
-        viewModel.getCalendar()
-        Log.d("sandraaa", "liveData = ${viewModel.liveCalendar.value}")
     }
 
     override fun onStart() {

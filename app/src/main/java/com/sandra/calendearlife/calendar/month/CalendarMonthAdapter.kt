@@ -16,7 +16,7 @@ import com.sandra.calendearlife.databinding.ItemCountdownBinding
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.calendar_show_event.*
 
-class CalendarMonthAdapter() :
+class CalendarMonthAdapter(val onClickListener: OnClickListener) :
     ListAdapter<Calendar, CalendarMonthAdapter.CountdownViewHolder>(DiffCallback) {
 
     class CountdownViewHolder(private var binding: CalendarShowEventBinding):
@@ -48,7 +48,14 @@ class CalendarMonthAdapter() :
 
     override fun onBindViewHolder(holder: CountdownViewHolder, position: Int) {
         val calendar = getItem(position)
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(calendar)
+        }
         holder.bind(calendar)
+    }
+
+    class OnClickListener(val clickListener: (calendar: Calendar) -> Unit) {
+        fun onClick(calendar: Calendar) = clickListener(calendar)
     }
 
 }

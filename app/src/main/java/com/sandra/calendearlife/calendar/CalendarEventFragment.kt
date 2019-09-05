@@ -17,6 +17,7 @@ import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.databinding.CalendarEventFragmentBinding
 import com.sandra.calendearlife.dialog.RepeatDialog
 import com.sandra.calendearlife.reminders.RemindersViewModel
+import java.sql.Time
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -187,15 +188,19 @@ class CalendarEventFragment : Fragment() {
 
         binding.saveText.setOnClickListener {
 
+            val date: String
             val beginDate: String
             val endDate: String
             val dateFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a")
             val remindFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
+            val yearFormat = SimpleDateFormat("yyyy/MM/dd")
 
             if (binding.allDaySwitch.isChecked){
+                date = "${binding.beginDate.text}"
                 beginDate = "${binding.beginDate.text} 00:01 AM"
                 endDate = "${binding.beginDate.text} 11:59 PM"
             } else {
+                date = "${binding.beginDate.text}"
                 beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
                 endDate = "${binding.endDate.text} ${binding.endTime.text}"
             }
@@ -206,6 +211,7 @@ class CalendarEventFragment : Fragment() {
             val parsedBeginDate = dateFormat.parse(beginDate)
             val parsedEndDate = dateFormat.parse(endDate)
             val parsedRemindDate = remindFormat.parse(remindDate)
+            val parsedDate = yearFormat.parse(date)
 
             val countdown = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),
@@ -224,6 +230,7 @@ class CalendarEventFragment : Fragment() {
                 "frequency" to RepeatDialog.value)
 
             val item = hashMapOf(
+                "date" to Timestamp(parsedDate.time),
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to Timestamp(parsedBeginDate.time),
                 "endDate" to Timestamp(parsedEndDate.time),

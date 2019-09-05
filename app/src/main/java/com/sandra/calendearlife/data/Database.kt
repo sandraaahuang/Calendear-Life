@@ -18,6 +18,7 @@ data class Data (
 
 @Parcelize
 data class Calendar (
+    val date: String? = null,
     val setDate: String? = null,
     val beginDate: String? = null,
     val endDate: String? = null,
