@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -20,6 +21,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.auth.User
 import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.UserManager
 import com.sandra.calendearlife.databinding.PreviewFragmentBinding
@@ -126,6 +128,8 @@ class PreviewFragment : Fragment() {
                     Log.d("UserManager", "userPhoto = ${UserManager.userPhoto}")
 
                     viewModel.getItem()
+
+                    findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
 
                 } else {
                     // If sign in fails, display a message to the user.

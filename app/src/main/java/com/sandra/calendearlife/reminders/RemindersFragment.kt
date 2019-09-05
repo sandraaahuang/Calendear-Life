@@ -137,11 +137,17 @@ class RemindersFragment : Fragment() {
 
         binding.saveText.setOnClickListener {
             val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
+            val date = "${binding.remindersDateInput.text}"
             val dateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
+            val customFormat = SimpleDateFormat("yyyy/MM/dd")
             val parsedDate = dateFormat.parse(remindDate)
+            val parsed = customFormat.parse(date)
 
             val calendar = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),
+                "beginDate" to java.sql.Timestamp(parsedDate.time),
+                "beginDate" to java.sql.Timestamp(parsedDate.time),
+                "date" to java.sql.Timestamp(parsed.time),
                 "title" to "${binding.remindersTitleInput.text}",
                 "note" to "${binding.remindersNoteInput.text}",
                 "hasReminders" to true

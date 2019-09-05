@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Timestamp
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
 
@@ -30,6 +31,7 @@ class AddCountdownAdapter(val onClickListener: OnClickListener) :
 
         fun bind(countdown: Countdown, onClickListener: OnClickListener) {
             binding.countdown = countdown
+            binding.countdownDate.text = "倒數 "+"${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}"+ " 天"
             binding.root.setOnClickListener { onClickListener.onClick(countdown) }
             binding.executePendingBindings()
 

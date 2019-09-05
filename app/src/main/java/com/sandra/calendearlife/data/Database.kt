@@ -1,6 +1,7 @@
 package com.sandra.calendearlife.data
 
 import android.os.Parcelable
+import com.google.firebase.Timestamp
 import kotlinx.android.parcel.Parcelize
 
 
@@ -41,6 +42,7 @@ data class Reminders(
     val title: String? = null,
     val setRemindDate: Boolean = false,
     val remindDate: String? = null,
+    val remindTimestamp: Timestamp,
     val isChecked: Boolean = false,
     val note: String? = null,
     val frequency: String? = null,
@@ -53,6 +55,7 @@ data class Countdown(
     val title: String? = null,
     val note: String? = null,
     val targetDate: String? = null,
+    val targetTimestamp: Timestamp,
     val overdue: Boolean = false,
     val documentID: String
 ) : Parcelable

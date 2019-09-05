@@ -1,10 +1,12 @@
 package com.sandra.calendearlife.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Timestamp
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
 
@@ -15,6 +17,8 @@ class HomeCountdownAdapter(val onClickListener: OnClickListener) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(countdown: Countdown) {
             binding.countdown = countdown
+            binding.countdownDate.text = "倒數 "+"${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}"+ " 天"
+            Log.d("sandraaa","binding.countdownDate.text = ${binding.countdownDate.text}")
             binding.executePendingBindings()
         }
     }

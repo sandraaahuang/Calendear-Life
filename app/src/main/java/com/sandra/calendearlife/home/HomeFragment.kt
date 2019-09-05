@@ -73,11 +73,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
-        binding.linkToGoogle.setOnClickListener {
-            findNavController().navigate(NavigationDirections.actionGlobalPreviewFragment())
-
-        }
-
         return binding.root
     }
 }
