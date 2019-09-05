@@ -76,15 +76,21 @@ class CountdownFragment : Fragment() {
 
         binding.saveLayout.setOnClickListener {
 
+            val targetDate = binding.countdownDateInput.text.toString()
+            val putInDate = Date(targetDate)
+
             val calendar = hashMapOf(
+
                 "setDate" to FieldValue.serverTimestamp(),
+                "beginDate" to java.sql.Timestamp(putInDate.time),
+                "endDate" to java.sql.Timestamp(putInDate.time),
+                "date" to java.sql.Timestamp(putInDate.time),
                 "title" to "${binding.countdownTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
                 "hasReminders" to true
             )
 
-            val targetDate = binding.countdownDateInput.text.toString()
-            val putInDate = Date(targetDate)
+
 
             val countdown = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),

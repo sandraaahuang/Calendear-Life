@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.UserManager
 import com.sandra.calendearlife.data.Reminders
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,117 +43,97 @@ class RemindersViewModel : ViewModel() {
 
     fun writeItem(calendar: Any, reminder: Any) {
         db.collection("data")
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (data in task.result!!) {
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .add(calendar)
+            .addOnSuccessListener { documentReference ->
+                Log.d(
+                    "AddCalendarIntoDB",
+                    "DocumentSnapshot added with ID: " + documentReference.id
+                )
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .document(documentReference.id)
+                    .update("documentID", documentReference.id)
 
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .document(documentReference.id)
+                    .collection("reminders")
+                    .add(reminder)
+                    .addOnSuccessListener { reminderID ->
+                        Log.d(
+                            "AddCountdownsIntoDB",
+                            "DocumentSnapshot added with ID: " + reminderID.id
+                        )
                         db.collection("data")
-                            .document(data.id)
+                            .document(UserManager.id!!)
                             .collection("calendar")
-                            .add(calendar)
-                            .addOnSuccessListener { documentReference ->
-                                Log.d(
-                                    "AddCalendarIntoDB",
-                                    "DocumentSnapshot added with ID: " + documentReference.id
-                                )
-                                db.collection("data")
-                                    .document(data.id)
-                                    .collection("calendar")
-                                    .document(documentReference.id)
-                                    .update("documentID", documentReference.id)
-
-                                db.collection("data")
-                                    .document(data.id)
-                                    .collection("calendar")
-                                    .document(documentReference.id)
-                                    .collection("reminders")
-                                    .add(reminder)
-                                    .addOnSuccessListener { reminderID ->
-                                        Log.d(
-                                            "AddCountdownsIntoDB",
-                                            "DocumentSnapshot added with ID: " + reminderID.id
-                                        )
-                                        db.collection("data")
-                                            .document(data.id)
-                                            .collection("calendar")
-                                            .document(documentReference.id)
-                                            .collection("reminders")
-                                            .document(reminderID.id)
-                                            .update("documentID", reminderID.id)
-                                    }
-                            }
+                            .document(documentReference.id)
+                            .collection("reminders")
+                            .document(reminderID.id)
+                            .update("documentID", reminderID.id)
                     }
-                }
             }
     }
 
     fun getItem() {
         //connect to countdown data
         db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
             .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (data in task.result!!) {
-                        Log.d("getAllDate", data.id + " => " + data.data)
+            .addOnSuccessListener { documents ->
 
-                        db.collection("data")
-                            .document(data.id)
-                            .collection("calendar")
-                            .get()
-                            .addOnSuccessListener { documents ->
+                for (calendar in documents) {
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                                for (calendar in documents) {
-                                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+                    // get reminders
 
-                                    // get reminders
+                    db.collection("data")
+                        .document(UserManager.id!!)
+                        .collection("calendar")
+                        .document(calendar.id)
+                        .collection("reminders")
+                        .get()
+                        .addOnSuccessListener { documents ->
 
-                                    db.collection("data")
-                                        .document(data.id)
-                                        .collection("calendar")
-                                        .document(calendar.id)
-                                        .collection("reminders")
-                                        .get()
-                                        .addOnSuccessListener { documents ->
+                            for (reminder in documents) {
+                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
-                                            for (reminder in documents) {
-                                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
+                                val setDate =
+                                    (reminder.data["setDate"] as com.google.firebase.Timestamp)
+                                val remindDate =
+                                    (reminder.data["remindDate"] as com.google.firebase.Timestamp)
 
-                                                val setDate =
-                                                    (reminder.data["setDate"] as com.google.firebase.Timestamp)
-                                                val remindDate =
-                                                    (reminder.data["remindDate"] as com.google.firebase.Timestamp)
+                                remindAdd = Reminders(
+                                    simpleDateFormat.format(setDate.seconds * 1000),
+                                    reminder.data["title"].toString(),
+                                    reminder.data["setRemindDate"].toString().toBoolean(),
+                                    simpleDateFormat.format(remindDate.seconds * 1000),
+                                    reminder.data["remindDate"] as com.google.firebase.Timestamp,
+                                    reminder.data["isChecked"].toString().toBoolean(),
+                                    reminder.data["note"].toString(),
+                                    reminder.data["frequency"].toString(),
+                                    reminder.data["documentID"].toString()
+                                )
 
-                                                remindAdd = Reminders(
-                                                    simpleDateFormat.format(setDate.seconds * 1000),
-                                                    reminder.data["title"].toString(),
-                                                    reminder.data["setRemindDate"].toString().toBoolean(),
-                                                    simpleDateFormat.format(remindDate.seconds * 1000),
-                                                    reminder.data["isChecked"].toString().toBoolean(),
-                                                    reminder.data["note"].toString(),
-                                                    reminder.data["frequency"].toString(),
-                                                    reminder.data["documentID"].toString()
-                                                )
-
-                                                remindersItem.add(remindAdd)
-                                            }
-                                            _liveReminders.value = remindersItem
-                                        }
-
-                                        .addOnFailureListener { exception ->
-                                            Log.w("getAllreminders", "Error getting documents: ", exception)
-                                        }
-                                }
+                                remindersItem.add(remindAdd)
                             }
+                            _liveReminders.value = remindersItem
+                        }
 
-                            .addOnFailureListener { exception ->
-                                Log.w("getAllCalendar", "Error getting documents: ", exception)
-                            }
-
-                    }
-                } else {
-                    Log.w("getAllDate", "Error getting documents.", task.exception)
+                        .addOnFailureListener { exception ->
+                            Log.w("getAllreminders", "Error getting documents: ", exception)
+                        }
                 }
             }
+
+            .addOnFailureListener { exception ->
+                Log.w("getAllCalendar", "Error getting documents: ", exception)
+            }
+
     }
 }

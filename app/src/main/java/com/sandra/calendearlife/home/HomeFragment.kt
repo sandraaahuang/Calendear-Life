@@ -14,12 +14,17 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.gms.auth.GoogleAuthUtil
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.AccountPicker
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+
+
 
 class HomeFragment : Fragment() {
 
@@ -68,35 +73,8 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
-        binding.linkToGoogle.setOnClickListener {
-            // Google Account Picker
-                val googlePicker = AccountPicker
-                    .newChooseAccountIntent(
-                        null, null, arrayOf(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE),
-                        true, null, null, null, null
-                    )
-                startActivityForResult(googlePicker, REQUEST_CODE)
-
-        }
-
         return binding.root
     }
-
-    override fun onActivityResult(
-        requestCode: Int, resultCode: Int,
-        data: Intent?
-    ) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            val accountName = data!!.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
-        Log.d("sandraaa","accountName = $accountName")
-        }
-        else{Log.d("sandraaa","accountName = null")}
-    }
-
-    companion object {
-        const val REQUEST_CODE = 12345
-    }
-
 }
 
 

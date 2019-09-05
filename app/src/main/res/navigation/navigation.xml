@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/navigation" app:startDestination="@id/homeFragment">
+            android:id="@+id/navigation" app:startDestination="@id/previewFragment">
     <fragment android:id="@+id/homeFragment" android:name="com.sandra.calendearlife.home.HomeFragment"
               android:label="HomeFragment"/>
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment"/>
@@ -46,4 +46,6 @@
               android:label="CalendarEventFragment"/><action android:id="@+id/action_global_calendarEventFragment" app:destination="@id/calendarEventFragment"/>
     <dialog android:id="@+id/repeatDialog" android:name="com.sandra.calendearlife.dialog.RepeatDialog"
             android:label="RepeatDialog"/>
+    <fragment android:id="@+id/previewFragment" android:name="com.sandra.calendearlife.preview.PreviewFragment"
+              android:label="PreviewFragment"/><action android:id="@+id/action_global_previewFragment" app:destination="@id/previewFragment"/>
 </navigation>

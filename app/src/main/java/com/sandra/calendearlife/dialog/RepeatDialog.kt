@@ -103,7 +103,7 @@ class RepeatDialog: AppCompatDialogFragment() {
     }
 
     companion object {
-        lateinit var value: String
+        var value: String = "Does not repeat"
         var frequency = listOf("Does not repeat"
             , "Every day", "Every week", "Every month", "Every year")
     }
