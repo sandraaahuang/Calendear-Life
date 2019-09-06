@@ -1,11 +1,10 @@
 package com.sandra.calendearlife
 
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toolbar
+import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -13,7 +12,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import com.google.android.material.navigation.NavigationView
 import com.sandra.calendearlife.databinding.ActivityMainBinding
-import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,6 +26,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         setupToolbar()
+        sepupStatusBar()
+        setToolbar()
+        setDrawer()
     }
 
     fun setupToolbar() {
@@ -98,5 +99,48 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun sepupStatusBar(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window = window
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.decorView.systemUiVisibility =
+                (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = Color.TRANSPARENT
+        }
+    }
+
+    private fun setToolbar(){
+        binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
+    }
+
+    private fun setDrawer(){
+        val drawerLayout = binding.drawerLayout
+        drawerLayout.fitsSystemWindows = true
+        drawerLayout.clipToPadding = false
+
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+    }
+
+    private fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources
+            .getIdentifier("status_bar_height", "dimen", "android")
+
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
+
     }
 }
