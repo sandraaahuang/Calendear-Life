@@ -8,10 +8,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.home.HomeFragment
-import com.sandra.calendearlife.home.HomeRemindersAdapter
+import com.sandra.calendearlife.home.HomeViewModel
 
-class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val fragment: RemindersFragment) :
+class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val viewModel: RemindersViewModel) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private lateinit var icon: Drawable
@@ -30,7 +29,9 @@ class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val fragment: Rem
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
+        viewModel
         adapter.notifyDataSetChanged()
+
     }
 
     override fun onChildDraw(

@@ -86,7 +86,7 @@ class CalendarEventFragment : Fragment() {
             else -> "Sunday"
         }
 
-        val chooseDate = "$transferDay/${monthOfYear + 1 }/$dayOfMonth"
+        val chooseDate = "$year/${monthOfYear + 1 }/$dayOfMonth $transferDay"
 
 
         binding.beginDate.text = chooseDate

@@ -80,14 +80,14 @@ class CountdownFragment : Fragment() {
             val putInDate = Date(targetDate)
 
             val calendar = hashMapOf(
-
+                "color" to "#82b3c9",
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to java.sql.Timestamp(putInDate.time),
                 "endDate" to java.sql.Timestamp(putInDate.time),
                 "date" to java.sql.Timestamp(putInDate.time),
                 "title" to "${binding.countdownTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
-                "hasReminders" to true
+                "hasCountdown" to true
             )
 
 

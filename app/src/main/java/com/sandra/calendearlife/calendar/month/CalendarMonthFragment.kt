@@ -90,7 +90,7 @@ class CalendarMonthFragment : Fragment() {
         class DayViewContainer(view: View) : ViewContainer(view) {
             lateinit var day: CalendarDay // Will be set when this container is bound.
             val textView = view.dayText
-            val dotView = view.dotView
+//            val dotView = view.dotView
 
             init {
                 view.setOnClickListener {
@@ -105,7 +105,7 @@ class CalendarMonthFragment : Fragment() {
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.day = day
                 val textView = container.textView
-                val dotView = container.dotView
+//                val dotView = container.dotView
 
                 textView.text = day.date.dayOfMonth.toString()
 
@@ -115,22 +115,22 @@ class CalendarMonthFragment : Fragment() {
                         today -> {
                             textView.setTextColorRes(R.color.white)
                             textView.setBackgroundResource(R.drawable.today_bg)
-                            dotView.makeInVisible()
+//                            dotView.makeInVisible()
                         }
                         selectedDate -> {
                             textView.setTextColorRes(R.color.calendar_today_badge)
                             textView.setBackgroundResource(R.drawable.selected_bg)
-                            dotView.makeInVisible()
+//                            dotView.makeInVisible()
                         }
                         else -> {
                             textView.setTextColorRes(R.color.black)
                             textView.background = null
-                            dotView.isVisible = viewModel.liveCalendar.value?.isNotEmpty() ?: false
+//                            dotView.isVisible = viewModel.liveCalendar.value?.isNotEmpty() ?: false
                         }
                     }
                 } else {
                     textView.makeInVisible()
-                    dotView.makeInVisible()
+//                    dotView.makeInVisible()
                 }
             }
         }
@@ -234,6 +234,7 @@ class CalendarMonthFragment : Fragment() {
     private fun View.makeGone() {
         visibility = View.GONE
     }
+
     private fun Context.getColorCompat(@ColorRes color: Int) = ContextCompat.getColor(this, color)
     private fun TextView.setTextColorRes(@ColorRes color: Int) = setTextColor(context.getColorCompat(color))
 }

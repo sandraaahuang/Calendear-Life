@@ -59,7 +59,7 @@ class RemindersFragment : Fragment() {
         })
 
         val itemTouchHelper= ItemTouchHelper(
-            SwipeToDeleteReminders(addRemindersAdapter, this)
+            SwipeToDeleteReminders(addRemindersAdapter, viewModel)
         )
         itemTouchHelper.attachToRecyclerView(binding.addRemindersRecyclerView)
 
@@ -144,6 +144,7 @@ class RemindersFragment : Fragment() {
             val parsed = customFormat.parse(date)
 
             val calendar = hashMapOf(
+                "color" to "#a094b7",
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to java.sql.Timestamp(parsedDate.time),
                 "beginDate" to java.sql.Timestamp(parsedDate.time),
