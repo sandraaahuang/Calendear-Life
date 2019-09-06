@@ -80,7 +80,7 @@ class CountdownFragment : Fragment() {
             val putInDate = Date(targetDate)
 
             val calendar = hashMapOf(
-                "color" to "#82b3c9",
+                "color" to "82b3c9",
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to java.sql.Timestamp(putInDate.time),
                 "endDate" to java.sql.Timestamp(putInDate.time),

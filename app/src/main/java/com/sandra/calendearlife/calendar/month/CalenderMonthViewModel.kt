@@ -26,6 +26,19 @@ class CalenderMonthViewModel : ViewModel() {
     val liveCalendar: LiveData<List<com.sandra.calendearlife.data.Calendar>>
         get() = _liveCalendar
 
+    private val _navigateToCalendarProperty = MutableLiveData<com.sandra.calendearlife.data.Calendar>()
+
+    val navigateToCalendarProperty: LiveData<com.sandra.calendearlife.data.Calendar>
+        get() = _navigateToCalendarProperty
+
+    fun displayCalendarDetails(calendar: com.sandra.calendearlife.data.Calendar) {
+        _navigateToCalendarProperty.value = calendar
+    }
+
+    fun displayCalendarDetailsComplete() {
+        _navigateToCalendarProperty.value = null
+    }
+
     // get user's today calendar
     fun queryToday(today: Timestamp) {
 
@@ -62,7 +75,8 @@ class CalenderMonthViewModel : ViewModel() {
                         calendar.data["location"].toString(),
                         calendar.data["hasReminders"].toString().toBoolean(),
                         calendar.data["hasCountdown"].toString().toBoolean(),
-                        null
+                        calendar.data["documentID"].toString(),
+                        calendar.data["frequency"].toString()
                     )
                     calendarItem.add(calenderAdd)
 
