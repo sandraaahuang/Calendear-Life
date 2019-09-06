@@ -33,7 +33,8 @@ data class Calendar (
     val location: String? = null,
     val hasReminders: Boolean = false,
     val hasCountdown: Boolean = false,
-    val documentID: String? = null
+    val documentID: String? = null,
+    val frequency: String? = null
 
 ) : Parcelable
 

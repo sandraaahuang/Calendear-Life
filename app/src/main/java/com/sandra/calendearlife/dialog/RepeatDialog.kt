@@ -8,14 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.calendar.CalendarEventFragment
+import com.sandra.calendearlife.calendar.event.CalendarEventFragment
 import com.sandra.calendearlife.databinding.DialogRepeatBinding
 import com.sandra.calendearlife.reminders.RemindersFragment
-import com.sandra.calendearlife.reminders.RemindersViewModel
-
 
 
 class RepeatDialog: AppCompatDialogFragment() {

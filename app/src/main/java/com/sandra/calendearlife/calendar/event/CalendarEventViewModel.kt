@@ -1,4 +1,4 @@
-package com.sandra.calendearlife.calendar
+package com.sandra.calendearlife.calendar.event
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -26,7 +26,7 @@ class CalendarEventViewModel : ViewModel() {
                     .document(UserManager.id!!)
                     .collection("calendar")
                     .document(CdocumentReference.id)
-                    .update("documentID", CdocumentReference.id, "color", "#af8eb5")
+                    .update("documentID", CdocumentReference.id, "color", "af8eb5")
                     .addOnSuccessListener {
                         // add reminders
                         db.collection("data")
@@ -63,7 +63,7 @@ class CalendarEventViewModel : ViewModel() {
                                                     .document(UserManager.id!!)
                                                     .collection("calendar")
                                                     .document(document.id)
-                                                    .update("color", "#81b9bf")
+                                                    .update("color", "81b9bf")
                                             }
                                     }
                                 }
@@ -104,7 +104,7 @@ class CalendarEventViewModel : ViewModel() {
                                                     .document(UserManager.id!!)
                                                     .collection("calendar")
                                                     .document(document.id)
-                                                    .update("color", "#cb9b8c")
+                                                    .update("color", "cb9b8c")
 
 
                                                 // item that have both reminders and countdown
@@ -126,7 +126,7 @@ class CalendarEventViewModel : ViewModel() {
                                                                     .document(UserManager.id!!)
                                                                     .collection("calendar")
                                                                     .document(document.id)
-                                                                    .update("color", "#a69b97")
+                                                                    .update("color", "a69b97")
 
 
                                                             }

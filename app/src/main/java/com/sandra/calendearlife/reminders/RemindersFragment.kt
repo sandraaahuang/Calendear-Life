@@ -144,14 +144,15 @@ class RemindersFragment : Fragment() {
             val parsed = customFormat.parse(date)
 
             val calendar = hashMapOf(
-                "color" to "#a094b7",
+                "color" to "a094b7",
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to java.sql.Timestamp(parsedDate.time),
-                "beginDate" to java.sql.Timestamp(parsedDate.time),
+                "endDate" to java.sql.Timestamp(parsedDate.time),
                 "date" to java.sql.Timestamp(parsed.time),
                 "title" to "${binding.remindersTitleInput.text}",
                 "note" to "${binding.remindersNoteInput.text}",
-                "hasReminders" to true
+                "hasReminders" to true,
+                "frequency" to RepeatDialog.value
             )
 
             val reminders = hashMapOf(

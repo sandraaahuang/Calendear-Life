@@ -1,4 +1,4 @@
-package com.sandra.calendearlife.calendar
+package com.sandra.calendearlife.calendar.event
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -6,20 +6,15 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.databinding.CalendarEventFragmentBinding
 import com.sandra.calendearlife.dialog.RepeatDialog
-import com.sandra.calendearlife.reminders.RemindersViewModel
-import java.sql.Time
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -232,6 +227,7 @@ class CalendarEventFragment : Fragment() {
                 "frequency" to RepeatDialog.value)
 
             val item = hashMapOf(
+                "frequency" to RepeatDialog.value,
                 "date" to Timestamp(parsedDate.time),
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to Timestamp(parsedBeginDate.time),

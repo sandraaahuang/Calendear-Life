@@ -11,7 +11,6 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -55,7 +54,10 @@ class CalendarMonthFragment : Fragment() {
     lateinit var binding: CalendarMonthFragmentBinding
 
     private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener{
+        viewModel.displayCalendarDetails(it)
+        Log.d("sandraaa", "click item = $it")
     })
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -63,6 +65,15 @@ class CalendarMonthFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.recyclerView.adapter = adapter
+
+        viewModel.navigateToCalendarProperty.observe(this, androidx.lifecycle.Observer {
+            if ( null != it ) {
+                // Must find the NavController from the Fragment
+                this.findNavController().navigate(NavigationDirections.actionGlobalCalendarDetailFragment(it))
+                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
+                viewModel.displayCalendarDetailsComplete()
+            }
+        })
 
         return  binding.root
 
@@ -207,8 +218,8 @@ class CalendarMonthFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.colorPrimary))
-        requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.colorPrimaryDark)
+        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.white))
+        requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.dark_gray)
     }
 
     private fun daysOfWeekFromLocale(): Array<DayOfWeek> {

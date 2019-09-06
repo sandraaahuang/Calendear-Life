@@ -111,7 +111,7 @@
                     android:id="@+id/repeatChoose"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Never"
+                    android:text="Does not repeat"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="#868686"
                     android:textSize="16sp"
