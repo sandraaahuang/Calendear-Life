@@ -56,7 +56,7 @@
                     app:layout_constraintTop_toTopOf="@+id/timeIcon"
                     app:layout_constraintBottom_toBottomOf="@+id/timeIcon"/>
             <TextView
-                    android:text="Augest 31 2019"
+                    android:text="2019/09/06 Friday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
@@ -66,7 +66,7 @@
                     app:layout_constraintStart_toStartOf="@+id/beginDate" android:layout_marginTop="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/beginDate"/>
             <TextView
-                    android:text="00:00"
+                    android:text="00:00 AM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
@@ -77,7 +77,7 @@
                     app:layout_constraintTop_toTopOf="@+id/endDate"
                     app:layout_constraintBottom_toBottomOf="@+id/endDate"/>
             <TextView
-                    android:text="Augest 31 2019"
+                    android:text="2019/09/06 Friday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
@@ -87,7 +87,7 @@
                     app:layout_constraintStart_toStartOf="@+id/timeIcon" android:layout_marginTop="16dp"
                     app:layout_constraintTop_toBottomOf="@+id/timeIcon"/>
             <TextView
-                    android:text="00:00"
+                    android:text="00:00 AM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
@@ -227,7 +227,7 @@
                     android:id="@+id/remindersDateInput"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="9, 2, 2019"
+                    android:text="2019/09/06"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="#868686"
                     android:textSize="16sp"
@@ -236,7 +236,7 @@
                     android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/remindersTimeInput"/>
             <TextView
                     android:id="@+id/remindersTimeInput"
-                    android:text="00 : 00"
+                    android:text="00:00 AM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
