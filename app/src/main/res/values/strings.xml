@@ -20,4 +20,19 @@
     <string name="thursday">Thur</string>
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
+
+    <!-- current fragment type -->
+    <string name="home">Home</string>
+    <string name="detail">Detail</string>
+    <string name="add_event_into_calendar">New Event</string>
+    <string name="add_event_into_reminder">New Reminder</string>
+    <string name="add_event_into_countdown">New Countdown</string>
+    <string name="calendarFragment">Calendar</string>
+    <string name="schedule">Schedule</string>
+    <string name="day_fragment">Day</string>
+    <string name="week_fragment">Week</string>
+    <string name="search_fragment">Search</string>
+
+
+
 </resources>

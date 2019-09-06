@@ -27,6 +27,7 @@ import com.sandra.calendearlife.UserManager
 import com.sandra.calendearlife.databinding.PreviewFragmentBinding
 
 
+
 class PreviewFragment : Fragment() {
 
     private val viewModel: PreviewViewModel by lazy{
