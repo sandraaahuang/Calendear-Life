@@ -23,8 +23,7 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import com.sandra.calendearlife.NavigationDirections
-import com.sandra.calendearlife.R
+import com.sandra.calendearlife.*
 import com.sandra.calendearlife.databinding.CalendarMonthFragmentBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
@@ -147,9 +146,11 @@ class CalendarMonthFragment : Fragment() {
         }
 
         calendar.monthScrollListener = {
-            requireActivity().toolbar.title = if (it.year == today.year) {
+
+            requireActivity().textView.text = if (it.year == today.year) {
                 titleSameYearFormatter.format(it.yearMonth)
-            } else {
+            }
+            else {
                 titleFormatter.format(it.yearMonth)
             }
 
@@ -212,13 +213,13 @@ class CalendarMonthFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.white))
+        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.dark_gray))
         requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.dark_gray)
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.white))
+        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.dark_gray))
         requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.dark_gray)
     }
 
@@ -234,18 +235,14 @@ class CalendarMonthFragment : Fragment() {
         return daysOfWeek
     }
 
-    private fun View.makeVisible() {
-        visibility = View.VISIBLE
-    }
-
-    private fun View.makeInVisible() {
-        visibility = View.INVISIBLE
-    }
-
-    private fun View.makeGone() {
-        visibility = View.GONE
-    }
-
     private fun Context.getColorCompat(@ColorRes color: Int) = ContextCompat.getColor(this, color)
     private fun TextView.setTextColorRes(@ColorRes color: Int) = setTextColor(context.getColorCompat(color))
+}
+
+fun View.makeVisible() {
+    visibility = View.VISIBLE
+}
+
+fun View.makeInVisible() {
+    visibility = View.INVISIBLE
 }

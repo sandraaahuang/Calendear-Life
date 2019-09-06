@@ -47,7 +47,7 @@
     <dialog android:id="@+id/repeatDialog" android:name="com.sandra.calendearlife.dialog.RepeatDialog"
             android:label="RepeatDialog"/>
     <fragment android:id="@+id/previewFragment" android:name="com.sandra.calendearlife.preview.PreviewFragment"
-              android:label="PreviewFragment"/><action android:id="@+id/action_global_previewFragment" app:destination="@id/previewFragment"/>
+              android:label="PreviewFragment"/>
     <fragment android:id="@+id/calendarDetailFragment"
               android:name="com.sandra.calendearlife.calendar.detail.CalendarDetailFragment"
               android:label="CalendarDetailFragment">

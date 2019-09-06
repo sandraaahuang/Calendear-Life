@@ -4,12 +4,18 @@ import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.navigation.NavigationView
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 
@@ -20,18 +26,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navView: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
+    private val viewModel: MainViewModel by lazy{
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         setupToolbar()
         sepupStatusBar()
-        setToolbar()
         setDrawer()
+        setupNavController()
     }
 
     fun setupToolbar() {
+        binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
         drawerLayout = binding.drawerLayout
         navView = binding.navView
         toolbar = binding.toolbar
@@ -50,8 +63,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
@@ -118,10 +131,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun setToolbar(){
-        binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
-    }
-
     private fun setDrawer(){
         val drawerLayout = binding.drawerLayout
         drawerLayout.fitsSystemWindows = true
@@ -142,5 +151,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         return result
 
+    }
+
+    private fun setupNavController() {
+        findNavController(R.id.myNavHostFragment).addOnDestinationChangedListener { navController: NavController, _: NavDestination, _: Bundle? ->
+            viewModel.currentFragmentType.value = when (navController.currentDestination?.id) {
+                R.id.homeFragment -> CurrentFragmentType.HOME
+                R.id.previewFragment -> CurrentFragmentType.PREVIEW
+                R.id.calendarDetailFragment -> CurrentFragmentType.DETAIL
+                R.id.remindersDetailFragment -> CurrentFragmentType.DETAIL
+                R.id.countdownDetailFragment -> CurrentFragmentType.DETAIL
+                R.id.calendarEventFragment -> CurrentFragmentType.NEWEVENT
+                R.id.countdownFragment -> CurrentFragmentType.NEWCOUNTDOWN
+                R.id.remindersFragment -> CurrentFragmentType.NEWREMINDER
+                R.id.calendarScheduleFragment -> CurrentFragmentType.SCHEDULE
+                R.id.calendarDayFragment -> CurrentFragmentType.DAY
+                R.id.calendarWeekFragment -> CurrentFragmentType.WEEK
+                R.id.calendarSearchFragment -> CurrentFragmentType.SEARCH
+                else -> viewModel.currentFragmentType.value
+            }
+        }
     }
 }
