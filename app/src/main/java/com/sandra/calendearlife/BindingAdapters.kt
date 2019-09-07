@@ -11,6 +11,9 @@ import com.sandra.calendearlife.countdown.AddCountdownAdapter
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
+import com.sandra.calendearlife.history.HistoryCountdownAdapter
+import com.sandra.calendearlife.history.HistoryCountdownViewModel
+import com.sandra.calendearlife.history.HistoryRemindersAdapter
 import com.sandra.calendearlife.home.HomeCountdownAdapter
 import com.sandra.calendearlife.home.HomeRemindersAdapter
 import com.sandra.calendearlife.reminders.AddRemindersAdapter
@@ -35,6 +38,9 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Countdown>?) {
             is AddCountdownAdapter -> {
                 submitList(data)
             }
+            is HistoryCountdownAdapter -> {
+                submitList(data)
+            }
         }
     }
 }
@@ -47,6 +53,9 @@ fun bindremindersRecyclerView(recyclerView: RecyclerView, data: List<Reminders>?
                 submitList(data)
             }
             is AddRemindersAdapter -> {
+                submitList(data)
+            }
+            is HistoryRemindersAdapter -> {
                 submitList(data)
             }
         }

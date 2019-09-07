@@ -14,7 +14,8 @@ enum class CurrentFragmentType(val value: String) {
     SCHEDULE(getString(R.string.schedule)),
     DAY(getString(R.string.day_fragment)),
     WEEK(getString(R.string.week_fragment)),
-    SEARCH(getString(R.string.search_fragment))
+    SEARCH(getString(R.string.search_fragment)),
+    HISTORY(getString(R.string.history))
 }
 
 fun getString(resourceId: Int): String {

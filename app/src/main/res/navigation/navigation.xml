@@ -54,4 +54,8 @@
         <argument android:name="calendar" app:argType="com.sandra.calendearlife.data.Calendar"/>
     </fragment>
     <action android:id="@+id/action_global_calendarDetailFragment" app:destination="@id/calendarDetailFragment"/>
+    <fragment android:id="@+id/historyCountdown2" android:name="com.sandra.calendearlife.history.HistoryCountdown"
+              android:label="HistoryCountdown"/>
+    <fragment android:id="@+id/historyReminders" android:name="com.sandra.calendearlife.history.HistoryReminders"
+              android:label="HistoryReminders"/><action android:id="@+id/action_global_historyCountdown2" app:destination="@id/historyCountdown2"/><action android:id="@+id/action_global_historyReminders" app:destination="@id/historyReminders"/>
 </navigation>

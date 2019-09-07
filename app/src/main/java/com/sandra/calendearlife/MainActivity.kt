@@ -108,6 +108,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalRemindersFragment())
             }
+            R.id.historyReminder ->{
+                findNavController(R.id.myNavHostFragment)
+                    .navigate(NavigationDirections.actionGlobalHistoryReminders())
+            }
+
+            R.id.historyCountdown ->{
+                findNavController(R.id.myNavHostFragment)
+                    .navigate(NavigationDirections.actionGlobalHistoryCountdown2())
+            }
         }
 
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -177,6 +186,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.calendarDayFragment -> CurrentFragmentType.DAY
                 R.id.calendarWeekFragment -> CurrentFragmentType.WEEK
                 R.id.calendarSearchFragment -> CurrentFragmentType.SEARCH
+                R.id.historyReminders -> CurrentFragmentType.HISTORY
+                R.id.historyCountdown2 -> CurrentFragmentType.HISTORY
                 else -> viewModel.currentFragmentType.value
             }
         }
