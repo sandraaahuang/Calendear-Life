@@ -79,6 +79,8 @@ class RemindersViewModel : ViewModel() {
             }
     }
 
+
+    // also only get isChecked is false
     fun getItem() {
         //connect to countdown data
         db.collection("data")
@@ -97,6 +99,7 @@ class RemindersViewModel : ViewModel() {
                         .collection("calendar")
                         .document(calendar.id)
                         .collection("reminders")
+                        .whereEqualTo("isChecked", false)
                         .get()
                         .addOnSuccessListener { documents ->
 
@@ -135,5 +138,50 @@ class RemindersViewModel : ViewModel() {
                 Log.w("getAllCalendar", "Error getting documents: ", exception)
             }
 
+    }
+
+    // update isChecked to true when user click the button
+    fun updateItem(documentID: String) {
+
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .get()
+            .addOnSuccessListener { documents ->
+
+                for (calendar in documents) {
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+
+                    // add countdowns
+                    db.collection("data")
+                        .document(UserManager.id!!)
+                        .collection("calendar")
+                        .document(calendar.id)
+                        .collection("reminders")
+                        .whereEqualTo("documentID", documentID)
+                        .get()
+                        .addOnSuccessListener { documents ->
+
+                            for (reminders in documents) {
+                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
+
+                                // add countdowns
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .collection("reminders")
+                                    .document(documentID)
+                                    .update("isChecked", true)
+                                    .addOnSuccessListener {
+                                        Log.d(
+                                            "RenewCountdown",
+                                            "successfully updated my status!"
+                                        )
+                                    }
+                            }
+                        }
+                }
+            }
     }
 }

@@ -1,24 +1,31 @@
 package com.sandra.calendearlife.home
 
 import android.service.autofill.OnClickAction
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
 import kotlinx.android.synthetic.main.item_reminders.view.*
 
 
-class HomeRemindersAdapter(val fragment: HomeFragment, val onClickListener: OnClickListener) :
+class HomeRemindersAdapter(val viewModel: HomeViewModel, val onClickListener: OnClickListener) :
     ListAdapter<Reminders, HomeRemindersAdapter.RemindersViewHolder>(DiffCallback) {
 
     class RemindersViewHolder(private var binding: ItemRemindersBinding):
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(reminders: Reminders) {
+        fun bind(reminders: Reminders, viewModel: HomeViewModel) {
             binding.reminders = reminders
+            binding.remindersChecked.setOnClickListener {
+                viewModel.updateItem(reminders.documentID)
+
+            }
             binding.executePendingBindings()
         }
     }
@@ -47,7 +54,7 @@ class HomeRemindersAdapter(val fragment: HomeFragment, val onClickListener: OnCl
         holder.itemView.setOnClickListener {
             onClickListener.onClick(reminders)
         }
-        holder.bind(reminders)
+        holder.bind(reminders, viewModel)
     }
 
     class OnClickListener(val clickListener: (reminders: Reminders) -> Unit) {

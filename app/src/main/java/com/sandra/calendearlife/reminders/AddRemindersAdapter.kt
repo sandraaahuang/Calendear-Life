@@ -9,7 +9,7 @@ import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
 import com.sandra.calendearlife.dialog.RepeatDialog
 
-class AddRemindersAdapter(val onClickListener: OnClickListener) :
+class AddRemindersAdapter(val onClickListener: OnClickListener, val viewModel: RemindersViewModel) :
     ListAdapter<Reminders, AddRemindersAdapter.ItemViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (reminders: Reminders) -> Unit) {
@@ -29,8 +29,11 @@ class AddRemindersAdapter(val onClickListener: OnClickListener) :
     class ItemViewHolder(private var binding: ItemRemindersBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(reminders: Reminders) {
+        fun bind(reminders: Reminders, viewModel: RemindersViewModel) {
             binding.reminders = reminders
+            binding.remindersChecked.setOnClickListener {
+                viewModel.updateItem(reminders.documentID)
+            }
             binding.executePendingBindings()
 
         }
@@ -51,6 +54,6 @@ class AddRemindersAdapter(val onClickListener: OnClickListener) :
         holder.itemView.setOnClickListener {
             onClickListener.onClick(reminders)
         }
-        holder.bind(reminders)
+        holder.bind(reminders, viewModel)
     }
 }

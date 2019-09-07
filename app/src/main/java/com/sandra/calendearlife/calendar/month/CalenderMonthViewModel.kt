@@ -15,6 +15,7 @@ class CalenderMonthViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
     private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+    private val simpleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd h:mm a")
     val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
     lateinit var calenderAdd: com.sandra.calendearlife.data.Calendar
@@ -61,8 +62,8 @@ class CalenderMonthViewModel : ViewModel() {
                         calendar.data["color"].toString(),
                         simpleDateFormat.format(date.seconds * 1000),
                         simpleDateFormat.format(setDate.seconds * 1000),
-                        simpleDateFormat.format(beginDate.seconds * 1000),
-                        simpleDateFormat.format(endDate.seconds * 1000),
+                        simpleDateTimeFormat.format(beginDate.seconds * 1000),
+                        simpleDateTimeFormat.format(endDate.seconds * 1000),
                         calendar.data["title"].toString(),
                         calendar.data["note"].toString(),
                         calendar.data["hasGuests"].toString().toBoolean(),
