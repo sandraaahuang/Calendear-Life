@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
 
         val countdownAdapter = HomeCountdownAdapter(HomeCountdownAdapter.OnClickListener{
             findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
-        })
+        },viewModel)
 
         val remindersAdapter = HomeRemindersAdapter(viewModel, HomeRemindersAdapter.OnClickListener{
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))

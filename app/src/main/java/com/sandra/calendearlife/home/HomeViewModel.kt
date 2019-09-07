@@ -38,7 +38,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun getItem() {
-        //connect to countdown data
+        //connect to countdown data ( only the item that overdue is false )
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
@@ -54,6 +54,7 @@ class HomeViewModel : ViewModel() {
                         .collection("calendar")
                         .document(calendar.id)
                         .collection("countdowns")
+                        .whereEqualTo("overdue", false)
                         .get()
                         .addOnSuccessListener { documents ->
 
@@ -83,7 +84,7 @@ class HomeViewModel : ViewModel() {
                             Log.w("getAllcountdown", "Error getting documents: ", exception)
                         }
 
-                    //get reminders ( only ischecked is false
+                    //get reminders ( only ischecked is false )
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -163,6 +164,49 @@ class HomeViewModel : ViewModel() {
                                     .collection("reminders")
                                     .document(documentID)
                                     .update("isChecked", true)
+                                    .addOnSuccessListener {
+                                        Log.d(
+                                            "RenewCountdown",
+                                            "successfully updated my status!"
+                                        )
+                                    }
+                            }
+                        }
+                }
+            }
+    }
+
+    //update countdown item to overdue depends on time
+    fun updateCountdown(documentId: String) {
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .get()
+            .addOnSuccessListener { documents ->
+
+                for (calendar in documents) {
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+
+                    // add countdowns
+                    db.collection("data")
+                        .document(UserManager.id!!)
+                        .collection("calendar")
+                        .document(calendar.id)
+                        .collection("countdowns")
+                        .get()
+                        .addOnSuccessListener { documents ->
+
+                            for (countdown in documents) {
+                                Log.d("getAllCalendar", "${countdown.id} => ${countdown.data}")
+
+                                // add countdowns
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .collection("countdowns")
+                                    .document(documentId)
+                                    .update("overdue", true)
                                     .addOnSuccessListener {
                                         Log.d(
                                             "RenewCountdown",
