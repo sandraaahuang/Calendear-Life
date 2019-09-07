@@ -23,6 +23,15 @@ class CalendarMonthAdapter(val onClickListener: OnClickListener) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(calendar: Calendar) {
             binding.calendar = calendar
+
+            binding.typeText.text =
+                when (calendar.color){
+                "af8eb5" -> "Event"
+                "a094b7" -> "Reminder"
+                "82b3c9" -> "Countdown"
+                else -> "coming soon"
+            }
+
             binding.executePendingBindings()
         }
     }
