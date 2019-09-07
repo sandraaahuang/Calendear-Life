@@ -1,5 +1,6 @@
 package com.sandra.calendearlife.countdown
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +10,7 @@ import com.google.firebase.Timestamp
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
 
-class AddCountdownAdapter(val onClickListener: OnClickListener) :
+class AddCountdownAdapter(val onClickListener: OnClickListener, val viewModel: CountdownViewModel) :
     ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {
 
     class OnClickListener(val clickListener: (countdown: Countdown) -> Unit) {
@@ -29,9 +30,15 @@ class AddCountdownAdapter(val onClickListener: OnClickListener) :
     class ItemViewHolder(private var binding: ItemCountdownBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(countdown: Countdown, onClickListener: OnClickListener) {
+        fun bind(countdown: Countdown, onClickListener: OnClickListener, viewModel: CountdownViewModel) {
             binding.countdown = countdown
-            binding.countdownDate.text = "倒數 "+"${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}"+ " 天"
+            binding.countdownDate.text =
+                "倒數 " + "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds) / 86400)}" + " 天"
+
+            if (countdown.targetTimestamp.seconds < Timestamp.now().seconds) {
+                viewModel.updateItem(countdown.documentID)
+
+            }
             binding.root.setOnClickListener { onClickListener.onClick(countdown) }
             binding.executePendingBindings()
 
@@ -51,7 +58,7 @@ class AddCountdownAdapter(val onClickListener: OnClickListener) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is ItemViewHolder -> holder.bind(getItem(position), onClickListener)
+            is ItemViewHolder -> holder.bind(getItem(position), onClickListener, viewModel)
         }
     }
 }

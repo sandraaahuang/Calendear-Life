@@ -39,7 +39,7 @@ class CountdownFragment : Fragment() {
         val addCountdownAdapter = AddCountdownAdapter(AddCountdownAdapter.OnClickListener {
             viewModel.displayCountdownDetails(it)
             Log.d("sandraaa","it = $it")
-        })
+        },viewModel)
 
         viewModel.navigateToCountdownProperty.observe(this, androidx.lifecycle.Observer {
             if ( null != it ) {

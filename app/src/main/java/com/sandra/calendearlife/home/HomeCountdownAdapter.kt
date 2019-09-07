@@ -10,15 +10,21 @@ import com.google.firebase.Timestamp
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
 
-class HomeCountdownAdapter(val onClickListener: OnClickListener) :
+class HomeCountdownAdapter(val onClickListener: OnClickListener, val viewModel: HomeViewModel) :
     ListAdapter<Countdown, HomeCountdownAdapter.CountdownViewHolder>(DiffCallback) {
 
     class CountdownViewHolder(private var binding: ItemCountdownBinding):
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(countdown: Countdown) {
+        fun bind(countdown: Countdown, viewModel: HomeViewModel) {
             binding.countdown = countdown
             binding.countdownDate.text = "倒數 "+"${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}"+ " 天"
             Log.d("sandraaa","binding.countdownDate.text = ${binding.countdownDate.text}")
+
+            if (countdown.targetTimestamp.seconds < Timestamp.now().seconds){
+                viewModel.updateCountdown(countdown.documentID)
+                Log.d("sandraaa", "countdown.targetTimestamp.seconds = ${countdown.targetTimestamp.seconds}," +
+                        "Timestamp.now().seconds = ${Timestamp.now().seconds}")
+            }
             binding.executePendingBindings()
         }
     }
@@ -47,7 +53,7 @@ class HomeCountdownAdapter(val onClickListener: OnClickListener) :
         holder.itemView.setOnClickListener {
             onClickListener.onClick(countdown)
         }
-        holder.bind(countdown)
+        holder.bind(countdown,viewModel)
     }
 
     class OnClickListener(val clickListener: (countdown: Countdown) -> Unit) {

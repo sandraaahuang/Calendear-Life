@@ -10,11 +10,12 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="300dp"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout2">
+                app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout2"
+                android:layout_width="0dp" android:layout_height="300dp"
+                android:background="@drawable/background_stone">
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/countdownRecyclerView"
@@ -41,6 +42,7 @@
                     android:layout_marginEnd="8dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/remindersRecyclerView"
                 android:layout_width="0dp"
