@@ -94,4 +94,10 @@ dependencies {
     //signInGoogle
     implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    //add gif animation
+    implementation 'com.github.harunkor:AndroidGifViewPlayerKotlin:1.0.0'
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:4.8.0"
 }

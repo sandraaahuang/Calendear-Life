@@ -4,20 +4,20 @@ import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.navigation.NavigationView
 import com.sandra.calendearlife.databinding.ActivityMainBinding
+import com.sandra.calendearlife.databinding.NavHeaderMainBinding
+import com.sandra.calendearlife.util.CurrentFragmentType
+import com.sandra.calendearlife.util.UserManager
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toolbar = binding.toolbar
         setSupportActionBar(toolbar)
 
-        // hide ht e title of toolbar
+        // hide title of toolbar
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val toggle = ActionBarDrawerToggle(
@@ -133,6 +133,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun setDrawer(){
         val drawerLayout = binding.drawerLayout
+
+        // Set up header of drawer ui using data binding
+        val bindingNavHeader = NavHeaderMainBinding.inflate(
+            LayoutInflater.from(this), binding.navView, false)
+
+        bindingNavHeader.lifecycleOwner = this
+        bindingNavHeader.viewModel = viewModel
+        binding.navView.addHeaderView(bindingNavHeader.root)
+
         drawerLayout.fitsSystemWindows = true
         drawerLayout.clipToPadding = false
 

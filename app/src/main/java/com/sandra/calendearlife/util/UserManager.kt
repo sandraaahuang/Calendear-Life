@@ -1,7 +1,8 @@
-package com.sandra.calendearlife
+package com.sandra.calendearlife.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.sandra.calendearlife.MyApplication
 
 object UserManager{
     val preferences =

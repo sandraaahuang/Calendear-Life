@@ -3,7 +3,7 @@ package com.sandra.calendearlife.calendar.event
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.UserManager
+import com.sandra.calendearlife.util.UserManager
 
 class CalendarEventViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()

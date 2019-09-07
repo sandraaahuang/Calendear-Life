@@ -1,4 +1,7 @@
-package com.sandra.calendearlife
+package com.sandra.calendearlife.util
+
+import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.R
 
 
 enum class CurrentFragmentType(val value: String) {

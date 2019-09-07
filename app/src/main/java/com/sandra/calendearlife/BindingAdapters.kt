@@ -1,7 +1,11 @@
 package com.sandra.calendearlife
 
+import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.sandra.calendearlife.calendar.month.CalendarMonthAdapter
 import com.sandra.calendearlife.countdown.AddCountdownAdapter
 import com.sandra.calendearlife.data.Calendar
@@ -10,6 +14,16 @@ import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.home.HomeCountdownAdapter
 import com.sandra.calendearlife.home.HomeRemindersAdapter
 import com.sandra.calendearlife.reminders.AddRemindersAdapter
+
+@BindingAdapter("imageUrl")
+fun bindImage(imgView: ImageView, imgUrl: String?) {
+    imgUrl?.let {
+        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+        Glide.with(imgView.context)
+            .load(imgUri)
+            .into(imgView)
+    }
+}
 
 @BindingAdapter("listCountdown")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<Countdown>?) {
