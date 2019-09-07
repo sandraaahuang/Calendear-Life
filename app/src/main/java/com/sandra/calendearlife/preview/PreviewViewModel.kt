@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.UserManager
+import com.sandra.calendearlife.util.UserManager
 
 class PreviewViewModel : ViewModel() {
 

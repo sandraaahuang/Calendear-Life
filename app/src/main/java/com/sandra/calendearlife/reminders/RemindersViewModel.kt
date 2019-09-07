@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.UserManager
+import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.data.Reminders
 import java.text.SimpleDateFormat
 import java.util.*

@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.UserManager
-import org.threeten.bp.DateTimeUtils
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
+import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList

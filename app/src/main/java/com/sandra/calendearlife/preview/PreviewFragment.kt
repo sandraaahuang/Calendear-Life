@@ -15,17 +15,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.auth.User
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.UserManager
+import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.databinding.PreviewFragmentBinding
-
+import tr.com.harunkor.gifviewplayer.GifMovieView
 
 
 class PreviewFragment : Fragment() {
@@ -50,6 +47,13 @@ class PreviewFragment : Fragment() {
         binding.connect.setOnClickListener {
             signin()
         }
+
+        //gif player layout variable.
+        val gifViewPlayer = binding.imageView as GifMovieView
+        //gif animation file set  in drawable folder.
+        gifViewPlayer.setMovieResource(R.drawable.icon_gif)
+        //gif animation Movie callback and set
+        gifViewPlayer.setMovie(gifViewPlayer.getMovie())
 
         return binding.root
     }

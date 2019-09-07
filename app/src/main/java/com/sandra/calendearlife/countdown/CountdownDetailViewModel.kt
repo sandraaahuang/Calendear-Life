@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.UserManager
+import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.data.Countdown
 
 class CountdownDetailViewModel(countdown: Countdown, app: Application) : AndroidViewModel(app) {

@@ -4,7 +4,7 @@
 
     <data>
         <variable name="viewModel" type="com.sandra.calendearlife.MainViewModel"/>
-        <import type="com.sandra.calendearlife.CurrentFragmentType"/>
+        <import type="com.sandra.calendearlife.util.CurrentFragmentType"/>
         <import type="android.view.View"/>
     </data>
 
@@ -25,7 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/primary_gray"
-                    android:elevation="4dp"
+                    android:elevation="8dp"
                     android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PREVIEW ? View.GONE : View.VISIBLE}"
                     android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
@@ -60,7 +60,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:fitsSystemWindows="true"
-                app:headerLayout="@layout/nav_header_main"
                 app:menu="@menu/activity_main_drawer"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>
