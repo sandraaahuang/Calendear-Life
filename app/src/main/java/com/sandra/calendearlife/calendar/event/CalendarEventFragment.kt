@@ -21,9 +21,16 @@ import java.util.*
 
 class CalendarEventFragment : Fragment() {
 
+    // get dialog result data
     var RESPONSE = "response"
     var EVALUATE_DIALOG = "evaluate_dialog"
     var REQUEST_EVALUATE = 0X110
+
+    val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
+    val timeFormat = SimpleDateFormat("hh:mm a")
+    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+    val dateWeekTimeFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a")
+    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
 
     lateinit var binding: CalendarEventFragmentBinding
 
@@ -88,12 +95,12 @@ class CalendarEventFragment : Fragment() {
         binding.endDate.text = chooseDate
 
         binding.beginDate.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
+
             val datePickerDialog= DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringDate = simpleDateFormat.format(date)
+                    val stringDate = dateWeekFormat.format(date)
                     binding.beginDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
 
@@ -101,12 +108,11 @@ class CalendarEventFragment : Fragment() {
         }
 
         binding.endDate.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
             val datePickerDialog= DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringDate = simpleDateFormat.format(date)
+                    val stringDate = dateWeekFormat.format(date)
                     binding.endDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
@@ -126,7 +132,7 @@ class CalendarEventFragment : Fragment() {
             TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
                 val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
-                val stringTime = SimpleDateFormat("hh:mm a").format(date)
+                val stringTime = timeFormat.format(date)
                 binding.remindersTimeInput.text =
                     "$stringTime" }, hour, minute, false
             ).show()
@@ -136,7 +142,7 @@ class CalendarEventFragment : Fragment() {
                 { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected setDate in textbox
                     val date = Date(year -1900, monthOfYear, dayOfMonth, hour, minute)
-                    val stringTime = SimpleDateFormat("yyyy/MM/dd").format(date)
+                    val stringTime = simpleDateFormat.format(date)
                     binding.remindersDateInput.text=
                         "$stringTime" }, year, monthOfYear, dayOfMonth
             )
@@ -153,28 +159,26 @@ class CalendarEventFragment : Fragment() {
             TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
                 val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
-                val stringTime = SimpleDateFormat("hh:mm a").format(date)
+                val stringTime = timeFormat.format(date)
                 binding.remindersTimeInput.text =
                     "$stringTime" }, hour, minute, false
             ).show()
         }
 
         binding.beginTime.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("h:mm a")
             TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
                 val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
-                val stringTime = simpleDateFormat.format(date)
+                val stringTime = timeFormat.format(date)
                 binding.beginTime.text = "$stringTime" }, hour, minute, false
             ).show()
         }
 
         binding.endTime.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("h:mm a")
             TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
                 val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
-                val stringTime = simpleDateFormat.format(date)
+                val stringTime = timeFormat.format(date)
                 binding.endTime.text = "$stringTime" }, hour, minute, false
             ).show()
         }
@@ -188,9 +192,6 @@ class CalendarEventFragment : Fragment() {
             val date: String
             val beginDate: String
             val endDate: String
-            val dateFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a")
-            val remindFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
-            val yearFormat = SimpleDateFormat("yyyy/MM/dd")
 
             if (binding.allDaySwitch.isChecked){
                 date = "${binding.beginDate.text}"
@@ -204,34 +205,28 @@ class CalendarEventFragment : Fragment() {
 
             val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
 
-
-            val parsedBeginDate = dateFormat.parse(beginDate)
-            val parsedEndDate = dateFormat.parse(endDate)
-            val parsedRemindDate = remindFormat.parse(remindDate)
-            val parsedDate = yearFormat.parse(date)
-
             val countdown = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),
                 "title" to "${binding.eventTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
-                "targetDate" to Timestamp(parsedEndDate.time),
+                "targetDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
                 "overdue" to false)
 
             val reminders = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),
                 "title" to "${binding.eventTitleInput.text}",
                 "setRemindDate" to true,
-                "remindDate" to Timestamp(parsedRemindDate.time),
+                "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
                 "isChecked" to false,
                 "note" to "${binding.noteInput.text}",
                 "frequency" to RepeatDialog.value)
 
             val item = hashMapOf(
                 "frequency" to RepeatDialog.value,
-                "date" to Timestamp(parsedDate.time),
+                "date" to Timestamp(simpleDateFormat.parse(date).time),
                 "setDate" to FieldValue.serverTimestamp(),
-                "beginDate" to Timestamp(parsedBeginDate.time),
-                "endDate" to Timestamp(parsedEndDate.time),
+                "beginDate" to Timestamp(dateWeekTimeFormat.parse(beginDate).time),
+                "endDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
                 "title" to "${binding.eventTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
                 "isAllDay" to "${binding.allDaySwitch.isChecked}",

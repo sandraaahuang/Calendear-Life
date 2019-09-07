@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
         })
 
-        val remindersAdapter = HomeRemindersAdapter(this, HomeRemindersAdapter.OnClickListener{
+        val remindersAdapter = HomeRemindersAdapter(viewModel, HomeRemindersAdapter.OnClickListener{
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
         })
         binding = HomeFragmentBinding.inflate(inflater, container, false)

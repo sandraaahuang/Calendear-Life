@@ -47,7 +47,7 @@ class RemindersFragment : Fragment() {
         val addRemindersAdapter = AddRemindersAdapter(AddRemindersAdapter.OnClickListener{
             viewModel.displayReminderDetails(it)
             Log.d("sandraaa","it = $it")
-        })
+        }, viewModel)
 
         viewModel.navigateToReminderProperty.observe(this, androidx.lifecycle.Observer {
             if ( null != it ) {
