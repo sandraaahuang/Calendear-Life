@@ -32,7 +32,5 @@
     <string name="day_fragment">Day</string>
     <string name="week_fragment">Week</string>
     <string name="search_fragment">Search</string>
-
-
-
+    <string name="history">History</string>
 </resources>

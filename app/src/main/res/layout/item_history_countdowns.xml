@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="countdown" type="com.sandra.calendearlife.data.Countdown"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+    >
+
+        <ImageView
+                android:background="@drawable/icon_overdue"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/countdownOverdue"
+                android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+                android:text="Title : "
+                android:textSize="16sp"
+                android:fontFamily="@font/noto_sans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textTitle" android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/countdownOverdue"
+                android:layout_marginStart="16dp"/>
+        <TextView
+                android:text="@{countdown.title}"
+                tools:text="countdown title"
+                android:textSize="16sp"
+                android:textColor="@color/dark_blue"
+                android:fontFamily="@font/noto_sans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/countdownTitle"
+                app:layout_constraintTop_toTopOf="@+id/textTitle"
+                app:layout_constraintBottom_toBottomOf="@+id/textTitle"
+                app:layout_constraintStart_toEndOf="@+id/textTitle" android:layout_marginStart="8dp"/>
+
+        <TextView
+                android:text="Note : "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="@font/noto_sans"
+                android:id="@+id/textNote" app:layout_constraintStart_toStartOf="@+id/textTitle"
+                app:layout_constraintTop_toBottomOf="@+id/textTitle" android:layout_marginTop="8dp"/>
+        <TextView
+                android:text="@{countdown.note}"
+                tools:text="this is note :D"
+                android:textSize="16sp"
+                android:textColor="@color/dark_blue"
+                android:fontFamily="@font/noto_sans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/remindersNote"
+                app:layout_constraintStart_toStartOf="@+id/countdownTitle"
+                app:layout_constraintTop_toTopOf="@+id/textNote"
+                app:layout_constraintBottom_toBottomOf="@+id/textNote"/>
+
+
+        <TextView
+                android:text="target Date : "
+                android:textSize="16sp"
+                android:fontFamily="@font/noto_sans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4" app:layout_constraintStart_toStartOf="@+id/textNote"
+                app:layout_constraintTop_toBottomOf="@+id/textNote" android:layout_marginTop="8dp"/>
+        <TextView
+                android:text="@{countdown.targetDate}"
+                tools:text="20202020"
+                android:fontFamily="@font/noto_sans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/countdownTime"
+                android:textColor="@color/dark_blue"
+                app:layout_constraintTop_toTopOf="@+id/textView4"
+                app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                app:layout_constraintStart_toEndOf="@+id/textView4" android:layout_marginStart="8dp"/>
+        <View
+                android:id="@+id/view_spacing_line2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintTop_toBottomOf="@+id/countdownTime"
+                android:layout_marginTop="8dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

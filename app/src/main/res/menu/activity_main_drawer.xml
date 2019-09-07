@@ -48,4 +48,17 @@
         </menu>
     </item>
 
+    <item android:title="History">
+        <menu>
+            <item
+                    android:id="@+id/historyReminder"
+                    android:icon="@drawable/icon_ischecked"
+                    android:title="Reminder record"/>
+            <item
+                    android:id="@+id/historyCountdown"
+                    android:icon="@drawable/icon_overdue"
+                    android:title="Countdown record"/>
+        </menu>
+    </item>
+
 </menu>
