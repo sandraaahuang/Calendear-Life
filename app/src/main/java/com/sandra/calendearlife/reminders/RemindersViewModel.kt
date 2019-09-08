@@ -186,7 +186,7 @@ class RemindersViewModel : ViewModel() {
     }
 
     // delete item due to swipe specific item
-    fun deleteItem(documentID: String) {
+    fun deleteItem(title: String) {
 
         db.collection("data")
             .document(UserManager.id!!)
@@ -203,7 +203,7 @@ class RemindersViewModel : ViewModel() {
                         .collection("calendar")
                         .document(calendar.id)
                         .collection("reminders")
-                        .whereEqualTo("documentID", documentID)
+                        .whereEqualTo("title", title)
                         .get()
                         .addOnSuccessListener { documents ->
 
@@ -216,11 +216,11 @@ class RemindersViewModel : ViewModel() {
                                     .collection("calendar")
                                     .document(calendar.id)
                                     .collection("reminders")
-                                    .document(documentID)
-                                    .update("isChecked", true)
+                                    .document(reminders.id)
+                                    .delete()
                                     .addOnSuccessListener {
                                         Log.d(
-                                            "RenewCountdown",
+                                            "delete",
                                             "successfully updated my status!"
                                         )
                                     }

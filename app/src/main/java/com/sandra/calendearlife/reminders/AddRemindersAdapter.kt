@@ -45,6 +45,10 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val viewModel: R
                 binding.remindersTime.setTextColor(Color.parseColor("#f44336"))
             }
 
+            if (!reminders.setRemindDate){
+                binding.remindersTime.visibility = View.GONE
+            }
+
             binding.executePendingBindings()
 
         }
