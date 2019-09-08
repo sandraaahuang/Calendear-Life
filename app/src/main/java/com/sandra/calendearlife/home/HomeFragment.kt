@@ -1,29 +1,27 @@
 package com.sandra.calendearlife.home
 
 
-import android.accounts.AccountManager
-import android.content.Intent
+import android.Manifest
+import android.content.DialogInterface
+import android.content.pm.PackageManager
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.provider.FontsContractCompat.FontRequestCallback.RESULT_OK
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.google.android.gms.auth.GoogleAuthUtil
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.AccountPicker
-import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.NavigationDirections
-import com.sandra.calendearlife.data.Countdown
-import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-
+import com.sandra.calendearlife.util.UserManager
+import java.util.*
 
 
 class HomeFragment : Fragment() {

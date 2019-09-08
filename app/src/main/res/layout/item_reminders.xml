@@ -5,59 +5,60 @@
     <data>
         <variable name="reminders" type="com.sandra.calendearlife.data.Reminders"/>
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:orientation="vertical"
+
+    <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-    >
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="6dp"
+            android:elevation="6dp"
+            android:layout_margin="6dp">
 
-        <View
-                android:id="@+id/view_spacing_line"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+            <Button
+                    android:background="@drawable/round_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/remindersChecked"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp"/>
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/icon_checked"
+                    android:id="@+id/checkStatus" app:layout_constraintEnd_toStartOf="@+id/remindersChecked"
+                    app:layout_constraintTop_toBottomOf="@+id/remindersChecked"
+                    app:layout_constraintStart_toEndOf="@+id/remindersChecked"
+                    app:layout_constraintBottom_toTopOf="@+id/remindersChecked"/>
+            <TextView
+                    android:text="@{reminders.title}"
+                    tools:text="Please remind me"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/noto_sans"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/remindersTitle"
+                    android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/remindersChecked" android:layout_marginStart="16dp"/>
+            <TextView
+                    android:text="@{reminders.remindDate}"
+                    tools:text="20202020"
+                    android:fontFamily="@font/noto_sans"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/remindersTime"
+                    app:layout_constraintTop_toBottomOf="@+id/remindersTitle" android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="@+id/remindersTitle"/>
 
-        <View
-                android:id="@+id/view_spacing_line2"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/remindersChecked"
-                android:layout_marginTop="16dp"/>
-        <Button
-                android:background="@drawable/round_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/remindersChecked"
-                android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"/>
-        <TextView
-                android:text="@{reminders.title}"
-                tools:text="Please remind me"
-                android:textSize="16sp"
-                android:background="@null"
-                android:fontFamily="@font/noto_sans"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/remindersTitle"
-                app:layout_constraintStart_toEndOf="@+id/remindersChecked" android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
-        <TextView
-                android:text="@{reminders.remindDate}"
-                tools:text="20202020"
-                android:fontFamily="@font/noto_sans"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/remindersTime"
-                app:layout_constraintTop_toBottomOf="@+id/remindersTitle" android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="@+id/remindersTitle"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

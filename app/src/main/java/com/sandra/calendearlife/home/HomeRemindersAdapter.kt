@@ -27,6 +27,8 @@ class HomeRemindersAdapter(val viewModel: HomeViewModel, val onClickListener: On
             binding.reminders = reminders
             binding.remindersChecked.setOnClickListener {
                 viewModel.updateItem(reminders.documentID)
+                binding.remindersTitle.setTextColor(Color.parseColor("#D8D8D8"))
+                binding.checkStatus.visibility = View.VISIBLE
 
             }
             if (reminders.remindTimestamp.seconds < Timestamp.now().seconds){

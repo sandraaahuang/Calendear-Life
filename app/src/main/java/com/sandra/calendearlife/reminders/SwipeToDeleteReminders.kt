@@ -4,11 +4,14 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.home.HomeViewModel
+import kotlinx.android.synthetic.main.home_fragment.view.*
+import kotlinx.android.synthetic.main.item_reminders.view.*
 
 class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val viewModel: RemindersViewModel) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -29,7 +32,8 @@ class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val viewModel: Re
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        viewModel
+        val hi = viewHolder.itemView.remindersTitle.text
+        Log.d("sandraaa", "hi = $hi")
         adapter.notifyDataSetChanged()
 
     }
