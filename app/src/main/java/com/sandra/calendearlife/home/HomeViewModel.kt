@@ -218,4 +218,49 @@ class HomeViewModel : ViewModel() {
                 }
             }
     }
+
+    // delete item due to swipe specific item
+    fun deleteItem(title: String) {
+
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .get()
+            .addOnSuccessListener { documents ->
+
+                for (calendar in documents) {
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+
+                    // add countdowns
+                    db.collection("data")
+                        .document(UserManager.id!!)
+                        .collection("calendar")
+                        .document(calendar.id)
+                        .collection("reminders")
+                        .whereEqualTo("title", title)
+                        .get()
+                        .addOnSuccessListener { documents ->
+
+                            for (reminders in documents) {
+                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
+
+                                // add countdowns
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .collection("reminders")
+                                    .document(reminders.id)
+                                    .delete()
+                                    .addOnSuccessListener {
+                                        Log.d(
+                                            "delete",
+                                            "successfully updated my status!"
+                                        )
+                                    }
+                            }
+                        }
+                }
+            }
+    }
 }

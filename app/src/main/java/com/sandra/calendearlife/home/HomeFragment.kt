@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
+import com.sandra.calendearlife.reminders.RemindersViewModel
 import com.sandra.calendearlife.util.UserManager
 import java.util.*
 

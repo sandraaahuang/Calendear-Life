@@ -32,8 +32,10 @@ class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val viewModel: Re
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        val hi = viewHolder.itemView.remindersTitle.text
-        Log.d("sandraaa", "hi = $hi")
+        viewModel.remindersItem.removeAt(position)
+        val title = viewHolder.itemView.remindersTitle.text.toString()
+        viewModel.deleteItem(title)
+        Log.d("sandraaa", "hi = $title")
         adapter.notifyDataSetChanged()
 
     }

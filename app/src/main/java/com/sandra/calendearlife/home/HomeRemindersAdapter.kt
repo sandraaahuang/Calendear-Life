@@ -36,6 +36,11 @@ class HomeRemindersAdapter(val viewModel: HomeViewModel, val onClickListener: On
                 Log.d("sandraaa", "reminders.remindTimestamp.seconds = ${reminders.remindTimestamp.seconds}," +
                         "Timestamp.now().seconds = ${Timestamp.now().seconds}")
             }
+
+            if (!reminders.setRemindDate){
+                binding.remindersTime.visibility = View.GONE
+            }
+
             binding.executePendingBindings()
         }
     }
