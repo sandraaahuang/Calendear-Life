@@ -49,10 +49,10 @@
                 android:text="@{viewModel.userEmail}"
                 android:fontFamily="@font/noto_sans"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@+id/nav_header_image" android:layout_marginStart="24dp"
+                app:layout_constraintStart_toEndOf="@+id/nav_header_image" android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/nav_header_image"
                 app:layout_constraintTop_toTopOf="@+id/nav_header_image"/>
 

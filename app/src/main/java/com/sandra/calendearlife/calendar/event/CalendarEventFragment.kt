@@ -18,6 +18,10 @@ import com.sandra.calendearlife.dialog.RepeatDialog
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
+import android.provider.CalendarContract.Calendars
+import android.content.ContentResolver
+
+
 
 class CalendarEventFragment : Fragment() {
 
@@ -26,11 +30,11 @@ class CalendarEventFragment : Fragment() {
     var EVALUATE_DIALOG = "evaluate_dialog"
     var REQUEST_EVALUATE = 0X110
 
-    val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
-    val timeFormat = SimpleDateFormat("hh:mm a")
-    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-    val dateWeekTimeFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a")
-    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
+    private val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
+    private val timeFormat = SimpleDateFormat("hh:mm a")
+    private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+    private val dateWeekTimeFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a")
+    private val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
 
     lateinit var binding: CalendarEventFragmentBinding
 

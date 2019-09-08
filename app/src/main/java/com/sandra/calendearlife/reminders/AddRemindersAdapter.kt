@@ -3,6 +3,7 @@ package com.sandra.calendearlife.reminders
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -36,6 +37,8 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val viewModel: R
             binding.reminders = reminders
             binding.remindersChecked.setOnClickListener {
                 viewModel.updateItem(reminders.documentID)
+                binding.remindersTitle.setTextColor(Color.parseColor("#D8D8D8"))
+                binding.checkStatus.visibility = View.VISIBLE
             }
 
             if (reminders.remindTimestamp.seconds < Timestamp.now().seconds){

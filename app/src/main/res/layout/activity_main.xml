@@ -23,11 +23,11 @@
 
             <androidx.appcompat.widget.Toolbar
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/primary_gray"
+                    android:layout_height="80dp"
+                    android:background="@color/gray"
                     android:elevation="8dp"
                     android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PREVIEW ? View.GONE : View.VISIBLE}"
-                    android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar"
+                    android:id="@+id/toolbar"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
             <TextView
@@ -35,6 +35,7 @@
                     android:layout_gravity="center"
                     android:textSize="20sp"
                     android:fontFamily="@font/noto_sans"
+                    android:textStyle="bold"
                     android:text="@{viewModel.currentFragmentType.value}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" tools:layout_editor_absoluteY="16dp"

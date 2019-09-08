@@ -1,9 +1,22 @@
 package com.sandra.calendearlife.calendar.event
 
+import android.Manifest
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
+import android.provider.CalendarContract
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.util.UserManager
+import android.provider.CalendarContract.Calendars
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.sandra.calendearlife.MyApplication
+import java.util.*
+
 
 class CalendarEventViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
@@ -141,5 +154,48 @@ class CalendarEventViewModel : ViewModel() {
 
                     }
             }
+    }
+
+    // insert new item into google calendar
+    // auto generate event ID
+    fun insert_event() {
+
+        // calendar id
+        val targetCalendarId = "3"
+        val calendarId = java.lang.Long.parseLong(targetCalendarId)
+
+        // 取得現在的時間作為活動開始時間  begin date
+        val currentTimeMillis = System.currentTimeMillis()
+
+        // 設定活動結束時間為15分鐘後 end date
+        val endTimeMillis = currentTimeMillis + 900000
+
+        // title
+        val targetTitle :String = ""
+        // 新增活動
+        val cr = MyApplication.instance.contentResolver
+        val values = ContentValues()
+        values.put(CalendarContract.Events.DTSTART, currentTimeMillis)
+        values.put(CalendarContract.Events.DTEND, endTimeMillis)
+        values.put(CalendarContract.Events.TITLE, targetTitle)
+        values.put(CalendarContract.Events.DESCRIPTION, "Description")
+        values.put(CalendarContract.Events.CALENDAR_ID, calendarId)
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
+        // 因為targetSDK=25，所以要在Apps運行時檢查權限
+        val permissionCheck = ContextCompat.checkSelfPermission(
+            MyApplication.instance,
+            Manifest.permission.WRITE_CALENDAR
+        )
+        // 如果使用者給了權限便開始新增日歷
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            val uri = cr?.insert(CalendarContract.Events.CONTENT_URI, values)
+            // 返回新建活動的ID
+            if (uri != null) {
+                val eventID = java.lang.Long.parseLong(uri.lastPathSegment!!)
+                // give event id
+//                val targetEventId = binding.eventId
+//                targetEventId.setText(String.format("%s", eventID))
+            }
+        }
     }
 }

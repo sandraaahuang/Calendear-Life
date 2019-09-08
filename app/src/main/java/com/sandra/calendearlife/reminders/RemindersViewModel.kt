@@ -184,4 +184,49 @@ class RemindersViewModel : ViewModel() {
                 }
             }
     }
+
+    // delete item due to swipe specific item
+    fun deleteItem(documentID: String) {
+
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .get()
+            .addOnSuccessListener { documents ->
+
+                for (calendar in documents) {
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+
+                    // add countdowns
+                    db.collection("data")
+                        .document(UserManager.id!!)
+                        .collection("calendar")
+                        .document(calendar.id)
+                        .collection("reminders")
+                        .whereEqualTo("documentID", documentID)
+                        .get()
+                        .addOnSuccessListener { documents ->
+
+                            for (reminders in documents) {
+                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
+
+                                // add countdowns
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .collection("reminders")
+                                    .document(documentID)
+                                    .update("isChecked", true)
+                                    .addOnSuccessListener {
+                                        Log.d(
+                                            "RenewCountdown",
+                                            "successfully updated my status!"
+                                        )
+                                    }
+                            }
+                        }
+                }
+            }
+    }
 }
