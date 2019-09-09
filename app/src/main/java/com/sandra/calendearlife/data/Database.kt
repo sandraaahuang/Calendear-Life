@@ -35,7 +35,6 @@ data class Calendar (
     val hasCountdown: Boolean = false,
     val documentID: String? = null,
     val frequency: String? = null
-
 ) : Parcelable
 
 @Parcelize

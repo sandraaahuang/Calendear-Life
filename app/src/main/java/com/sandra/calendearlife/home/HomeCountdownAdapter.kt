@@ -17,7 +17,7 @@ class HomeCountdownAdapter(val onClickListener: OnClickListener, val viewModel: 
         RecyclerView.ViewHolder(binding.root) {
         fun bind(countdown: Countdown, viewModel: HomeViewModel) {
             binding.countdown = countdown
-            binding.countdownDate.text = "倒數 "+"${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}"+ " 天"
+            binding.countdownDate.text = "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}↓"
             Log.d("sandraaa","binding.countdownDate.text = ${binding.countdownDate.text}")
 
             if (countdown.targetTimestamp.seconds < Timestamp.now().seconds){

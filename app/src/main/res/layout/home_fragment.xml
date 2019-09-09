@@ -17,6 +17,7 @@
                 android:layout_width="0dp" android:layout_height="300dp"
                 android:background="@drawable/background_stone">
 
+
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/countdownRecyclerView"
                     android:orientation="horizontal"

@@ -23,7 +23,7 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
     }
 
     //update item
-    fun updateItem(item: HashMap<String, Any>, documentID: String) {
+    fun updateItem(item: HashMap<String, Any>, calendarItem: HashMap<String, Any>, documentID: String) {
 
         db.collection("data")
             .document(UserManager.id!!)
@@ -47,7 +47,7 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
                             for (reminders in documents) {
                                 Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
+                                // update reminders
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -55,24 +55,14 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
                                     .collection("reminders")
                                     .document(reminders.id)
                                     .update(item)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "successfully updated my status!"
-                                        )
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.w(
-                                            "RenewCountdown",
-                                            "Error updating document",
-                                            e
-                                        )
-                                    }
-                            }
-                        }
 
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllCalendar", "Error getting documents: ", exception)
+                                // update calendar
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .update(calendarItem)
+                            }
                         }
                 }
             }
@@ -116,30 +106,16 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
                                     .collection("reminders")
                                     .document(reminders.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "id = $documentID"
-                                        )
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.w(
-                                            "RenewCountdown",
-                                            "Error updating document",
-                                            e
-                                        )
-                                    }
+
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .delete()
+
                             }
                         }
-
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllCalendar", "Error getting documents: ", exception)
-                        }
                 }
-            }
-
-            .addOnFailureListener { exception ->
-                Log.w("getAllCalendar", "Error getting documents: ", exception)
             }
     }
 }

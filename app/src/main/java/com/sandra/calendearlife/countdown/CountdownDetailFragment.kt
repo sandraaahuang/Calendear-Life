@@ -66,8 +66,15 @@ class CountdownDetailFragment : Fragment() {
                 "targetDate" to java.sql.Timestamp(putInDate.time)
             )
 
+            val calendarItem = hashMapOf(
+                "title" to "${binding.editTextCountdown.text}",
+                "note" to "${binding.editTextCountdownNote.text}",
+                "beginDate" to java.sql.Timestamp(putInDate.time),
+                "date" to java.sql.Timestamp(putInDate.time)
+            )
+
             Log.d("sandraaa", " update = $updateItem")
-            viewModel.updateItem(updateItem, countdown.documentID)
+            viewModel.updateItem(updateItem,calendarItem, countdown.documentID)
             findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
