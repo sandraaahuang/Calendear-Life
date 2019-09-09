@@ -39,7 +39,7 @@ class CalendarEventViewModel : ViewModel() {
                     .document(UserManager.id!!)
                     .collection("calendar")
                     .document(CdocumentReference.id)
-                    .update("documentID", CdocumentReference.id, "color", "af8eb5")
+                    .update("documentID", CdocumentReference.id, "color", "8C6B8B")
                     .addOnSuccessListener {
                         // add reminders
                         db.collection("data")
@@ -76,7 +76,7 @@ class CalendarEventViewModel : ViewModel() {
                                                     .document(UserManager.id!!)
                                                     .collection("calendar")
                                                     .document(document.id)
-                                                    .update("color", "81b9bf")
+                                                    .update("color", "542437")
                                             }
                                     }
                                 }
@@ -139,7 +139,7 @@ class CalendarEventViewModel : ViewModel() {
                                                                     .document(UserManager.id!!)
                                                                     .collection("calendar")
                                                                     .document(document.id)
-                                                                    .update("color", "a69b97")
+                                                                    .update("color", "A6292F")
 
 
                                                             }

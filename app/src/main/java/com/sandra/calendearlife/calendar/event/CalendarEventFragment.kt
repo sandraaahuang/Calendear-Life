@@ -20,7 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.provider.CalendarContract.Calendars
 import android.content.ContentResolver
-
+import android.os.Handler
+import androidx.navigation.fragment.findNavController
+import com.sandra.calendearlife.NavigationDirections
 
 
 class CalendarEventFragment : Fragment() {
@@ -239,6 +241,10 @@ class CalendarEventFragment : Fragment() {
             )
 
             viewModel.writeItem(item, countdown, reminders)
+
+            Handler().postDelayed({
+                findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
+            },2000)
         }
         
         return binding.root

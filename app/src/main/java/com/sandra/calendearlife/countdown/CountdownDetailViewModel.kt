@@ -24,7 +24,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
 
 
     //update item
-    fun updateItem(item: HashMap<String, Any>, documentID: String) {
+    fun updateItem(item: HashMap<String, Any>, calendarItem: HashMap<String, Any>, documentID: String) {
 
         db.collection("data")
             .document(UserManager.id!!)
@@ -35,7 +35,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                 for (calendar in documents) {
                     Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // get update item
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -48,7 +48,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                             for (countdown in documents) {
                                 Log.d("getAllCalendar", "${countdown.id} => ${countdown.data}")
 
-                                // add countdowns
+                                // update countdowns
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -56,24 +56,15 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                                     .collection("countdowns")
                                     .document(countdown.id)
                                     .update(item)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "successfully updated my status!"
-                                        )
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.w(
-                                            "RenewCountdown",
-                                            "Error updating document",
-                                            e
-                                        )
-                                    }
-                            }
-                        }
 
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllCalendar", "Error getting documents: ", exception)
+                                // update calendar
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .update(calendarItem)
+
+                            }
                         }
                 }
             }
@@ -96,7 +87,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                 for (calendar in documents) {
                     Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // get delete item
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -109,7 +100,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                             for (countdown in documents) {
                                 Log.d("getAllCalendar", "${countdown.id} => ${countdown.data}")
 
-                                // add countdowns
+                                // delete countdown
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -123,18 +114,15 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                                             "id = $documentID"
                                         )
                                     }
-                                    .addOnFailureListener { e ->
-                                        Log.w(
-                                            "RenewCountdown",
-                                            "Error updating document",
-                                            e
-                                        )
-                                    }
-                            }
-                        }
 
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllCalendar", "Error getting documents: ", exception)
+                                // delete calendar
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .delete()
+
+                            }
                         }
                 }
             }

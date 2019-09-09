@@ -26,11 +26,26 @@ class CalendarMonthAdapter(val onClickListener: OnClickListener) :
 
             binding.typeText.text =
                 when (calendar.color){
-                "af8eb5" -> "Event"
-                "a094b7" -> "Reminder"
-                "82b3c9" -> "Countdown"
-                else -> "coming soon"
+                "C02942" -> "Reminder"
+                "100038" -> "Countdown"
+                else -> "Event"
             }
+
+            // set countdown icon
+            binding.hasCountdown.visibility =
+                when {
+                    calendar.hasCountdown -> View.VISIBLE
+                    else -> View.GONE
+
+                }
+
+            // set reminder icon
+            binding.hasReminder.visibility =
+                when {
+                    calendar.hasReminders -> View.VISIBLE
+                    else -> View.GONE
+
+                }
 
             binding.executePendingBindings()
         }

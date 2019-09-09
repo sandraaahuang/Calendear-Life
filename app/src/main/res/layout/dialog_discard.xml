@@ -8,7 +8,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/makesureLayout"
+                android:layout_height="wrap_content"
+                android:id="@+id/makesureLayout"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0">
 

@@ -81,8 +81,15 @@ class RemindersDetailFragment : Fragment() {
                 "remindDate" to java.sql.Timestamp(putInDate.time)
             )
 
+            val calendarItem = hashMapOf(
+                "title" to "${binding.remindersTitle.text}",
+                "note" to "${binding.editTextRemindNote.text}",
+                "beginDate" to java.sql.Timestamp(putInDate.time),
+                "date" to java.sql.Timestamp(putInDate.time)
+            )
+
             Log.d("sandraaa", " update = $updateItem")
-            viewModel.updateItem(updateItem, reminders.documentID)
+            viewModel.updateItem(updateItem, calendarItem, reminders.documentID)
             findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 

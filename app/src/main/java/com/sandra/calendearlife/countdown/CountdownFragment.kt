@@ -3,6 +3,7 @@ package com.sandra.calendearlife.countdown
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -80,7 +81,7 @@ class CountdownFragment : Fragment() {
             val putInDate = Date(targetDate)
 
             val calendar = hashMapOf(
-                "color" to "82b3c9",
+                "color" to "100038",
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to java.sql.Timestamp(putInDate.time),
                 "endDate" to java.sql.Timestamp(putInDate.time),
@@ -101,6 +102,10 @@ class CountdownFragment : Fragment() {
             )
 
             viewModel.writeItem(calendar,countdown)
+
+            Handler().postDelayed({
+               findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+            },2000)
         }
 
         val recyclerIndicator = binding.indicator

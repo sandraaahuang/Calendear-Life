@@ -144,7 +144,7 @@ class RemindersFragment : Fragment() {
             val parsed = customFormat.parse(date)
 
             val calendar = hashMapOf(
-                "color" to "a094b7",
+                "color" to "C02942",
                 "setDate" to FieldValue.serverTimestamp(),
                 "beginDate" to java.sql.Timestamp(parsedDate.time),
                 "endDate" to java.sql.Timestamp(parsedDate.time),
