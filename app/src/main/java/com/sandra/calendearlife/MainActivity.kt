@@ -72,18 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.schedule -> {
-                findNavController(R.id.myNavHostFragment)
-                    .navigate(NavigationDirections.actionGlobalCalendarScheduleFragment())
-            }
-            R.id.day -> {
-                findNavController(R.id.myNavHostFragment)
-                    .navigate(NavigationDirections.actionGlobalCalendarDayFragment())
-            }
-            R.id.week -> {
-                findNavController(R.id.myNavHostFragment)
-                    .navigate(NavigationDirections.actionGlobalCalendarWeekFragment())
-            }
+
             R.id.month -> {
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarMonthFragment())

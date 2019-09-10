@@ -32,7 +32,7 @@ class AddCountdownAdapter(val onClickListener: OnClickListener, val viewModel: C
 
         fun bind(countdown: Countdown, onClickListener: OnClickListener, viewModel: CountdownViewModel) {
             binding.countdown = countdown
-            binding.countdownDate.text = "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}↓"
+            binding.countdownDate.text = "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)} days"
 
             if (countdown.targetTimestamp.seconds < Timestamp.now().seconds) {
                 viewModel.updateItem(countdown.documentID)

@@ -214,7 +214,7 @@
                 tools:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/switchSetAsReminder"
                 app:layout_constraintTop_toBottomOf="@+id/switchSetAsReminder" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" android:layout_marginTop="8dp">
+                android:layout_marginEnd="16dp" android:layout_marginTop="8dp">
 
             <ImageView
                     android:id="@+id/bellIcon"
@@ -222,7 +222,7 @@
                     android:layout_height="24dp" app:srcCompat="@drawable/icon_bell"
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="16dp"/>
+            />
             <TextView
                     android:id="@+id/remindersDateInput"
                     android:layout_width="wrap_content"
@@ -245,13 +245,14 @@
                     app:layout_constraintTop_toTopOf="@+id/remindersDateInput"
                     app:layout_constraintBottom_toBottomOf="@+id/remindersDateInput"
                     app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="16dp"/>
+            />
             <ImageView
                     android:id="@+id/repeatIcon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp" app:srcCompat="@drawable/icon_repeat"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" app:srcCompat="@drawable/icon_repeat"
                     app:layout_constraintStart_toStartOf="@+id/bellIcon"
-                    android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/bellIcon"/>
+                    android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/bellIcon"
+                    app:layout_constraintEnd_toEndOf="@+id/bellIcon"/>
             <TextView
                     android:id="@+id/repeatChoose"
                     android:layout_width="wrap_content"
@@ -261,7 +262,7 @@
                     android:textColor="#868686"
                     android:textSize="16sp"
                     app:layout_constraintTop_toTopOf="@+id/repeatIcon"
-                    app:layout_constraintBottom_toBottomOf="@+id/repeatIcon" android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/repeatIcon"
                     app:layout_constraintEnd_toEndOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
         <View
@@ -292,9 +293,9 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp" app:srcCompat="@android:color/background_dark"
                 android:id="@+id/saveImage2"
-                app:layout_constraintTop_toBottomOf="@+id/countdownIcon" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.0"
-                android:layout_marginTop="8dp"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
         <TextView
                 android:text="@string/saveReminders"
                 android:layout_width="wrap_content"

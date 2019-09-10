@@ -91,7 +91,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-                app:layout_constraintTop_toBottomOf="@+id/editText_countdownNote" android:layout_marginTop="8dp"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
         <Button
                 android:text="Delete"
                 android:layout_width="0dp"

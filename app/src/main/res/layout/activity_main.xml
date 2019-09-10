@@ -25,21 +25,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:background="@color/gray"
-                    android:elevation="8dp"
+                    android:elevation="3dp"
                     android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PREVIEW ? View.GONE : View.VISIBLE}"
                     android:id="@+id/toolbar"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-            <TextView
-                    tools:text="Hello"
-                    android:layout_gravity="center"
-                    android:textSize="20sp"
-                    android:fontFamily="@font/noto_sans"
-                    android:textStyle="bold"
-                    android:text="@{viewModel.currentFragmentType.value}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" tools:layout_editor_absoluteY="16dp"
-                    tools:layout_editor_absoluteX="175dp" android:id="@+id/textView"/>
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0">
+                <TextView
+                        tools:text="Hello"
+                        android:layout_gravity="center"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/noto_sans"
+                        android:textStyle="bold"
+                        android:text="@{viewModel.currentFragmentType.value}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" tools:layout_editor_absoluteY="16dp"
+                        tools:layout_editor_absoluteX="175dp" android:id="@+id/textView"/>
 
             </androidx.appcompat.widget.Toolbar>
             <fragment
@@ -53,6 +53,7 @@
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.navigation.NavigationView
@@ -61,6 +62,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:fitsSystemWindows="true"
+                app:itemIconTint="@color/black"
                 app:menu="@menu/activity_main_drawer"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>

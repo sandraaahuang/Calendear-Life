@@ -15,14 +15,16 @@
                 android:layout_marginBottom="32dp" app:layout_constraintBottom_toBottomOf="parent"/>
 
         <tr.com.harunkor.gifviewplayer.GifMovieView
-                android:layout_width="278dp"
-                android:layout_height="396dp"
+                android:layout_width="500dp"
+                android:layout_height="400dp"
                 android:src="@drawable/icon_gif"
                 android:id="@+id/imageView"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="16dp" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp" android:layout_marginTop="32dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/connect"/>
+                app:layout_constraintBottom_toTopOf="@+id/connect" android:layout_marginBottom="32dp"
+        />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
