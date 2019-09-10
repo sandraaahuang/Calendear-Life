@@ -88,7 +88,8 @@ class CountdownFragment : Fragment() {
                 "date" to java.sql.Timestamp(putInDate.time),
                 "title" to "${binding.countdownTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
-                "hasCountdown" to true
+                "hasCountdown" to true,
+                "fromGoogle" to false
             )
 
 

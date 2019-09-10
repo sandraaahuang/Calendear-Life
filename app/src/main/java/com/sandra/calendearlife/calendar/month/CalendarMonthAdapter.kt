@@ -47,6 +47,13 @@ class CalendarMonthAdapter(val onClickListener: OnClickListener) :
 
                 }
 
+            binding.hasGoogle.visibility =
+                when {
+                    calendar.fromGoogle -> View.VISIBLE
+                    else ->View.GONE
+                }
+
+
             binding.executePendingBindings()
         }
     }

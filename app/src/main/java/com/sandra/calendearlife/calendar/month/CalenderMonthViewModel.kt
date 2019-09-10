@@ -84,7 +84,8 @@ class CalenderMonthViewModel : ViewModel() {
                         calendar.data["hasReminders"].toString().toBoolean(),
                         calendar.data["hasCountdown"].toString().toBoolean(),
                         calendar.data["documentID"].toString(),
-                        calendar.data["frequency"].toString()
+                        calendar.data["frequency"].toString(),
+                        calendar.data["fromGoogle"].toString().toBoolean()
                     )
                     calendarItem.add(calenderAdd)
 

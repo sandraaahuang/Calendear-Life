@@ -152,7 +152,8 @@ class RemindersFragment : Fragment() {
                 "title" to "${binding.remindersTitleInput.text}",
                 "note" to "${binding.remindersNoteInput.text}",
                 "hasReminders" to true,
-                "frequency" to RepeatDialog.value
+                "frequency" to RepeatDialog.value,
+                "fromGoogle" to false
             )
 
             val reminders = hashMapOf(

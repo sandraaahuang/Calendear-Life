@@ -16,67 +16,71 @@
             android:elevation="@dimen/card_elevation"
             android:layout_margin="6dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <ImageView
-                android:layout_width="80dp"
-                android:layout_height="0dp"
-                android:background='@{Color.parseColor("#" + calendar.color)}'
-                android:id="@+id/itemEventColor"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
-                app:layout_constraintTop_toTopOf="@+id/itemEventText"
-                app:layout_constraintBottom_toBottomOf="@+id/itemEventText"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="165dp"
+                    android:layout_height="0dp"
+                    android:id="@+id/itemEventColor"
+                    android:background='@{Color.parseColor("#" + calendar.color)}'
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-                android:id="@+id/itemEventText"
-                android:layout_width="wrap_content"
-                android:layout_height="26dp"
-                android:textSize="16sp"
-                android:text="@{calendar.title}"
-                tools:text="Play football with friends"
-                app:layout_constraintStart_toEndOf="@+id/itemEventColor"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="4dp"/>
-        <TextView
-                android:text="helloText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/noto_sans"
-                android:textSize="14sp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:id="@+id/typeText" app:layout_constraintStart_toStartOf="@+id/itemEventColor"
-                app:layout_constraintTop_toTopOf="@+id/itemEventColor"
-                app:layout_constraintBottom_toBottomOf="@+id/itemEventColor"
-                app:layout_constraintEnd_toEndOf="@+id/itemEventColor"/>
-        <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp" app:srcCompat="@drawable/icon_has_countdown"
-                android:id="@+id/hasCountdown"
-                app:layout_constraintEnd_toStartOf="@+id/hasReminder" android:layout_marginEnd="8dp"
-                android:visibility="gone" app:layout_constraintBottom_toTopOf="@+id/itemEventText"
-                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"/>
-        <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp" app:srcCompat="@drawable/icon_has_remind"
-                android:id="@+id/hasReminder"
-                app:layout_constraintEnd_toStartOf="@+id/hasGoogle" android:layout_marginEnd="8dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/itemEventText"
-                app:layout_constraintTop_toTopOf="@+id/hasCountdown"/>
-        <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp" app:srcCompat="@drawable/icon_has_google"
-                android:id="@+id/hasGoogle"
-                android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/itemEventText"
-                app:layout_constraintTop_toTopOf="@+id/hasCountdown" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="16dp"/>
+                <TextView
+                        android:text="helloText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/noto_sans"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:id="@+id/typeText"
+                        app:layout_constraintStart_toStartOf="@+id/itemEventColor" android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+                <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" app:srcCompat="@drawable/icon_has_countdown"
+                        android:id="@+id/hasCountdown"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/typeText"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintTop_toTopOf="@+id/typeText"
+                        app:layout_constraintBottom_toBottomOf="@+id/typeText"/>
+                <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" app:srcCompat="@drawable/icon_has_remind"
+                        android:id="@+id/hasReminder"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/hasCountdown"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintTop_toTopOf="@+id/hasCountdown"
+                        app:layout_constraintBottom_toBottomOf="@+id/hasCountdown"/>
+                <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" app:srcCompat="@drawable/icon_has_google"
+                        android:id="@+id/hasGoogle"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/hasReminder" android:layout_marginStart="8dp"
+                        app:layout_constraintTop_toTopOf="@+id/hasReminder"
+                        app:layout_constraintBottom_toBottomOf="@+id/hasReminder"
+                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                    android:id="@+id/itemEventText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:textSize="16sp"
+                    android:text="@{calendar.title}"
+                    tools:text="Play football with friends"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/itemEventColor"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 

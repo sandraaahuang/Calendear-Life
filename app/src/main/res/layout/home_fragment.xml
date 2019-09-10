@@ -54,7 +54,8 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"/>
 
         <com.github.clans.fab.FloatingActionMenu
                 android:layout_width="wrap_content"
@@ -62,8 +63,9 @@
                 app:menu_colorNormal="@color/black"
                 app:menu_colorPressed="@color/black"
                 app:menu_colorRipple="@color/black"
-                app:menu_labels_colorRipple="@color/white"
-                app:menu_labels_colorNormal="@color/white"
+                app:menu_labels_colorRipple="@color/translucent_80"
+                app:menu_labels_colorNormal="@color/translucent_80"
+                app:menu_labels_showShadow="false"
                 app:menu_labels_textColor="@color/black"
                 android:layout_marginBottom="16dp"
                 app:fab_showShadow="true"
@@ -78,7 +80,7 @@
                     app:fab_colorNormal="@color/black"
                     app:fab_colorPressed="@color/black"
                     app:fab_colorRipple="@color/white"
-                    android:src="@drawable/icon_add_reminder"
+                    android:src="@drawable/icon_add_reminder_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fab_showShadow="true"

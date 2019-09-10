@@ -2,10 +2,12 @@ package com.sandra.calendearlife.calendar.detail
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.data.Calendar
 
@@ -47,7 +49,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (countdowns in documents) {
-                                Log.d("getAllCalendar", "${countdowns.id} => ${countdowns.data}")
+                                Log.d("getAllCountdownById", "${countdowns.id} => ${countdowns.data}")
 
                                 // update countdowns
                                 db.collection("data")
@@ -57,13 +59,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                                     .collection("countdowns")
                                     .document(countdowns.id)
                                     .update(countdown)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "update countdown",
-                                            "id = $documentID"
-                                        )
-                                    }
-
                             }
                         }
 
@@ -77,7 +72,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllReminders", "${reminders.id} => ${reminders.data}")
+                                Log.d("getAllRemindersById", "${reminders.id} => ${reminders.data}")
 
                                 // update reminders
                                 db.collection("data")
@@ -87,13 +82,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                                     .collection("reminders")
                                     .document(reminders.id)
                                     .update(updateRemind)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "update reminders"
-                                        )
-                                    }
-
                             }
                         }
                     // update calendar
@@ -103,10 +91,8 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .document(calendar.id)
                         .update(calendarItem)
                         .addOnSuccessListener {
-                            Log.d(
-                                "update calendar",
-                                "id = $documentID"
-                            )
+                            Toast.makeText(MyApplication.instance, "Successfully updated", Toast.LENGTH_SHORT)
+                                .show()
                         }
                 }
             }
@@ -138,7 +124,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (countdowns in documents) {
-                                Log.d("getAllCalendar", "${countdowns.id} => ${countdowns.data}")
+                                Log.d("getAllCountdown", "${countdowns.id} => ${countdowns.data}")
 
                                 // add countdowns
                                 db.collection("data")
@@ -148,13 +134,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                                     .collection("countdowns")
                                     .document(countdowns.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "delete countdown",
-                                            "id = $documentID"
-                                        )
-                                    }
-
                             }
                         }
 
@@ -168,7 +147,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
+                                Log.d("getAllRemindersById", "${reminders.id} => ${reminders.data}")
 
                                 // add countdowns
                                 db.collection("data")
@@ -178,13 +157,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                                     .collection("reminders")
                                     .document(reminders.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "delete reminders"
-                                        )
-                                    }
-
                             }
                         }
 
@@ -196,10 +168,8 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .document(calendar.id)
                         .delete()
                         .addOnSuccessListener {
-                            Log.d(
-                                "delete calendar",
-                                "id = $documentID"
-                            )
+                            Toast.makeText(MyApplication.instance, "Successfully deleted", Toast.LENGTH_SHORT)
+                                .show()
                         }
 
 

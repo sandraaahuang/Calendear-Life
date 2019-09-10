@@ -29,16 +29,15 @@
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
 
-        <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
-                android:id="@+id/indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="236dp"
-                app:spi_dotSelectedColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-                android:layout_marginBottom="4dp" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp"/>
+            <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:spi_dotSelectedColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+                    android:layout_marginBottom="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="8dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -99,7 +98,7 @@
                     android:layout_height="20dp" app:srcCompat="@drawable/icon_schedule"
                     android:layout_marginTop="8dp"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="48dp"/>
+                    android:layout_marginStart="16dp"/>
             <TextView
                     android:text="Date"
                     android:textColor="#868686"
@@ -136,7 +135,7 @@
                 android:layout_height="20dp" app:srcCompat="@drawable/icon_note"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/editCountdownLayout"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="48dp"/>
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
         <EditText
                 android:hint="@string/add_note"
                 android:background="@null"
