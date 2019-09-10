@@ -4,13 +4,17 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FieldValue
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.CalendarDetailFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.sql.Timestamp
@@ -131,6 +135,8 @@ class CalendarDetailFragment : Fragment() {
         binding.deleteButton.setOnClickListener {
             viewModel.deleteItem(calendar.documentID!!)
             Log.d("sandraaa", "delete = ${calendar.documentID}")
+            Handler().postDelayed({findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())}
+                ,3000)
 
         }
 

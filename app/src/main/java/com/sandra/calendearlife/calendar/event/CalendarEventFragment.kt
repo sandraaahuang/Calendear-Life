@@ -237,7 +237,8 @@ class CalendarEventFragment : Fragment() {
                 "note" to "${binding.noteInput.text}",
                 "isAllDay" to "${binding.allDaySwitch.isChecked}",
                 "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
-                "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean()
+                "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
+                "fromGoogle" to false
             )
 
             viewModel.writeItem(item, countdown, reminders)

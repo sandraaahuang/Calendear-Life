@@ -34,7 +34,8 @@ data class Calendar (
     val hasReminders: Boolean = false,
     val hasCountdown: Boolean = false,
     val documentID: String? = null,
-    val frequency: String? = null
+    val frequency: String? = null,
+    val fromGoogle: Boolean = false
 ) : Parcelable
 
 @Parcelize

@@ -60,42 +60,59 @@
         </androidx.core.widget.NestedScrollView>
 
         <com.github.clans.fab.FloatingActionMenu
-                android:id="@+id/floatingButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:menu_colorNormal="@color/black"
                 app:menu_colorPressed="@color/black"
                 app:menu_colorRipple="@color/black"
-                app:menu_labels_colorRipple="@color/white"
-                app:menu_labels_colorNormal="@color/white"
+                app:menu_labels_colorRipple="@color/translucent_80"
+                app:menu_labels_colorNormal="@color/translucent_80"
+                app:menu_labels_showShadow="false"
                 app:menu_labels_textColor="@color/black"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="end|bottom"
-                android:layout_margin="20dp">
+                android:layout_margin="20dp"
+                app:fab_showShadow="true"
+                app:fab_shadowColor="#66000000"
+                app:fab_shadowRadius="@dimen/card_raduis"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/remindersRecyclerView" android:layout_marginEnd="16dp">
 
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/remindersFab"
                     app:fab_label="New Reminder"
                     app:fab_colorNormal="@color/black"
+                    app:fab_colorPressed="@color/black"
+                    app:fab_colorRipple="@color/white"
                     android:src="@drawable/icon_add_reminder"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:fab_showShadow="true"
+                    app:fab_shadowColor="#66000000"/>
 
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/countdownsFab"
                     app:fab_label="New Countdown"
                     app:fab_colorNormal="@color/black"
+                    app:fab_colorPressed="@color/black"
+                    app:fab_colorRipple="@color/white"
                     android:src="@drawable/icon_add_countdown"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:fab_showShadow="true"
+                    app:fab_shadowColor="#66000000"/>
 
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/calendarFab"
                     app:fab_label="New Event"
                     app:fab_colorNormal="@color/black"
+                    app:fab_colorPressed="@color/black"
+                    app:fab_colorRipple="@color/white"
                     android:src="@drawable/icon_add_calendar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:fab_showShadow="true"
+                    app:fab_shadowColor="#66000000"/>
 
         </com.github.clans.fab.FloatingActionMenu>
 

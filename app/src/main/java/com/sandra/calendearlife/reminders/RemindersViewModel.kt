@@ -224,6 +224,19 @@ class RemindersViewModel : ViewModel() {
                                             "successfully updated my status!"
                                         )
                                     }
+
+                                // delete calendar
+                                db.collection("data")
+                                    .document(UserManager.id!!)
+                                    .collection("calendar")
+                                    .document(calendar.id)
+                                    .delete()
+                                    .addOnSuccessListener {
+                                        Log.d(
+                                            "delete",
+                                            "successfully updated my status!"
+                                        )
+                                    }
                             }
                         }
                 }
