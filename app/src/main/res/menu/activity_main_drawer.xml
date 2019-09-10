@@ -5,32 +5,36 @@
 
     <group android:checkableBehavior="single">
 
-    <item
-            android:id="@+id/schedule"
-            android:icon="@drawable/icon_schedule"
-            android:title="Schedule"/>
-    <item
-            android:id="@+id/day"
-            android:icon="@drawable/icon_day"
-            android:title="Day"/>
-    <item
-            android:id="@+id/week"
-            android:icon="@drawable/icon_week"
-            android:title="Week"/>
-    <item
-            android:id="@+id/month"
-            android:icon="@drawable/icon_month"
-            android:title="Month"/>
-    <item
-            android:id="@+id/search"
-            android:icon="@drawable/icon_search"
-            android:title="Search"/>
-    <item
-            android:id="@+id/home"
-            android:icon="@drawable/icon_home"
-            android:title="Home"/>
+        <item
+                android:id="@+id/home"
+                android:icon="@drawable/icon_home"
+                android:title="Home"/>
+
+        <item
+                android:id="@+id/month"
+                android:icon="@drawable/icon_month"
+                android:title="Month"/>
+
+        <item
+                android:id="@+id/search"
+                android:icon="@drawable/icon_search"
+                android:title="Search"/>
+
 
     </group>
+
+    <item android:title="History">
+        <menu>
+            <item
+                    android:id="@+id/historyReminder"
+                    android:icon="@drawable/icon_checked"
+                    android:title="Reminder record"/>
+            <item
+                    android:id="@+id/historyCountdown"
+                    android:icon="@drawable/icon_overdue"
+                    android:title="Countdown record"/>
+        </menu>
+    </item>
 
     <item android:title="Add Event">
         <menu>
@@ -42,22 +46,9 @@
                     android:id="@+id/addReminder"
                     android:icon="@drawable/icon_add_reminder"
                     android:title="Add Reminder"/>
-            <item   android:id="@+id/addCountdown"
-                    android:icon="@drawable/icon_add_countdown"
-                    android:title="Add Countdown"/>
-        </menu>
-    </item>
-
-    <item android:title="History">
-        <menu>
-            <item
-                    android:id="@+id/historyReminder"
-                    android:icon="@drawable/icon_ischecked"
-                    android:title="Reminder record"/>
-            <item
-                    android:id="@+id/historyCountdown"
-                    android:icon="@drawable/icon_overdue"
-                    android:title="Countdown record"/>
+            <item android:id="@+id/addCountdown"
+                  android:icon="@drawable/icon_add_countdown"
+                  android:title="Add Countdown"/>
         </menu>
     </item>
 

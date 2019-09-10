@@ -35,12 +35,12 @@
             <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
                     android:id="@+id/indicator"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="272dp"
+                    android:layout_height="wrap_content"
                     app:spi_dotSelectedColor="@color/black"
                     app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp"/>
+                    android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/countdownRecyclerView"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -66,6 +66,9 @@
                 app:menu_labels_colorNormal="@color/white"
                 app:menu_labels_textColor="@color/black"
                 android:layout_marginBottom="16dp"
+                app:fab_showShadow="true"
+                app:fab_shadowColor="#66000000"
+                app:fab_shadowRadius="@dimen/card_raduis"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/remindersRecyclerView" android:layout_marginEnd="16dp">
 
@@ -73,25 +76,37 @@
                     android:id="@+id/remindersFab"
                     app:fab_label="New Reminder"
                     app:fab_colorNormal="@color/black"
+                    app:fab_colorPressed="@color/black"
+                    app:fab_colorRipple="@color/white"
                     android:src="@drawable/icon_add_reminder"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:fab_showShadow="true"
+                    app:fab_shadowColor="#66000000"/>
 
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/countdownsFab"
                     app:fab_label="New Countdown"
                     app:fab_colorNormal="@color/black"
+                    app:fab_colorPressed="@color/black"
+                    app:fab_colorRipple="@color/white"
                     android:src="@drawable/icon_add_countdown"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    app:fab_showShadow="true"
+                    app:fab_shadowColor="#66000000"/>
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/calendarFab"
                 app:fab_label="New Event"
                 app:fab_colorNormal="@color/black"
+                app:fab_colorPressed="@color/black"
+                app:fab_colorRipple="@color/white"
                 android:src="@drawable/icon_add_calendar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                app:fab_showShadow="true"
+                app:fab_shadowColor="#66000000"/>
 
         </com.github.clans.fab.FloatingActionMenu>
 

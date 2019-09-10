@@ -12,8 +12,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.dialog.RepeatDialog
 import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -105,7 +107,8 @@ class CalenderMonthViewModel : ViewModel() {
             CalendarContract.Calendars.ACCOUNT_NAME, // 1 account name
             CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, // 2 display name
             CalendarContract.Calendars.OWNER_ACCOUNT, // 3 owner account
-            CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL)// 4 access level
+            CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL
+        )// 4 access level
 
         val PROJECTION_ID_INDEX = 0
         val PROJECTION_ACCOUNT_NAME_INDEX = 1
@@ -117,10 +120,15 @@ class CalenderMonthViewModel : ViewModel() {
         val INSTANCE_PROJECTION = arrayOf(
             CalendarContract.Instances.EVENT_ID, // 0 event id
             CalendarContract.Instances.BEGIN, // 1 begin date
-            CalendarContract.Instances.TITLE)// 2 title
+            CalendarContract.Instances.END, // 2 end date
+            CalendarContract.Instances.TITLE, // 3 title
+            CalendarContract.Instances.DESCRIPTION // 4 note
+        )
 
         val PROJECTION_BEGIN_INDEX = 1
-        val PROJECTION_TITLE_INDEX = 2
+        val PROJECTION_END_INDEX = 2
+        val PROJECTION_TITLE_INDEX = 3
+        val PROJECTION_DESCRIPTION_INDEX = 4
 
         // Get user email
         val targetAccount = UserManager.userEmail!!
@@ -164,7 +172,7 @@ class CalenderMonthViewModel : ViewModel() {
                     accountNameList.add(displayName)
                     calendarIdList.add(calendarId)
 
-                    Log.d("sandraaa","accountNameList = $accountNameList,calendarIdList = $calendarIdList ")
+                    Log.d("sandraaa", "accountNameList = $accountNameList,calendarIdList = $calendarIdList ")
 
                     val targetCalendar = calendarId
                     val beginTime = Calendar.getInstance()
@@ -186,7 +194,10 @@ class CalenderMonthViewModel : ViewModel() {
 
                     val eventIdList = java.util.ArrayList<String>()
                     val beginList = java.util.ArrayList<String>()
+                    val endList = java.util.ArrayList<String>()
                     val titleList = java.util.ArrayList<String>()
+                    val noteList = java.util.ArrayList<String>()
+
 
                     if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                         cur2 = cr2?.query(
@@ -199,20 +210,37 @@ class CalenderMonthViewModel : ViewModel() {
                             while (cur2.moveToNext()) {
                                 val eventID = cur2.getString(PROJECTION_ID_INDEX)
                                 val beginVal = cur2.getString(PROJECTION_BEGIN_INDEX)
-                                val title: String = cur2.getString(PROJECTION_TITLE_INDEX)
+                                val endVal = cur2.getString(PROJECTION_END_INDEX)
+                                val title = cur2.getString(PROJECTION_TITLE_INDEX)
+                                val note = cur2.getString(PROJECTION_DESCRIPTION_INDEX)
                                 // 取得所需的資料
                                 Log.i("query_event", String.format("eventID=%s", eventID))
                                 Log.i("query_event", String.format("beginVal=%s", beginVal))
+                                Log.i("query_event", String.format("endVal=%s", endVal))
                                 Log.i("query_event", String.format("title=%s", title))
+                                Log.i("query_event", String.format("note=%s", note))
                                 // 暫存資料讓使用者選擇
                                 eventIdList.add(eventID)
                                 beginList.add(beginVal)
+                                endList.add(endVal)
                                 titleList.add(title)
+                                noteList.add(note)
+
+                                val item = hashMapOf(
+                                    "date" to beginVal,
+                                    "setDate" to FieldValue.serverTimestamp(),
+                                    "beginDate" to beginVal,
+                                    "endDate" to endVal,
+                                    "title" to title,
+                                    "note" to note
+                                )
+//                                writeGoogleItem(item)
                             }
                             cur2.close()
+
+                            // write in database
+
                         }
-                        Log.d("sandraaa", "eventIdList = $eventIdList, beginList = $beginList," +
-                                "titleList = $titleList" )
                     }
                 }
                 cur.close()
@@ -221,5 +249,27 @@ class CalenderMonthViewModel : ViewModel() {
             val toast = Toast.makeText(MyApplication.instance, "沒有所需的權限", Toast.LENGTH_LONG)
             toast.show()
         }
+    }
+
+    fun writeGoogleItem(item: Any) {
+
+        // get all data from user at first
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("google")
+            .add(item)
+            .addOnSuccessListener { CdocumentReference ->
+                Log.d(
+                    "AddCountdownsIntoDB",
+                    "DocumentSnapshot added with ID: " + CdocumentReference.id
+                )
+
+                // update calendar document id and color ( pure calendar first)
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .document(CdocumentReference.id)
+                    .update("documentID", CdocumentReference.id, "color", "245E2C")
+            }
     }
 }

@@ -6,6 +6,16 @@
         <variable name="reminders" type="com.sandra.calendearlife.data.Reminders"/>
     </data>
 
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/card_raduis"
+            app:cardElevation="@dimen/card_elevation"
+            android:elevation="@dimen/card_elevation"
+            android:layout_margin="6dp">
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -14,7 +24,7 @@
 
 
         <ImageView
-                android:background="@drawable/icon_ischecked"
+                android:background="@drawable/icon_checked"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:id="@+id/remindersChecked"
@@ -95,4 +105,6 @@
                 android:layout_marginTop="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 </layout>
