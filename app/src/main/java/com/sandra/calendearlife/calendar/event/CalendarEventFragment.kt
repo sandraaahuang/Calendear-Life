@@ -21,6 +21,7 @@ import java.util.*
 import android.provider.CalendarContract.Calendars
 import android.content.ContentResolver
 import android.os.Handler
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import com.sandra.calendearlife.NavigationDirections
 
@@ -238,14 +239,27 @@ class CalendarEventFragment : Fragment() {
                 "isAllDay" to "${binding.allDaySwitch.isChecked}",
                 "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
                 "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
-                "fromGoogle" to false
+                "fromGoogle" to "${binding.switchSetAsGoogle.isChecked}".toBoolean()
             )
 
             viewModel.writeItem(item, countdown, reminders)
 
+            if (binding.switchSetAsGoogle.isChecked){
+                viewModel.insertIntoGoogle(
+                    com.google.firebase.Timestamp(dateWeekTimeFormat.parse(beginDate)),
+                    com.google.firebase.Timestamp(dateWeekTimeFormat.parse(endDate)),
+                    "${binding.eventTitleInput.text}",
+                    "${binding.noteInput.text}")
+
+
+                Log.d("sandraaa", "beginDate = ${com.google.firebase.Timestamp(dateWeekTimeFormat.parse(beginDate))} ")
+            } else{
+                Log.d("sandraaa", "fail")
+            }
+
             Handler().postDelayed({
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
-            },2000)
+            },4000)
         }
         
         return binding.root

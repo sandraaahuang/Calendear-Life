@@ -75,7 +75,7 @@ class CountdownFragment : Fragment() {
             DiscardDialog().show(this.fragmentManager!!, "show")
         }
 
-        binding.saveLayout.setOnClickListener {
+        binding.saveText.setOnClickListener {
 
             val targetDate = binding.countdownDateInput.text.toString()
             val putInDate = Date(targetDate)

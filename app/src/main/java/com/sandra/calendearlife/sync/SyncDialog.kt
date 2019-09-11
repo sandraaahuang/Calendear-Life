@@ -21,10 +21,6 @@ class SyncDialog : AppCompatDialogFragment() {
 
     lateinit var binding: DialogSyncBinding
 
-    private val viewModel: SyncViewModel by lazy{
-        ViewModelProviders.of(this).get(SyncViewModel::class.java)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_FRAME , R.style.MessageDialog)
@@ -42,8 +38,6 @@ class SyncDialog : AppCompatDialogFragment() {
         }
 
         binding.syncImage.setOnClickListener {
-
-            Log.d("sandraaa", "clickkkk")
 
             //gif player layout variable.
             val gifViewPlayer = binding.gifLoading
