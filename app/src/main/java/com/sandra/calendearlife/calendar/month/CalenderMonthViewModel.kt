@@ -89,7 +89,6 @@ class CalenderMonthViewModel : ViewModel() {
 
                 }
                 _liveCalendar.value = calendarItem
-                Log.d("sandraaa", "data = ${liveCalendar.value}")
             }
     }
 }

@@ -25,7 +25,6 @@ class CalendarDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
         val timeFormat = SimpleDateFormat("hh:mm a")
         val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
         val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
@@ -53,15 +52,6 @@ class CalendarDetailFragment : Fragment() {
             }
         }
 
-        binding.switchSetAsReminder.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                binding.setRemindLayout.visibility = View.VISIBLE
-            }
-            else {
-                binding.setRemindLayout.visibility = View.GONE
-            }
-        }
-
         val cal = Calendar.getInstance()
         val year = cal.get(Calendar.YEAR)
         val monthOfYear = cal.get(Calendar.MONTH)
@@ -72,18 +62,11 @@ class CalendarDetailFragment : Fragment() {
 
         binding.beginDate.setOnClickListener {
 
-            TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
-                val stringTime = timeFormat.format(date)
-                binding.beginTime.text = "$stringTime" }, hour, minute, false
-            ).show()
-
             val datePickerDialog= DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringDate = dateWeekFormat.format(date)
+                    val stringDate = simpleDateFormat.format(date)
                     binding.beginDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
 
@@ -92,49 +75,46 @@ class CalendarDetailFragment : Fragment() {
 
         binding.endDate.setOnClickListener {
 
-            TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
-                val stringTime = timeFormat.format(date)
-                binding.endTime.text = "$stringTime" }, hour, minute, false
-            ).show()
-
             val datePickerDialog= DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringDate = dateWeekFormat.format(date)
+                    val stringDate = simpleDateFormat.format(date)
                     binding.endDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
 
             datePickerDialog.show()
         }
 
-        binding.remindersDateInput.setOnClickListener {
-
+        binding.beginTime.setOnClickListener {
             TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
                 val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
                 val stringTime = timeFormat.format(date)
-                binding.remindersTimeInput.text = "$stringTime" }, hour, minute, false
+                binding.beginTime.text = "$stringTime" }, hour, minute, false
             ).show()
-
-            val datePickerDialog= DatePickerDialog(
-                it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-                { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringDate = dateWeekFormat.format(date)
-                    binding.remindersDateInput.text = "$stringDate" }, year, monthOfYear, dayOfMonth
-            )
-
-            datePickerDialog.show()
         }
 
-
+        binding.endTime.setOnClickListener {
+            TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+            { view, hour, minute ->
+                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
+                val stringTime = timeFormat.format(date)
+                binding.endTime.text = "$stringTime" }, hour, minute, false
+            ).show()
+        }
 
         binding.deleteButton.setOnClickListener {
             viewModel.deleteItem(calendar.documentID!!)
             Log.d("sandraaa", "delete = ${calendar.documentID}")
+
+            if (calendar.fromGoogle){
+                Log.d("sandraaa", "is google item")
+                viewModel.delete_event(calendar.documentID)
+            } else {
+                Log.d("sandraaa", "nono google item")
+            }
+
             Handler().postDelayed({findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())}
                 ,3000)
 
@@ -153,23 +133,19 @@ class CalendarDetailFragment : Fragment() {
                 endDate = "${binding.endDate.text} ${binding.endTime.text}"
             }
 
-            val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
-
             val updateRemind = hashMapOf(
                 "title" to "${binding.detailTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
-                "remindDate" to Timestamp(dateWeekFormat.parse(remindDate).time)
+                "setDate" to FieldValue.serverTimestamp()
             )
 
             val updateCalendar = hashMapOf(
                 "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
-                "beginDate" to Timestamp(dateWeekFormat.parse(beginDate).time),
-                "endDate" to Timestamp(dateWeekFormat.parse(endDate).time),
+                "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
+                "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
                 "title" to "${binding.detailTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
-                "isAllDay" to "${binding.allDaySwitch.isChecked}",
-                "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
-                "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean()
+                "isAllDay" to "${binding.allDaySwitch.isChecked}"
             )
 
             val updateCountdown = hashMapOf(
@@ -184,8 +160,21 @@ class CalendarDetailFragment : Fragment() {
                     "updateRemind = $updateRemind")
 
 
-//            viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)
+            viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)
+
+            if (calendar.fromGoogle){
+                Log.d("sandraaa", "is google item")
+            viewModel.update_event(calendar.documentID!!,
+                "${binding.detailTitleInput.text}",
+                "${binding.noteInput.text}",
+                com.google.firebase.Timestamp(dateTimeFormat.parse(beginDate)),
+                com.google.firebase.Timestamp(dateTimeFormat.parse(endDate)))
+            } else {
+                Log.d("sandraaa", "nono google item")
+            }
         }
+
+
 
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(this.fragmentManager!!, "show")
