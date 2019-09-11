@@ -224,7 +224,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
         val eventId = java.lang.Long.parseLong(targetEventId)
 
         val cr = MyApplication.instance.contentResolver
-        
+
         val permissionCheck = ContextCompat.checkSelfPermission(
             MyApplication.instance, WRITE_CALENDAR
         )
