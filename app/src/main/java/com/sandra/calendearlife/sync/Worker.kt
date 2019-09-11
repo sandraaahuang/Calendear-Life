@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.util.UserManager
+import java.text.SimpleDateFormat
 import java.util.*
 
 class DeleteWorker (appContext: Context, workerParams: WorkerParameters)
@@ -37,6 +38,7 @@ class DeleteWorker (appContext: Context, workerParams: WorkerParameters)
             .document(UserManager.id!!)
             .collection("calendar")
             .whereEqualTo("fromGoogle", true)
+            .whereEqualTo("color", "245E2C")
             .get()
             .addOnSuccessListener { CdocumentReference ->
 
@@ -194,8 +196,12 @@ class ImportWorker (appContext: Context, workerParams: WorkerParameters)
                                 titleList.add(title)
                                 noteList.add(note)
 
+                                val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+                                val dateFormat = simpleDateFormat.format(beginDate.seconds * 1000)
+
+
                                 val item = hashMapOf(
-                                    "date" to beginDate,
+                                    "date" to Timestamp(simpleDateFormat.parse(dateFormat)),
                                     "setDate" to FieldValue.serverTimestamp(),
                                     "beginDate" to beginDate,
                                     "endDate" to endDate,

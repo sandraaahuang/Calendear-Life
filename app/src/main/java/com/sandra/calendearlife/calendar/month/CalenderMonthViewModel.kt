@@ -76,8 +76,6 @@ class CalenderMonthViewModel : ViewModel() {
                         simpleDateTimeFormat.format(endDate.seconds * 1000),
                         calendar.data["title"].toString(),
                         calendar.data["note"].toString(),
-                        calendar.data["hasGuests"].toString().toBoolean(),
-                        null,
                         calendar.data["isAllDay"].toString().toBoolean(),
                         calendar.data["hasLocation"].toString().toBoolean(),
                         calendar.data["location"].toString(),
