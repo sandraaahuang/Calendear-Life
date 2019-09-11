@@ -100,4 +100,10 @@ dependencies {
 
     // Glide
     implementation "com.github.bumptech.glide:glide:4.8.0"
+
+    // import work manager
+    // use -ktx for Kotlin
+    implementation "android.arch.work:work-runtime:1.0.0-alpha06"
+    def work_version = "1.0.0-beta02"
+    implementation "android.arch.work:work-runtime-ktx:$work_version"
 }
