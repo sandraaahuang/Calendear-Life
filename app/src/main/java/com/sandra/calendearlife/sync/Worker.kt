@@ -209,11 +209,11 @@ class ImportWorker (appContext: Context, workerParams: WorkerParameters)
                                     "note" to note,
                                     "fromGoogle" to true,
                                     "color" to "245E2C",
-                                    "documentID" to null,
+                                    "documentID" to eventID,
                                     "hasCountdown" to false,
                                     "hasReminders" to false
                                 )
-                                writeGoogleItem(item)
+                                writeGoogleItem(item, eventID)
                             }
                             cur2.close()
                         }
@@ -227,25 +227,19 @@ class ImportWorker (appContext: Context, workerParams: WorkerParameters)
         }
     }
 
-    fun writeGoogleItem(item: Any) {
+    fun writeGoogleItem(item: Any, documentId: String) {
 
         // get all data from user at first
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
-            .add(item)
+            .document(documentId)
+            .set(item)
             .addOnSuccessListener { CdocumentReference ->
                 Log.d(
                     "AddCountdownsIntoDB",
-                    "DocumentSnapshot added with ID: " + CdocumentReference.id
+                    "DocumentSnapshot added with ID = $documentId"
                 )
-
-                // update calendar document id and color ( pure calendar first)
-                db.collection("data")
-                    .document(UserManager.id!!)
-                    .collection("calendar")
-                    .document(CdocumentReference.id)
-                    .update("documentID", CdocumentReference.id)
             }
     }
 }
