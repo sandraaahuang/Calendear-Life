@@ -18,6 +18,25 @@ import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.core.app.ActivityCompat
+import com.sandra.calendearlife.MainActivity
+
+
+class PermissionWorker (appContext: Context, workerParams: WorkerParameters)
+    : Worker(appContext, workerParams) {
+
+    override fun doWork(): Result {
+
+    fun request_permission() {
+
+        ActivityCompat.requestPermissions(
+            MainActivity(),
+            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1
+        )
+    }
+        return Result.success()
+    }
+}
 
 class DeleteWorker (appContext: Context, workerParams: WorkerParameters)
     : Worker(appContext, workerParams) {

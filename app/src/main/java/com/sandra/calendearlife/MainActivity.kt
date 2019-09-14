@@ -13,11 +13,16 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.material.navigation.NavigationView
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
+import com.sandra.calendearlife.sync.DeleteWorker
+import com.sandra.calendearlife.sync.ImportWorker
 import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -26,7 +31,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navView: NavigationView
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
-    private val viewModel: MainViewModel by lazy{
+    private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
 
@@ -85,26 +90,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHomeFragment())
             }
-            R.id.addCalendar ->{
+            R.id.addCalendar -> {
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarEventFragment())
             }
-            R.id.addCountdown ->{
+            R.id.addCountdown -> {
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCountdownFragment())
             }
-            R.id.addReminder ->{
+            R.id.addReminder -> {
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalRemindersFragment())
             }
-            R.id.historyReminder ->{
+            R.id.historyReminder -> {
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryReminders())
             }
 
-            R.id.historyCountdown ->{
+            R.id.historyCountdown -> {
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryCountdown2())
+            }
+
+            R.id.sync -> {
+                val deleteRequest = OneTimeWorkRequestBuilder<DeleteWorker>()
+                    .build()
+
+                val importWorker = OneTimeWorkRequestBuilder<ImportWorker>()
+                    .setInitialDelay(3, TimeUnit.SECONDS)
+                    .build()
+
+                WorkManager.getInstance()
+                    .beginWith(deleteRequest)
+                    .then(importWorker)
+                    .enqueue()
+
             }
         }
 
@@ -112,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun sepupStatusBar(){
+    private fun sepupStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
@@ -129,12 +149,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun setDrawer(){
+    private fun setDrawer() {
         val drawerLayout = binding.drawerLayout
 
         // Set up header of drawer ui using data binding
         val bindingNavHeader = NavHeaderMainBinding.inflate(
-            LayoutInflater.from(this), binding.navView, false)
+            LayoutInflater.from(this), binding.navView, false
+        )
 
         bindingNavHeader.lifecycleOwner = this
         bindingNavHeader.viewModel = viewModel

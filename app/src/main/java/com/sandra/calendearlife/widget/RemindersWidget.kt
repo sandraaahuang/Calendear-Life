@@ -6,10 +6,12 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.RemoteViews
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.home.HomeFragment
+import com.sandra.calendearlife.data.Reminders
+
 
 /**
  * Implementation of App Widget functionality.
@@ -31,16 +33,21 @@ class RemindersWidget : AppWidgetProvider() {
         // Enter relevant functionality for when the last widget is disabled
     }
 
+    override fun onReceive(context: Context?, intent: Intent?) {
+        super.onReceive(context, intent)
+
+        if ("click" == intent?.action) {
+            val remindersItem = intent.getParcelableExtra<Reminders>("remindersItem")
+            Log.d("sandraaa", "remindersItem = $remindersItem")
+        }
+    }
+
     companion object {
 
         internal fun updateAppWidget(
             context: Context, appWidgetManager: AppWidgetManager,
             appWidgetId: Int
         ) {
-
-            val widgetText = context.getString(R.string.appwidget_text)
-            // Construct the RemoteViews object
-
             val views = RemoteViews(context.packageName, R.layout.reminder_widget)
 
             val serviceIntent = Intent(context, ReminderWidgetService::class.java)
@@ -48,12 +55,28 @@ class RemindersWidget : AppWidgetProvider() {
             serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
 
             views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
-            views.setEmptyView(R.id.remindersWidgetStackView, R.id.remindersTextView)
+
+            views.setOnClickPendingIntent(R.id.title, getPendingIntent(context))
 
 
+
+            val clickIntent = Intent(context, RemindersWidget::class.java)
+            clickIntent.action = "click"
+            val clickPendingIntent = PendingIntent.getBroadcast(
+                context,
+                0, clickIntent, 0
+            )
+
+            views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
+
+
+        }
+        private fun getPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(context, MainActivity::class.java)
+            return PendingIntent.getActivity(context, 12345, intent, 0)
         }
     }
 }
