@@ -1,23 +1,31 @@
 package com.sandra.calendearlife.widget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
+import com.sandra.calendearlife.home.HomeFragment
 import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
+
+
+
 
 class ReminderWidgetService : RemoteViewsService() {
 
@@ -34,18 +42,14 @@ class ReminderWidgetService : RemoteViewsService() {
 
         lateinit var remindAdd: Reminders
         val remindersItem = ArrayList<Reminders>()
-        val _liveReminders = MutableLiveData<List<Reminders>>()
-        val liveReminders: LiveData<List<Reminders>>
-            get() = _liveReminders
 
         private var appWidgetId: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID
             , AppWidgetManager.INVALID_APPWIDGET_ID)
 
-        init {
-            getRemindersItem()
-        }
+        override fun onCreate() {
 
-        private fun getRemindersItem(){
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+
             db.collection("data")
                 .document(UserManager.id!!)
                 .collection("calendar")
@@ -82,17 +86,14 @@ class ReminderWidgetService : RemoteViewsService() {
                                         reminder.data["frequency"].toString(),
                                         reminder.data["documentID"].toString()
                                     )
-
                                     remindersItem.add(remindAdd)
                                 }
-                                _liveReminders.value = remindersItem
-                                Log.d("sandraaa", "liveDate=  ${liveReminders.value}")
+                                Log.d("sandraaa", "remindersItem=  $remindersItem")
+
+                                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
                             }
                     }
                 }
-        }
-
-        override fun onCreate() {
 
         }
 
@@ -113,9 +114,26 @@ class ReminderWidgetService : RemoteViewsService() {
         }
 
         override fun getViewAt(position: Int): RemoteViews {
-            val views = RemoteViews(context.packageName, R.layout.reminder_widget)
-            views.setTextViewText(R.id.remindersTextView, liveReminders.value!![position].title)
-            Log.d("sandraaa", "remindersItem[position].title = ${liveReminders.value!![position].title}")
+
+            val views = RemoteViews(context.packageName, R.layout.item_reminder_widget)
+
+            views.setTextViewText(R.id.remindersTextView, remindersItem[position].title)
+
+            if (remindersItem[position].setRemindDate){
+            views.setTextViewText(R.id.remindersTime, remindersItem[position].remindDate)}
+            else {
+                Log.d("sandraaa", "don't have time")
+                views.setViewVisibility(R.id.remindersTime, View.INVISIBLE)
+            }
+
+            Log.d("sandraaa", "remindersItem[position].title = ${remindersItem[position].title}")
+
+            val fillIntent = Intent()
+            fillIntent.putExtra("remindersItem", remindersItem[position])
+            views.setOnClickFillInIntent(R.id.remindersTextView, fillIntent)
+
+
+
             return views
         }
 
@@ -129,6 +147,11 @@ class ReminderWidgetService : RemoteViewsService() {
 
         override fun onDestroy() {
 
+        }
+
+        private fun getPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(context, MainActivity::class.java)
+            return PendingIntent.getActivity(context, 12345, intent, 0)
         }
     }
 }

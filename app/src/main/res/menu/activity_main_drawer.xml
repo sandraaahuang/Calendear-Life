@@ -20,6 +20,11 @@
                 android:icon="@drawable/icon_search"
                 android:title="Search"/>
 
+        <item
+                android:id="@+id/sync"
+                android:icon="@drawable/icon_sync"
+                android:title="Sync your Calendar"/>
+
 
     </group>
 
