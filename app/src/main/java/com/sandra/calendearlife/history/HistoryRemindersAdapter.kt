@@ -2,6 +2,7 @@ package com.sandra.calendearlife.history
 
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -31,6 +32,14 @@ class HistoryRemindersAdapter() :
 
         fun bind(reminders: Reminders) {
             binding.reminders = reminders
+
+            if (reminders.setRemindDate){
+                binding.remindersTime.visibility = View.VISIBLE
+            }
+            else {
+                binding.remindersTime.visibility = View.GONE
+                binding.textView4.visibility = View.GONE
+            }
 
             binding.executePendingBindings()
 

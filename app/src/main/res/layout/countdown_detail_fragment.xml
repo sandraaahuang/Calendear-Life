@@ -82,7 +82,7 @@
         <Button
                 android:id="@+id/saveButton"
                 android:text="@string/saveReminders"
-                android:background="@drawable/grayborder"
+                android:background="@drawable/gray_square"
                 android:fontFamily="@font/noto_sans"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
