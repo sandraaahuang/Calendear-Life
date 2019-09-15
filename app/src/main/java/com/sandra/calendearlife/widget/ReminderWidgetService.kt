@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,9 +23,6 @@ import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-
-
-
 
 
 class ReminderWidgetService : RemoteViewsService() {
@@ -129,10 +127,8 @@ class ReminderWidgetService : RemoteViewsService() {
             Log.d("sandraaa", "remindersItem[position].title = ${remindersItem[position].title}")
 
             val fillIntent = Intent()
-            fillIntent.putExtra("remindersItem", remindersItem[position])
+            fillIntent.putExtra("remindersItem", remindersItem[position].documentID)
             views.setOnClickFillInIntent(R.id.remindersTextView, fillIntent)
-
-
 
             return views
         }
@@ -147,11 +143,6 @@ class ReminderWidgetService : RemoteViewsService() {
 
         override fun onDestroy() {
 
-        }
-
-        private fun getPendingIntent(context: Context): PendingIntent {
-            val intent = Intent(context, MainActivity::class.java)
-            return PendingIntent.getActivity(context, 12345, intent, 0)
         }
     }
 }
