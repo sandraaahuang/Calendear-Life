@@ -60,5 +60,5 @@
               android:label="HistoryReminders"/><action android:id="@+id/action_global_historyCountdown2" app:destination="@id/historyCountdown2"/><action android:id="@+id/action_global_historyReminders" app:destination="@id/historyReminders"/>
     <fragment android:id="@+id/syncDialog" android:name="com.sandra.calendearlife.sync.SyncDialog"
               android:label="SyncDialog"/>
-    <action android:id="@+id/action_global_syncDialog" app:destination="@id/syncDialog"/>
+    <action android:id="@+id/action_global_syncDialog" app:destination="@id/syncDialog"/><action android:id="@+id/action_global_previewFragment" app:destination="@id/previewFragment"/>
 </navigation>
