@@ -231,7 +231,8 @@ class SyncDialog : AppCompatDialogFragment() {
                 cur.close()
             }
         } else {
-            val toast = Toast.makeText(MyApplication.instance, "沒有所需的權限", Toast.LENGTH_LONG)
+            val toast = Toast.makeText(MyApplication.instance, "Please open the permission of Calendar",
+                Toast.LENGTH_LONG)
             toast.show()
         }
     }

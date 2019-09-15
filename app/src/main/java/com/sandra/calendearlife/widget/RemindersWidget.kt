@@ -3,6 +3,7 @@ package com.sandra.calendearlife.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -10,11 +11,14 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
+import android.widget.Adapter
 import android.widget.RemoteViews
+import android.widget.Toast
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.reminders.RemindersFragment
+import kotlinx.coroutines.selects.select
 
 
 /**
@@ -39,7 +43,6 @@ class RemindersWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
-
         if ("click" == intent?.action) {
             val remindersItem = intent.getStringExtra("remindersItem")
             Log.d("sandraaa", "remindersItem = $remindersItem")
@@ -54,7 +57,6 @@ class RemindersWidget : AppWidgetProvider() {
             context: Context, appWidgetManager: AppWidgetManager,
             appWidgetId: Int
         ) {
-
             val views = RemoteViews(context.packageName, R.layout.reminder_widget)
             views.setOnClickPendingIntent(R.id.remindAdd, getPendingIntent(context))
 
@@ -87,7 +89,6 @@ class RemindersWidget : AppWidgetProvider() {
                 views.setViewVisibility(R.id.remindersWidgetStackView, View.VISIBLE)
                 views.setViewVisibility(R.id.empty, View.GONE)
 
-
             } else {
                 views.setViewVisibility(R.id.remindersWidgetStackView, View.GONE)
                 views.setViewVisibility(R.id.empty, View.VISIBLE)
@@ -95,6 +96,7 @@ class RemindersWidget : AppWidgetProvider() {
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
 
         }
 

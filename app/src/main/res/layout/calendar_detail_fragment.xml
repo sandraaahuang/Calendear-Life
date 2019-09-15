@@ -259,7 +259,7 @@
         <Button
                 android:id="@+id/saveButton"
                 android:text="@string/saveReminders"
-                android:background="@drawable/grayborder"
+                android:background="@drawable/gray_square"
                 android:fontFamily="@font/noto_sans"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
@@ -268,7 +268,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="8dp"/>
         <Button
                 android:text="Delete"
@@ -281,7 +281,7 @@
                 android:id="@+id/deleteButton" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/saveButton" app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintTop_toTopOf="@+id/saveButton"
-                app:layout_constraintBottom_toBottomOf="@+id/saveButton" android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/saveButton"
         />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

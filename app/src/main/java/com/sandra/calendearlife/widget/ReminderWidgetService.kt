@@ -37,7 +37,9 @@ class ReminderWidgetService : RemoteViewsService() {
         val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
         val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
-        private var context: Context = context
+        private var selectedPosition = -1
+
+        private var context = context
 
         lateinit var remindAdd: Reminders
         val remindersItem = ArrayList<Reminders>()
@@ -113,6 +115,7 @@ class ReminderWidgetService : RemoteViewsService() {
         }
 
         override fun getViewAt(position: Int): RemoteViews {
+
 
             val views = RemoteViews(context.packageName, R.layout.item_reminder_widget)
 

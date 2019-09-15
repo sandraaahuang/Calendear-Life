@@ -73,13 +73,6 @@ class PreviewFragment : Fragment() {
             updateWidget()
         }
 
-        //gif player layout variable.
-        val gifViewPlayer = binding.imageView as GifMovieView
-        //gif animation file set  in drawable folder.
-        gifViewPlayer.setMovieResource(R.drawable.icon_gif)
-        //gif animation Movie callback and set
-        gifViewPlayer.setMovie(gifViewPlayer.getMovie())
-
         return binding.root
     }
 
