@@ -1,9 +1,11 @@
 package com.sandra.calendearlife
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -23,6 +25,10 @@ import com.sandra.calendearlife.sync.ImportWorker
 import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
 import java.util.concurrent.TimeUnit
+import android.content.Intent
+import androidx.lifecycle.Observer
+import com.sandra.calendearlife.data.Reminders
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,6 +39,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+
+    fun createIntent(context: Context, documentId: String?): Intent {
+
+        val intent = Intent(context, MainActivity::class.java)
+        intent.putExtra("remindersItem", documentId)
+
+        Log.d("sandraaa", "intent = ${intent.extras?.get("remindersItem")}")
+
+        return intent
+
+    }
+
+    fun createFlagIntent(context: Context, documentId: String?, vararg flags: Int): Intent {
+
+        val intent = createIntent(context, documentId)
+
+        for (flag in flags) {
+            intent.flags = flag
+        }
+
+        return intent
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +75,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sepupStatusBar()
         setDrawer()
         setupNavController()
+
+        intent.extras?.let {
+            viewModel.getItem(it.get("remindersItem").toString())
+        }
+
+        viewModel.liveReminders.observe(this, Observer {
+            it?.let {
+                findNavController(R.id.myNavHostFragment)
+                    .navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
+            }
+        })
     }
 
     fun setupToolbar() {

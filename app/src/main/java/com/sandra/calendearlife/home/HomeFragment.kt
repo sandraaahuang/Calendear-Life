@@ -1,28 +1,19 @@
 package com.sandra.calendearlife.home
 
 
-import android.Manifest
-import android.content.DialogInterface
-import android.content.pm.PackageManager
-import android.database.Cursor
 import android.os.Bundle
-import android.provider.CalendarContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
-import com.sandra.calendearlife.reminders.RemindersViewModel
-import com.sandra.calendearlife.util.UserManager
-import java.util.*
+import android.content.Intent.getIntent
+
+
 
 
 class HomeFragment : Fragment() {
