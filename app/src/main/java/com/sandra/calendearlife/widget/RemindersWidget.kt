@@ -12,7 +12,7 @@ import android.widget.RemoteViews
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Reminders
-
+import com.sandra.calendearlife.reminders.RemindersFragment
 
 
 /**
@@ -46,14 +46,6 @@ class RemindersWidget : AppWidgetProvider() {
         }
     }
 
-    private fun executeResumeAction(context: Context, intent: Intent?) {
-
-        val bundle = intent?.getStringExtra("remindersItem")
-        val launchActivityIntent = MainActivity().
-            createFlagIntent(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        context.startActivity(launchActivityIntent)}
-
     companion object {
 
         internal fun updateAppWidget(
@@ -76,9 +68,25 @@ class RemindersWidget : AppWidgetProvider() {
             views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
             views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)
 
+            views.setOnClickPendingIntent(R.id.remindAdd, getPendingIntent(context))
+
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
+        }
+
+        private fun executeResumeAction(context: Context, intent: Intent?) {
+
+            val bundle = intent?.getStringExtra("remindersItem")
+            val launchActivityIntent = MainActivity().
+                createFlagIntent(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            context.startActivity(launchActivityIntent)}
+
+        private fun getPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("turn", "addFragment")
+            return PendingIntent.getActivity(context, 12345, intent, 0)
         }
     }
 }

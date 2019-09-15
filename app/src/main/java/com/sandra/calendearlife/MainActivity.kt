@@ -28,6 +28,9 @@ import java.util.concurrent.TimeUnit
 import android.content.Intent
 import androidx.lifecycle.Observer
 import com.sandra.calendearlife.data.Reminders
+import android.text.TextUtils
+
+
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -41,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
 
-    fun createIntent(context: Context, documentId: String?): Intent {
+    private fun createIntent(context: Context, documentId: String?): Intent {
 
         val intent = Intent(context, MainActivity::class.java)
         intent.putExtra("remindersItem", documentId)
@@ -86,6 +89,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
             }
         })
+
+        val value = intent.getStringExtra("turn")
+        if (!TextUtils.isEmpty(value)) {
+            when (value) {
+                "addFragment" -> {
+                    findNavController(R.id.myNavHostFragment)
+                        .navigate(NavigationDirections.actionGlobalRemindersFragment())
+                }
+            }
+        }
     }
 
     fun setupToolbar() {

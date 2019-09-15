@@ -1,6 +1,7 @@
 package com.sandra.calendearlife.reminders
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.firebase.firestore.FieldValue
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog

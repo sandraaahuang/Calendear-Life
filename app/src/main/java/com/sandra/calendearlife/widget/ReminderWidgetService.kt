@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -123,6 +124,11 @@ class ReminderWidgetService : RemoteViewsService() {
                 Log.d("sandraaa", "don't have time")
                 views.setViewVisibility(R.id.remindersTime, View.INVISIBLE)
             }
+
+            if (remindersItem[position].remindTimestamp.seconds < Timestamp.now().seconds){
+                views.setTextColor(R.id.remindersTime,Color.parseColor("#f44336"))
+            }
+
 
             Log.d("sandraaa", "remindersItem[position].title = ${remindersItem[position].title}")
 

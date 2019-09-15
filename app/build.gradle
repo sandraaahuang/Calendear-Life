@@ -106,4 +106,7 @@ dependencies {
     implementation "android.arch.work:work-runtime:1.0.0-alpha06"
     def work_version = "1.0.0-beta02"
     implementation "android.arch.work:work-runtime-ktx:$work_version"
+
+    // custom rounded layout
+    implementation 'com.jcminarro:RoundKornerLayouts:0.2.0'
 }
