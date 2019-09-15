@@ -1,12 +1,16 @@
 package com.sandra.calendearlife.preview
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RemoteViews
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -22,8 +26,8 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.databinding.PreviewFragmentBinding
+import com.sandra.calendearlife.widget.RemindersWidget
 import tr.com.harunkor.gifviewplayer.GifMovieView
-
 
 class PreviewFragment : Fragment() {
 
@@ -35,6 +39,25 @@ class PreviewFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
 
+    private fun setLogin(login: Boolean) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("login", login)
+            .apply()
+    }
+
+    private fun updateWidget() {
+
+        val thisWidget = ComponentName(context!!, RemindersWidget::class.java)
+        val views = RemoteViews(this.context!!.packageName, R.layout.reminder_widget)
+
+        if (PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean("login", false)) {
+            views.setViewVisibility(R.id.remindersWidgetStackView, View.VISIBLE)
+            views.setViewVisibility(R.id.empty, View.GONE)
+        } else {
+            views.setViewVisibility(R.id.remindersWidgetStackView, View.GONE)
+            views.setViewVisibility(R.id.empty, View.VISIBLE)
+        }
+        AppWidgetManager.getInstance(this.context).updateAppWidget(thisWidget, views)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -46,6 +69,8 @@ class PreviewFragment : Fragment() {
 
         binding.connect.setOnClickListener {
             signin()
+            setLogin(true)
+            updateWidget()
         }
 
         //gif player layout variable.

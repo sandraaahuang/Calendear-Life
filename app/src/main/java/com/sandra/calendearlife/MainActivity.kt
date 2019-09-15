@@ -1,5 +1,7 @@
 package com.sandra.calendearlife
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -26,11 +28,12 @@ import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
 import java.util.concurrent.TimeUnit
 import android.content.Intent
+import android.preference.PreferenceManager
 import androidx.lifecycle.Observer
 import com.sandra.calendearlife.data.Reminders
 import android.text.TextUtils
-
-
+import android.widget.RemoteViews
+import com.sandra.calendearlife.widget.RemindersWidget
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -96,6 +99,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 "addFragment" -> {
                     findNavController(R.id.myNavHostFragment)
                         .navigate(NavigationDirections.actionGlobalRemindersFragment())
+                }
+                "login" -> {
+                    findNavController(R.id.myNavHostFragment)
+                        .navigate(NavigationDirections.actionGlobalPreviewFragment())
                 }
             }
         }

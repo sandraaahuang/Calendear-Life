@@ -7,7 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
@@ -53,22 +55,43 @@ class RemindersWidget : AppWidgetProvider() {
             appWidgetId: Int
         ) {
 
-            val serviceIntent = Intent(context, ReminderWidgetService::class.java)
-            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
-
-            val clickIntent = Intent(context, RemindersWidget::class.java)
-            clickIntent.action = "click"
-            val clickPendingIntent = PendingIntent.getBroadcast(
-                context,
-                0, clickIntent, 0
-            )
-
             val views = RemoteViews(context.packageName, R.layout.reminder_widget)
-            views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
-            views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)
-
             views.setOnClickPendingIntent(R.id.remindAdd, getPendingIntent(context))
+
+            //set first login
+            val intent = Intent(context, MainActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            intent.putExtra("turn", "login")
+            views.setOnClickPendingIntent(R.id.reminderWidget, pendingIntent)
+
+            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+                    "login",
+                    false
+                )
+            ) {
+
+                val serviceIntent = Intent(context, ReminderWidgetService::class.java)
+                serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
+
+                val clickIntent = Intent(context, RemindersWidget::class.java)
+                clickIntent.action = "click"
+                val clickPendingIntent = PendingIntent.getBroadcast(
+                    context,
+                    0, clickIntent, 0
+                )
+
+                views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
+                views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)
+
+                views.setViewVisibility(R.id.remindersWidgetStackView, View.VISIBLE)
+                views.setViewVisibility(R.id.empty, View.GONE)
+
+
+            } else {
+                views.setViewVisibility(R.id.remindersWidgetStackView, View.GONE)
+                views.setViewVisibility(R.id.empty, View.VISIBLE)
+            }
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
