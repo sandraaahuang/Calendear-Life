@@ -28,6 +28,7 @@ import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
 import java.util.concurrent.TimeUnit
 import android.content.Intent
+import android.content.IntentFilter
 import android.preference.PreferenceManager
 import androidx.lifecycle.Observer
 import com.sandra.calendearlife.data.Reminders
@@ -39,6 +40,7 @@ import com.sandra.calendearlife.widget.RemindersWidget
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private val screenOnOffBrocastReceiver = MyBroadCastReceiver()
     lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Notification.countdownNotify()
+
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -109,6 +111,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter()
+        filter.addAction(Intent.ACTION_SCREEN_ON)
+        filter.addAction(Intent.ACTION_SCREEN_OFF)
+        filter.addAction(Intent.ACTION_USER_PRESENT)
+        registerReceiver(screenOnOffBrocastReceiver, filter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(screenOnOffBrocastReceiver)
     }
 
     fun setupToolbar() {
