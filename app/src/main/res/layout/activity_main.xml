@@ -29,7 +29,19 @@
                     android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PREVIEW ? View.GONE : View.VISIBLE}"
                     android:id="@+id/toolbar"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0"/>
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0">
+                <TextView
+                        tools:text="Hello"
+                        android:layout_gravity="center"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/noto_sans"
+                        android:textStyle="bold"
+                        android:text="@{viewModel.currentFragmentType.value}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" tools:layout_editor_absoluteY="16dp"
+                        tools:layout_editor_absoluteX="175dp" android:id="@+id/textView"/>
+
+            </androidx.appcompat.widget.Toolbar>
             <fragment
                     android:id="@+id/myNavHostFragment"
                     android:name="androidx.navigation.fragment.NavHostFragment"

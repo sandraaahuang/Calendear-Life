@@ -15,6 +15,7 @@ import android.widget.Adapter
 import android.widget.RemoteViews
 import android.widget.Toast
 import com.sandra.calendearlife.MainActivity
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.reminders.RemindersFragment
@@ -43,17 +44,40 @@ class RemindersWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
-        if ("click" == intent?.action) {
-            val remindersItem = intent.getStringExtra("remindersItem")
-            Log.d("sandraaa", "remindersItem = $remindersItem")
 
+        val appWidgetId: Int = intent!!.getIntExtra(
+            AppWidgetManager.EXTRA_APPWIDGET_ID
+            , AppWidgetManager.INVALID_APPWIDGET_ID
+        )
+
+
+
+        if (intent.action == "click") {
+
+            val remindersItem = intent.extras?.getString("remindersItem")
+            Log.d("sandraaa", "remindersItem = $remindersItem, category = ${intent.categories}")
             executeResumeAction(context, intent)
+
+
+            val position = intent.extras?.getInt("position")
+            Log.d("sandraaa", "position = $position, category = ${intent.categories}")
+
+
+            AppWidgetManager.getInstance(context)
+                .notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
+            AppWidgetManager.getInstance(context)
+                .notifyAppWidgetViewDataChanged(appWidgetId, R.layout.item_reminder_widget)
+            AppWidgetManager.getInstance(context)
+                .notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersCheckedButton)
+            AppWidgetManager.getInstance(context)
+                .notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersCheckedStauts)
+
         }
     }
 
     companion object {
 
-        internal fun updateAppWidget(
+        fun updateAppWidget(
             context: Context, appWidgetManager: AppWidgetManager,
             appWidgetId: Int
         ) {
@@ -96,23 +120,23 @@ class RemindersWidget : AppWidgetProvider() {
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
-
         }
 
         private fun executeResumeAction(context: Context, intent: Intent?) {
 
             val bundle = intent?.getStringExtra("remindersItem")
-            val launchActivityIntent = MainActivity().
-                createFlagIntent(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK)
+            val launchActivityIntent = MainActivity().createFlagIntent(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK)
 
-            context.startActivity(launchActivityIntent)}
+            context.startActivity(launchActivityIntent)
+        }
 
         private fun getPendingIntent(context: Context): PendingIntent {
             val intent = Intent(context, MainActivity::class.java)
             intent.putExtra("turn", "addFragment")
             return PendingIntent.getActivity(context, 12345, intent, 0)
         }
+
+        val selectedPostion = Intent().extras?.get("position")
     }
 }
 

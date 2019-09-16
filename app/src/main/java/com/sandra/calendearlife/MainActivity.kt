@@ -33,6 +33,7 @@ import androidx.lifecycle.Observer
 import com.sandra.calendearlife.data.Reminders
 import android.text.TextUtils
 import android.widget.RemoteViews
+import com.sandra.calendearlife.util.Notification
 import com.sandra.calendearlife.widget.RemindersWidget
 
 
@@ -72,6 +73,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Notification.countdownNotify()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
