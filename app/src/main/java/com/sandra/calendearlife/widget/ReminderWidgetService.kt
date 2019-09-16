@@ -125,7 +125,7 @@ class ReminderWidgetService : RemoteViewsService() {
             views.setTextViewText(R.id.remindersTime, remindersItem[position].remindDate)}
             else {
                 Log.d("sandraaa", "don't have time")
-                views.setViewVisibility(R.id.remindersTime, View.INVISIBLE)
+                views.setViewVisibility(R.id.remindersTime, View.GONE)
             }
 
             if (remindersItem[position].remindTimestamp.seconds < Timestamp.now().seconds){

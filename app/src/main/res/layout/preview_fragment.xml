@@ -16,29 +16,32 @@
                 android:layout_marginEnd="16dp" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp" android:layout_marginTop="48dp"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginBottom="100dp" app:layout_constraintBottom_toBottomOf="parent"/>
+                android:layout_marginBottom="100dp" app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
 
         <ImageView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/sign_in_border"
                 app:srcCompat="@drawable/icon_google_sign_in"
-                android:id="@+id/imageView3" app:layout_constraintTop_toTopOf="@+id/connect"
-                app:layout_constraintBottom_toBottomOf="@+id/connect"
-                app:layout_constraintStart_toStartOf="@+id/imageView" app:layout_constraintDimensionRatio="h,1:1"
-                android:layout_marginStart="32dp"/>
+                android:id="@+id/imageView3"
+                app:layout_constraintDimensionRatio="h,1:1"
+                app:layout_constraintTop_toTopOf="@+id/connect" app:layout_constraintBottom_toBottomOf="@+id/connect"
+                app:layout_constraintStart_toStartOf="@+id/connect" android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp" android:layout_marginBottom="8dp"/>
         <Button
                 android:id="@+id/connect"
                 android:layout_width="0dp"
-                android:layout_height="32dp"
+                android:layout_height="48dp"
                 android:textAllCaps="false"
-                android:text="Sign In With Google"
+                android:text="Sign in with Google"
                 android:background="@drawable/login_border"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_blue"
                 android:fontFamily="@font/noto_sans"
-                app:layout_constraintEnd_toEndOf="@+id/imageView" android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toEndOf="@+id/imageView"
+                android:paddingLeft="32dp"
                 android:layout_marginBottom="32dp" app:layout_constraintBottom_toBottomOf="@+id/imageView"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"/>
+                app:layout_constraintStart_toStartOf="@+id/imageView" android:layout_marginStart="64dp"
+                android:layout_marginEnd="64dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
