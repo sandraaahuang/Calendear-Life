@@ -164,7 +164,7 @@
         <ImageView
                 android:id="@+id/remindersIcon"
                 android:layout_width="24dp"
-                android:layout_height="24dp" app:srcCompat="@drawable/icon_set_remind"
+                android:layout_height="24dp" app:srcCompat="@drawable/icon_bell"
                 app:layout_constraintStart_toStartOf="@+id/noteIcon"
                 app:layout_constraintTop_toBottomOf="@+id/view_spacing_line6" android:layout_marginTop="8dp"/>
 
@@ -259,7 +259,7 @@
         <ImageView
                 android:id="@+id/countdownIcon"
                 android:layout_width="24dp"
-                android:layout_height="24dp" app:srcCompat="@drawable/icon_countdown"
+                android:layout_height="24dp" app:srcCompat="@drawable/icon_countdown_line"
                 app:layout_constraintTop_toBottomOf="@+id/view_spacing_line4" android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="@+id/remindersIcon"/>
 
@@ -303,7 +303,7 @@
         <ImageView
                 android:id="@+id/googleIcon"
                 android:layout_width="24dp"
-                android:layout_height="24dp" app:srcCompat="@drawable/icon_has_google"
+                android:layout_height="24dp" app:srcCompat="@drawable/icon_upload"
                 app:layout_constraintTop_toBottomOf="@+id/view_spacing_line"
                 app:layout_constraintStart_toStartOf="@+id/countdownIcon" android:layout_marginTop="8dp"/>
 
