@@ -50,17 +50,27 @@ class RemindersWidget : AppWidgetProvider() {
             , AppWidgetManager.INVALID_APPWIDGET_ID
         )
 
-
-
         if (intent.action == "click") {
 
+            Log.d("sandraaa", "extra = ${intent.extras}")
+
+            if (intent.hasExtra("remindersItem")) {
+
+                Log.d("widget", "getItem = ${intent.extras?.getString("remindersItem")}")
+
+            } else if (intent.hasExtra("position")) {
+
+                Log.d("widget", "getItem = ${intent.extras?.getString("position")}")
+
+            }
+
             val remindersItem = intent.extras?.getString("remindersItem")
-            Log.d("sandraaa", "remindersItem = $remindersItem, category = ${intent.categories}")
-            executeResumeAction(context, intent)
+//            Log.d("sandraaa", "remindersItem = $remindersItem, category = ${intent.categories}")
+//            executeResumeAction(context, intent)
 
 
             val position = intent.extras?.getInt("position")
-            Log.d("sandraaa", "position = $position, category = ${intent.categories}")
+//            Log.d("sandraaa", "position = $position, category = ${intent.categories}")
 
 
             AppWidgetManager.getInstance(context)
@@ -102,10 +112,13 @@ class RemindersWidget : AppWidgetProvider() {
 
                 val clickIntent = Intent(context, RemindersWidget::class.java)
                 clickIntent.action = "click"
+
                 val clickPendingIntent = PendingIntent.getBroadcast(
                     context,
                     0, clickIntent, 0
                 )
+
+
 
                 views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
                 views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)

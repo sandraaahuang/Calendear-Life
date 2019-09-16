@@ -87,7 +87,7 @@ class ReminderWidgetService : RemoteViewsService() {
                                     )
                                     remindersItem.add(remindAdd)
                                 }
-                                Log.d("sandraaa", "remindersItem=  $remindersItem")
+//                                Log.d("sandraaa", "remindersItem=  $remindersItem")
 
                                 appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
                             }
@@ -129,22 +129,21 @@ class ReminderWidgetService : RemoteViewsService() {
             }
 
             val fillIntent = Intent()
-            fillIntent.putExtra("remindersItem", remindersItem[position].documentID)
+            Log.d("widget", "item = ${fillIntent.extras?.get("remindersItem")}")
+            Log.d("widget", "position = ${fillIntent.extras?.get("position")}")
 
-            val buttonIntent = Intent()
-            buttonIntent.putExtra("position", position)
+            views.setOnClickFillInIntent(R.id.remindersCheckedButton, fillIntent.putExtra("position", position))
 
-            views.setOnClickFillInIntent(R.id.remindersCheckedButton, fillIntent.addCategory("remindersItem"))
-
-            views.setOnClickFillInIntent(R.id.remindersTextView, fillIntent.addCategory("position"))
+            views.setOnClickFillInIntent(R.id.remindersTextView
+                , fillIntent.putExtra("remindersItem", remindersItem[position].documentID))
 
 
             if (position == selectedPostion) {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.VISIBLE)
-                Log.d("sandraaa", "position = $position, selectedPosition = $selectedPostion")
+//                Log.d("sandraaa", "position = $position, selectedPosition = $selectedPostion")
             } else {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.GONE)
-                Log.d("sandraaa", "position = $position, selectedPosition = $selectedPostion")
+//                Log.d("sandraaa", "position = $position, selectedPosition = $selectedPostion")
             }
 
             return views
