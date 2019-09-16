@@ -32,7 +32,7 @@
                     android:textColor="@color/deep_gray"
                     android:textAllCaps="false"
                     android:layout_width="0dp"
-                    android:layout_height="32dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/grayborder"
                     android:id="@+id/askMeLaterButton"
                     android:fontFamily="@font/noto_sans"
