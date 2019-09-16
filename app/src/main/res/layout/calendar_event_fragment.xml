@@ -14,7 +14,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
-                android:textSize="16sp"
+                android:textSize="18sp"
+                android:background="@null"
                 android:layout_marginStart="48dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/removeIcon"/>
@@ -264,7 +265,7 @@
 
         <Button
                 android:text="@string/saveReminders"
-                android:background="@color/black"
+                android:background="@drawable/save_button_corner"
                 android:layout_width="50dp"
                 android:layout_height="30dp"
                 android:fontFamily="@font/noto_sans"
