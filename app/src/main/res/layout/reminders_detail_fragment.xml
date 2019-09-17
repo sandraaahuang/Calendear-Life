@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
-                    android:text="@{viewModel.selectedItem.remindDate}"
+                    android:text="@{viewModel.selectedItem.remindDate.substring(0,10)}"
                     app:layout_constraintEnd_toStartOf="@+id/remindTime" android:layout_marginEnd="8dp"
                     android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
             <TextView
@@ -60,6 +60,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
                     android:id="@+id/remindTime"
+                    android:text="@{viewModel.selectedItem.remindDate.substring(10)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="8dp" android:layout_marginTop="16dp"
                     app:layout_constraintTop_toTopOf="parent"/>

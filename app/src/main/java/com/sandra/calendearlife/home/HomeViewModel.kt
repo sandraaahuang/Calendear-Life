@@ -16,8 +16,9 @@ import kotlin.collections.ArrayList
 class HomeViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-        val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-        val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
+    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd h:mm a")
+    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
 
     lateinit var countdownAdd: Countdown
@@ -104,7 +105,7 @@ class HomeViewModel : ViewModel() {
                                     simpleDateFormat.format(setDate.seconds * 1000),
                                     reminder.data["title"].toString(),
                                     reminder.data["setRemindDate"].toString().toBoolean(),
-                                    simpleDateFormat.format(remindDate.seconds * 1000),
+                                    dateTimeFormat.format(remindDate.seconds * 1000),
                                     reminder.data["remindDate"] as Timestamp,
                                     reminder.data["isChecked"].toString().toBoolean(),
                                     reminder.data["note"].toString(),

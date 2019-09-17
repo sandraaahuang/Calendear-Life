@@ -28,9 +28,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.lifecycle.Observer
 import android.text.TextUtils
+import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
-import com.sandra.calendearlife.calendar.notification.CountdownWorker
-import com.sandra.calendearlife.calendar.notification.MyBroadCastReceiver
+import com.sandra.calendearlife.calendar.notification.*
+import kotlinx.android.synthetic.main.calendar_show_event.*
 import java.sql.Date
 import java.sql.Timestamp
 import java.time.*
@@ -113,19 +114,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val initialDate: LocalDateTime
         val zoneId = ZoneId.of("Asia/Taipei")
         val nowHour = LocalDateTime.now(zoneId).hour
-        if (nowHour > 9){
-            initialDate = LocalDateTime.of(LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth.plus(1), 9, 0)
+        if (nowHour > 9) {
+            initialDate = LocalDateTime.of(
+                LocalDate.now().year, LocalDate.now().monthValue,
+                LocalDateTime.now().dayOfMonth.plus(1), 9, 0
+            )
             Log.d("sandraaa", "initialDate = ${initialDate.toEpochSecond(ZoneOffset.ofHours(8))}")
         } else {
-            initialDate = LocalDateTime.of(LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth, 9, 0)
+            initialDate = LocalDateTime.of(
+                LocalDate.now().year, LocalDate.now().monthValue,
+                LocalDateTime.now().dayOfMonth, 9, 0
+            )
             Log.d("sandraaa", "initialDate = $initialDate")
         }
 
-        val countdownRequest
-                = PeriodicWorkRequestBuilder<CountdownWorker>(1, TimeUnit.DAYS)
-            .setPeriodStartTime(initialDate.toEpochSecond(ZoneOffset.ofHours(8)), TimeUnit.SECONDS)
+        val countdownRequest = PeriodicWorkRequestBuilder<CountdownWorker>(1, TimeUnit.DAYS)
+            .setPeriodStartTime(1568728020, TimeUnit.SECONDS)
             .build()
 
         WorkManager.getInstance()
