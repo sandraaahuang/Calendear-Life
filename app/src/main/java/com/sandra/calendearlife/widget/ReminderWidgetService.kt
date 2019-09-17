@@ -1,11 +1,9 @@
 package com.sandra.calendearlife.widget
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
@@ -40,6 +38,7 @@ class ReminderWidgetService : RemoteViewsService() {
 
         private var appWidgetId: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID
             , AppWidgetManager.INVALID_APPWIDGET_ID)
+
 
 
 
@@ -128,22 +127,28 @@ class ReminderWidgetService : RemoteViewsService() {
                 views.setTextColor(R.id.remindersTime,Color.parseColor("#f44336"))
             }
 
-            val fillIntent = Intent()
-            Log.d("widget", "item = ${fillIntent.extras?.get("remindersItem")}")
-            Log.d("widget", "position = ${fillIntent.extras?.get("position")}")
+            val positionIntent = Intent().apply {
+                putExtra("position", position)
+                putExtra("refreshId", appWidgetId)
+            }
 
-            views.setOnClickFillInIntent(R.id.remindersCheckedButton, fillIntent.putExtra("position", position))
+            val reminderIntent = Intent().apply {
+                putExtra("remindersItem", remindersItem[position].documentID)
+            }
 
-            views.setOnClickFillInIntent(R.id.remindersTextView
-                , fillIntent.putExtra("remindersItem", remindersItem[position].documentID))
+            views.setOnClickFillInIntent(R.id.remindersCheckedButton, positionIntent)
+
+            views.setOnClickFillInIntent(R.id.remindersTextView, reminderIntent)
 
 
             if (position == selectedPostion) {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.VISIBLE)
-//                Log.d("sandraaa", "position = $position, selectedPosition = $selectedPostion")
+                updateItem(remindersItem[position].documentID)
+
+
             } else {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.GONE)
-//                Log.d("sandraaa", "position = $position, selectedPosition = $selectedPostion")
+
             }
 
             return views
@@ -158,7 +163,53 @@ class ReminderWidgetService : RemoteViewsService() {
         }
 
         override fun onDestroy() {
+        }
 
+        private // update isChecked to true when user click the button
+        fun updateItem(documentID: String) {
+
+            db.collection("data")
+                .document(UserManager.id!!)
+                .collection("calendar")
+                .get()
+                .addOnSuccessListener { documents ->
+
+                    for (calendar in documents) {
+                        Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+
+                        // add countdowns
+                        db.collection("data")
+                            .document(UserManager.id!!)
+                            .collection("calendar")
+                            .document(calendar.id)
+                            .collection("reminders")
+                            .whereEqualTo("documentID", documentID)
+                            .get()
+                            .addOnSuccessListener { documents ->
+
+                                for (reminders in documents) {
+                                    Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
+
+                                    // add countdowns
+                                    db.collection("data")
+                                        .document(UserManager.id!!)
+                                        .collection("calendar")
+                                        .document(calendar.id)
+                                        .collection("reminders")
+                                        .document(documentID)
+                                        .update("isChecked", true)
+                                        .addOnSuccessListener {
+                                            Log.d(
+                                                "RenewCountdown",
+                                                "successfully updated my status!"
+                                            )
+                                        }
+                                }
+                                selectedPostion = -1
+                                AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
+                            }
+                    }
+                }
         }
     }
 }
