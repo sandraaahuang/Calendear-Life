@@ -1,7 +1,5 @@
 package com.sandra.calendearlife
 
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -25,17 +23,18 @@ import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 import com.sandra.calendearlife.sync.DeleteWorker
 import com.sandra.calendearlife.sync.ImportWorker
 import com.sandra.calendearlife.util.CurrentFragmentType
-import com.sandra.calendearlife.util.UserManager
 import java.util.concurrent.TimeUnit
 import android.content.Intent
 import android.content.IntentFilter
-import android.preference.PreferenceManager
 import androidx.lifecycle.Observer
-import com.sandra.calendearlife.data.Reminders
 import android.text.TextUtils
-import android.widget.RemoteViews
-import com.sandra.calendearlife.util.Notification
-import com.sandra.calendearlife.widget.RemindersWidget
+import androidx.work.PeriodicWorkRequestBuilder
+import com.sandra.calendearlife.calendar.notification.CountdownWorker
+import com.sandra.calendearlife.calendar.notification.MyBroadCastReceiver
+import java.sql.Date
+import java.sql.Timestamp
+import java.time.*
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -76,8 +75,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Notification.reminderNotify()
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -111,14 +108,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
+
+        // setNotification
+        val initialDate: LocalDateTime
+        val zoneId = ZoneId.of("Asia/Taipei")
+        val nowHour = LocalDateTime.now(zoneId).hour
+        if (nowHour > 9){
+            initialDate = LocalDateTime.of(LocalDate.now().year, LocalDate.now().monthValue,
+                LocalDateTime.now().dayOfMonth.plus(1), 9, 0)
+            Log.d("sandraaa", "initialDate = ${initialDate.toEpochSecond(ZoneOffset.ofHours(8))}")
+        } else {
+            initialDate = LocalDateTime.of(LocalDate.now().year, LocalDate.now().monthValue,
+                LocalDateTime.now().dayOfMonth, 9, 0)
+            Log.d("sandraaa", "initialDate = $initialDate")
+        }
+
+        val countdownRequest
+                = PeriodicWorkRequestBuilder<CountdownWorker>(1, TimeUnit.DAYS)
+            .setPeriodStartTime(initialDate.toEpochSecond(ZoneOffset.ofHours(8)), TimeUnit.SECONDS)
+            .build()
+
+        WorkManager.getInstance()
+            .enqueue(countdownRequest)
     }
 
     override fun onResume() {
         super.onResume()
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_SCREEN_ON)
-        filter.addAction(Intent.ACTION_SCREEN_OFF)
-        filter.addAction(Intent.ACTION_USER_PRESENT)
         registerReceiver(screenOnOffBrocastReceiver, filter)
     }
 
