@@ -45,43 +45,25 @@ class RemindersWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
 
-        val appWidgetId: Int = intent!!.getIntExtra(
-            AppWidgetManager.EXTRA_APPWIDGET_ID
-            , AppWidgetManager.INVALID_APPWIDGET_ID
-        )
-
-        if (intent.action == "click") {
+        if (intent?.action == "click") {
 
             Log.d("sandraaa", "extra = ${intent.extras}")
 
             if (intent.hasExtra("remindersItem")) {
 
-                Log.d("widget", "getItem = ${intent.extras?.getString("remindersItem")}")
+                val remindersItem = intent.extras?.getString("remindersItem")
+                Log.d("sandraaa", "remindersItem = $remindersItem")
+                executeResumeAction(context, intent)
 
             } else if (intent.hasExtra("position")) {
 
-                Log.d("widget", "getItem = ${intent.extras?.getString("position")}")
+                val appwidgetId = intent.extras!!.getInt("refreshId")
+                selectedPostion = intent.extras!!.getInt("position")
+
+                AppWidgetManager.getInstance(context)
+                    .notifyAppWidgetViewDataChanged(appwidgetId, R.id.remindersWidgetStackView)
 
             }
-
-            val remindersItem = intent.extras?.getString("remindersItem")
-//            Log.d("sandraaa", "remindersItem = $remindersItem, category = ${intent.categories}")
-//            executeResumeAction(context, intent)
-
-
-            val position = intent.extras?.getInt("position")
-//            Log.d("sandraaa", "position = $position, category = ${intent.categories}")
-
-
-            AppWidgetManager.getInstance(context)
-                .notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
-            AppWidgetManager.getInstance(context)
-                .notifyAppWidgetViewDataChanged(appWidgetId, R.layout.item_reminder_widget)
-            AppWidgetManager.getInstance(context)
-                .notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersCheckedButton)
-            AppWidgetManager.getInstance(context)
-                .notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersCheckedStauts)
-
         }
     }
 
@@ -93,6 +75,8 @@ class RemindersWidget : AppWidgetProvider() {
         ) {
             val views = RemoteViews(context.packageName, R.layout.reminder_widget)
             views.setOnClickPendingIntent(R.id.remindAdd, getPendingIntent(context))
+
+            Log.d("sandraaa", "appwidgetId = $appWidgetId")
 
             //set first login
             val intent = Intent(context, MainActivity::class.java)
@@ -117,8 +101,6 @@ class RemindersWidget : AppWidgetProvider() {
                     context,
                     0, clickIntent, 0
                 )
-
-
 
                 views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
                 views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)
@@ -149,7 +131,7 @@ class RemindersWidget : AppWidgetProvider() {
             return PendingIntent.getActivity(context, 12345, intent, 0)
         }
 
-        val selectedPostion = Intent().extras?.get("position")
+        var selectedPostion: Int = -1
     }
 }
 
