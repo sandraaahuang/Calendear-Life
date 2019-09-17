@@ -17,12 +17,12 @@ class CountdownWorker (appContext: Context, workerParams: WorkerParameters)
     }
 }
 
-class ReminderDnrWorker (appContext: Context, workerParams: WorkerParameters)
+class ReminderWorker (appContext: Context, workerParams: WorkerParameters)
     : Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
 
-        Notification.reminderNotifyDnr()
+        Notification.reminderNotify()
 
         return Result.success()
     }

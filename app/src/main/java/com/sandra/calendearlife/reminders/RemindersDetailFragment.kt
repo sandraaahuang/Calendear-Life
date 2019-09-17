@@ -72,7 +72,7 @@ class RemindersDetailFragment : Fragment() {
         }
 
         binding.saveButton2.setOnClickListener {
-            val remindDate = binding.remindDate.text.toString()
+            val remindDate = "${binding.remindDate.text} ${binding.remindTime.text}"
             val putInDate = Date(remindDate)
 
             val updateItem = hashMapOf(
