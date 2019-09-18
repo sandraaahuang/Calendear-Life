@@ -1,41 +1,47 @@
 package com.sandra.calendearlife
 
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.Timestamp
+import com.sandra.calendearlife.calendar.notification.CountdownWorker
+import com.sandra.calendearlife.calendar.notification.MyBroadCastReceiver
+import com.sandra.calendearlife.calendar.notification.ReminderWorker
+import com.sandra.calendearlife.calendar.notification.TestWorker
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 import com.sandra.calendearlife.sync.DeleteWorker
 import com.sandra.calendearlife.sync.ImportWorker
 import com.sandra.calendearlife.util.CurrentFragmentType
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
-import android.content.Intent
-import android.content.IntentFilter
-import androidx.lifecycle.Observer
-import android.text.TextUtils
-import androidx.work.OneTimeWorkRequest
-import androidx.work.PeriodicWorkRequestBuilder
-import com.sandra.calendearlife.calendar.notification.*
-import kotlinx.android.synthetic.main.calendar_show_event.*
-import java.sql.Date
-import java.sql.Timestamp
-import java.time.*
-import java.util.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -109,31 +115,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-
-        // setNotification
-        val initialDate: LocalDateTime
-        val zoneId = ZoneId.of("Asia/Taipei")
-        val nowHour = LocalDateTime.now(zoneId).hour
-        if (nowHour > 9) {
-            initialDate = LocalDateTime.of(
-                LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth.plus(1), 9, 0
-            )
-            Log.d("sandraaa", "initialDate = ${initialDate.toEpochSecond(ZoneOffset.ofHours(8))}")
-        } else {
-            initialDate = LocalDateTime.of(
-                LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth, 9, 0
-            )
-            Log.d("sandraaa", "initialDate = $initialDate")
-        }
-
-        val countdownRequest = PeriodicWorkRequestBuilder<CountdownWorker>(1, TimeUnit.DAYS)
-            .setPeriodStartTime(1568728020, TimeUnit.SECONDS)
+        val testRepeat
+                = PeriodicWorkRequestBuilder<TestWorker>(1, TimeUnit.SECONDS)
+            .setPeriodStartTime(1568783580, TimeUnit.SECONDS)
             .build()
 
         WorkManager.getInstance()
-            .enqueue(countdownRequest)
+            .enqueue(testRepeat)
+
+        WorkManager.getInstance().getWorkInfoByIdLiveData(testRepeat.id)
+            .observe(this, Observer<WorkInfo> {
+                val status = it.state.name
+                Log.d("testRepeat","testRepeat status1 = $status")
+            })
+
     }
 
     override fun onResume() {

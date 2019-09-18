@@ -69,7 +69,7 @@ object Notification {
                             for ((index, value) in countdownItem.withIndex()){
 
                                 val textTitle = "${((value.targetTimestamp.seconds - Timestamp.now().seconds)/86400)} days " +
-                                        "before the ${value.title}"
+                                        "before ${value.title}"
                                 val CHANNEL_ID = "Calendear"
                                 val notificationId = index
 

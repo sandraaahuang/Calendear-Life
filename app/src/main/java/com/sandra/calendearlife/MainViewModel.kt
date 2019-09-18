@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -89,9 +90,9 @@ class MainViewModel : ViewModel() {
             }
     }
 
-    init {
-        dnrItem()
-    }
+//    init {
+//        dnrItem()
+//    }
 
     fun dnrItem() {
         //connect to countdown data ( only the item that overdue is false )
@@ -136,26 +137,6 @@ class MainViewModel : ViewModel() {
                                 remindersItem.add(remindAdd)
                             }
                             _liveRemindersDnr.value = remindersItem
-
-                            liveRemindersDnr.value?.let {
-                                for ((index, value) in it.withIndex()) {
-                                    val reminderDnrRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-                                        .setInitialDelay(
-                                            ((value.remindTimestamp.seconds - com.google.firebase.Timestamp.now().seconds)),
-                                            TimeUnit.SECONDS
-                                        )
-                                        .build()
-
-                                    WorkManager.getInstance()
-                                        .enqueue(reminderDnrRequest)
-
-                                    Log.d(
-                                        "workmanager",
-                                        "${value.remindTimestamp.seconds}, ${com.google.firebase.Timestamp.now().seconds}"
-                                    )
-                                }
-                            }
-
                         }
                 }
             }

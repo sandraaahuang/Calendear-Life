@@ -143,6 +143,8 @@ class ReminderWidgetService : RemoteViewsService() {
 
             if (position == selectedPostion) {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.VISIBLE)
+                views.setTextColor(R.id.remindersTextView, Color.parseColor("#D8D8D8"))
+                
                 updateItem(remindersItem[position].documentID)
 
 
@@ -199,14 +201,57 @@ class ReminderWidgetService : RemoteViewsService() {
                                         .document(documentID)
                                         .update("isChecked", true)
                                         .addOnSuccessListener {
+
+                                            db.collection("data")
+                                                .document(UserManager.id!!)
+                                                .collection("calendar")
+                                                .get()
+                                                .addOnSuccessListener { documents ->
+
+                                                    for (calendar in documents) {
+                                                        Log.d("widgetCalendar", "${calendar.id} => ${calendar.data}")
+
+                                                        //get reminders ( only ischecked is false )
+                                                        db.collection("data")
+                                                            .document(UserManager.id!!)
+                                                            .collection("calendar")
+                                                            .document(calendar.id)
+                                                            .collection("reminders")
+                                                            .whereEqualTo("isChecked", false)
+                                                            .get()
+                                                            .addOnSuccessListener { documents ->
+
+                                                                for (reminder in documents) {
+                                                                    Log.d("widgetReminder", "${reminder.id} => ${reminder.data}")
+
+                                                                    val setDate = (reminder.data["setDate"] as Timestamp)
+                                                                    val remindDate = (reminder.data["remindDate"] as Timestamp)
+
+                                                                    remindAdd = Reminders(
+                                                                        simpleDateFormat.format(setDate.seconds * 1000),
+                                                                        reminder.data["title"].toString(),
+                                                                        reminder.data["setRemindDate"].toString().toBoolean(),
+                                                                        simpleDateFormat.format(remindDate.seconds * 1000),
+                                                                        reminder.data["remindDate"] as Timestamp,
+                                                                        reminder.data["isChecked"].toString().toBoolean(),
+                                                                        reminder.data["note"].toString(),
+                                                                        reminder.data["frequency"].toString(),
+                                                                        reminder.data["documentID"].toString()
+                                                                    )
+                                                                    remindersItem.add(remindAdd)
+                                                                }
+
+                                                            }
+                                                    }
+                                                    selectedPostion = -1
+                                                    AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
+                                                }
                                             Log.d(
                                                 "RenewCountdown",
                                                 "successfully updated my status!"
                                             )
                                         }
                                 }
-                                selectedPostion = -1
-                                AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
                             }
                     }
                 }
