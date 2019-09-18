@@ -64,6 +64,10 @@ class PreviewFragment : Fragment() {
         binding = PreviewFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
+        if (UserManager.id != null){
+            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+        }
+
         //Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 

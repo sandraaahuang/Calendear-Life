@@ -39,9 +39,5 @@ class PreviewViewModel : ViewModel() {
 
                 }
             }
-
-            .addOnFailureListener { exception ->
-                Log.w("getExistedUser", "Error getting documents: ", exception)
-            }
     }
 }

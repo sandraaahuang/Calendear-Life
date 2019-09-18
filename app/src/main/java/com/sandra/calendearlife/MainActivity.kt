@@ -34,6 +34,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Countdown
+import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 import com.sandra.calendearlife.sync.DeleteWorker
@@ -119,6 +120,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
+        // setup countdown notification
         val initialDate: LocalDateTime
         val timestampInitialDate: Timestamp
         val zoneId = ZoneId.of("Asia/Taipei")
@@ -149,17 +151,96 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
         }
-
-        val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
         val alarmManager = MyApplication.instance.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+
         val pendingIntent = PendingIntent.getBroadcast(
             MyApplication.instance,
-            1234, intent, PendingIntent.FLAG_UPDATE_CURRENT
+            1234, intent.setAction("countdown"), PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.setInexactRepeating(
-            AlarmManager.RTC_WAKEUP, timestampInitialDate.seconds*1000,
-            AlarmManager.INTERVAL_DAY, pendingIntent
-        )
+            AlarmManager.RTC_WAKEUP, Timestamp.now().seconds*1000,
+            AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent )
+
+        viewModel.livednr.observe(this, Observer {
+            it?.let {
+                for ((index, value) in it.withIndex()) {
+
+                    when (value.frequency) {
+                        "Does not repeat" ->{
+                            Log.d("sandraaa", "DNR = $value.remindTimestamp.seconds")
+                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                            val dnrPending = PendingIntent.getBroadcast(
+                                MyApplication.instance,
+                                1234, dnrIntent.setAction("dnr"), PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            alarmManager.setExact(
+                                AlarmManager.RTC_WAKEUP,
+                                value.remindTimestamp.seconds * 1000, dnrPending
+                            )
+                        }
+                        "Every day" -> {
+                            Log.d("sandraaa", "ED = $value.remindTimestamp.seconds")
+                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                            val edPending = PendingIntent.getBroadcast(
+                                MyApplication.instance,
+                                1234, dnrIntent.setAction("ED"), PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            alarmManager.setInexactRepeating(
+                                AlarmManager.RTC_WAKEUP,
+                                value.remindTimestamp.seconds * 1000,
+                                AlarmManager.INTERVAL_DAY, edPending
+                            )
+                        }
+                        "Every week" -> {
+                            Log.d("sandraaa", "EW = $value.remindTimestamp.seconds")
+                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                            val edPending = PendingIntent.getBroadcast(
+                                MyApplication.instance,
+                                1234, dnrIntent.setAction("EW"), PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            alarmManager.setInexactRepeating(
+                                AlarmManager.RTC_WAKEUP,
+                                value.remindTimestamp.seconds * 1000,
+                                AlarmManager.INTERVAL_DAY * 7, edPending
+                            )
+
+                        }
+                        "Every month" -> {
+                            Log.d("sandraaa", "EM = $value.remindTimestamp.seconds")
+                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                            val edPending = PendingIntent.getBroadcast(
+                                MyApplication.instance,
+                                1234, dnrIntent.setAction("EM"), PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            alarmManager.setInexactRepeating(
+                                AlarmManager.RTC_WAKEUP,
+                                value.remindTimestamp.seconds * 1000,
+                                AlarmManager.INTERVAL_DAY * 30, edPending
+                            )
+
+                        }
+                        "Every year" -> {
+                            Log.d("sandraaa", "EY = $value.remindTimestamp.seconds")
+                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                            val edPending = PendingIntent.getBroadcast(
+                                MyApplication.instance,
+                                1234, dnrIntent.setAction("EY"), PendingIntent.FLAG_UPDATE_CURRENT
+                            )
+                            alarmManager.setInexactRepeating(
+                                AlarmManager.RTC_WAKEUP,
+                                value.remindTimestamp.seconds * 1000,
+                                AlarmManager.INTERVAL_DAY * 365, edPending
+                            )
+
+                        }
+                    }
+
+
+                }
+            }
+        })
+
     }
 
     fun setupToolbar() {
@@ -323,97 +404,558 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
 
-        Log.d("alarmManager", "trigger time = ${Timestamp.now().seconds * 1000}")
+        when (p1?.action) {
+            "countdown" -> {
+                val db = FirebaseFirestore.getInstance()
+                val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
-        val db = FirebaseFirestore.getInstance()
-        val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+                Log.d("alarmManager", "countdown trigger time = ${Timestamp.now().seconds * 1000}")
 
-        lateinit var countdownAdd: Countdown
-        val countdownItem = ArrayList<Countdown>()
+                lateinit
+                var countdownAdd: Countdown
+                val countdownItem = ArrayList<Countdown>()
 
-        db.collection("data")
-            .document(UserManager.id!!)
-            .collection("calendar")
-            .get()
-            .addOnSuccessListener { documents ->
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .get()
+                    .addOnSuccessListener { documents ->
 
-                for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+                        for (calendar in documents) {
 
-                    // get countdowns
-                    db.collection("data")
-                        .document(UserManager.id!!)
-                        .collection("calendar")
-                        .document(calendar.id)
-                        .collection("countdowns")
-                        .whereEqualTo("overdue", false)
-                        .get()
-                        .addOnSuccessListener { documents ->
+                            // get countdowns
+                            db.collection("data")
+                                .document(UserManager.id!!)
+                                .collection("calendar")
+                                .document(calendar.id)
+                                .collection("countdowns")
+                                .whereEqualTo("overdue", false)
+                                .get()
+                                .addOnSuccessListener { documents ->
 
-                            for (countdown in documents) {
-                                Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
-                                val setDate = (countdown.data["setDate"] as Timestamp)
-                                val targetDate = (countdown.data["targetDate"] as Timestamp)
+                                    for (countdown in documents) {
+                                        val setDate = (countdown.data["setDate"] as Timestamp)
+                                        val targetDate = (countdown.data["targetDate"] as Timestamp)
 
-                                countdownAdd = Countdown(
-                                    simpleDateFormat.format(setDate.seconds * 1000),
-                                    countdown.data["title"].toString(),
-                                    countdown.data["note"].toString(),
-                                    simpleDateFormat.format(targetDate.seconds * 1000),
-                                    countdown.data["targetDate"] as Timestamp,
-                                    countdown.data["overdue"].toString().toBoolean(),
-                                    countdown.data["documentID"].toString()
-                                )
+                                        countdownAdd = Countdown(
+                                            simpleDateFormat.format(setDate.seconds * 1000),
+                                            countdown.data["title"].toString(),
+                                            countdown.data["note"].toString(),
+                                            simpleDateFormat.format(targetDate.seconds * 1000),
+                                            countdown.data["targetDate"] as Timestamp,
+                                            countdown.data["overdue"].toString().toBoolean(),
+                                            countdown.data["documentID"].toString()
+                                        )
 
-                                countdownItem.add(countdownAdd)
-                            }
-
-                            Log.d("sandraaacountdownItem", "countdownItem = $countdownItem")
-
-                            for ((index, value) in countdownItem.withIndex()) {
-
-                                val textTitle =
-                                    "${((value.targetTimestamp.seconds - Timestamp.now().seconds) / 86400)} days " +
-                                            "before ${value.title}"
-                                val CHANNEL_ID = "Calendear"
-                                val notificationId = index
-
-
-                                val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                    .setSmallIcon(R.drawable.icon_has_google)
-                                    .setContentTitle(textTitle)
-                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                    .setAutoCancel(true)
-
-                                // Create the NotificationChannel, but only on API 26+ because
-                                // the NotificationChannel class is new and not in the support library
-
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    val name = getString(R.string.create_channel)
-                                    val descriptionText =
-                                        getString(R.string.create_channel)
-                                    val importance = NotificationManager.IMPORTANCE_DEFAULT
-                                    val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                                        description = descriptionText
+                                        countdownItem.add(countdownAdd)
                                     }
-                                    // Register the channel with the system
-                                    val notificationManager: NotificationManager =
-                                        MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-                                    notificationManager.createNotificationChannel(channel)
+                                    for ((index, value) in countdownItem.withIndex()) {
+
+                                        val textTitle =
+                                            "${((value.targetTimestamp.seconds - Timestamp.now().seconds) / 86400)} days " +
+                                                    "before ${value.title}"
+                                        val CHANNEL_ID = "Calendear"
+                                        val notificationId = index
+
+
+                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setContentTitle(textTitle)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setAutoCancel(true)
+
+                                        // Create the NotificationChannel, but only on API 26+ because
+                                        // the NotificationChannel class is new and not in the support library
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            val name = getString(R.string.create_channel)
+                                            val descriptionText =
+                                                getString(R.string.create_channel)
+                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
+                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                                                description = descriptionText
+                                            }
+                                            // Register the channel with the system
+                                            val notificationManager: NotificationManager =
+                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                                            notificationManager.createNotificationChannel(channel)
+                                        }
+                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
+                                            // notificationId is a unique int for each notification that you must define
+                                            notify(notificationId, builder.build())
+                                        }
+                                    }
+
                                 }
-                                with(NotificationManagerCompat.from(MyApplication.instance)) {
-                                    // notificationId is a unique int for each notification that you must define
-                                    notify(notificationId, builder.build())
-                                }
-                            }
 
                         }
-
-                }
+                    }
             }
+            "dnr" -> {
+                val db = FirebaseFirestore.getInstance()
+                val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
+                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                lateinit var remindAdd: Reminders
+                val remindersItem = ArrayList<Reminders>()
+
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .get()
+                    .addOnSuccessListener { documents ->
+
+                        for (calendar in documents) {
+
+                            //get reminders ( only ischecked is false )
+                            db.collection("data")
+                                .document(UserManager.id!!)
+                                .collection("calendar")
+                                .document(calendar.id)
+                                .collection("reminders")
+                                .whereEqualTo("isChecked", false)
+                                .whereEqualTo("setRemindDate", true)
+                                .whereEqualTo("frequency", "Does not repeat")
+                                .get()
+                                .addOnSuccessListener { documents ->
+
+                                    for (reminder in documents) {
+
+                                        val setDate = (reminder.data["setDate"] as Timestamp)
+                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+
+                                        remindAdd = Reminders(
+                                            simpleDateFormat.format(setDate.seconds * 1000),
+                                            reminder.data["title"].toString(),
+                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            simpleDateFormat.format(remindDate.seconds * 1000),
+                                            reminder.data["remindDate"] as Timestamp,
+                                            reminder.data["isChecked"].toString().toBoolean(),
+                                            reminder.data["note"].toString(),
+                                            reminder.data["frequency"].toString(),
+                                            reminder.data["documentID"].toString()
+                                        )
+
+                                        remindersItem.add(remindAdd)
+                                    }
+
+                                    for ((index, value) in remindersItem.withIndex()) {
+
+                                        val textTitle = value.title
+                                        val textContent = value.note
+                                        val CHANNEL_ID = "Calendear"
+                                        val notificationId = index
+
+
+                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setContentTitle(textTitle)
+                                            .setContentText(textContent)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setAutoCancel(true)
+
+                                        // Create the NotificationChannel, but only on API 26+ because
+                                        // the NotificationChannel class is new and not in the support library
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            val name = getString(R.string.create_channel)
+                                            val descriptionText =
+                                                getString(R.string.create_channel)
+                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
+                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                                                description = descriptionText
+                                            }
+                                            // Register the channel with the system
+                                            val notificationManager: NotificationManager =
+                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                                            notificationManager.createNotificationChannel(channel)
+                                        }
+                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
+                                            // notificationId is a unique int for each notification that you must define
+                                            notify(notificationId, builder.build())
+                                        }
+                                    }
+
+                                }
+
+                        }
+                    }
+
+            }
+            "ED" -> {
+                val db = FirebaseFirestore.getInstance()
+                val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+
+                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                lateinit var remindAdd: Reminders
+                val remindersItem = ArrayList<Reminders>()
+
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .get()
+                    .addOnSuccessListener { documents ->
+
+                        for (calendar in documents) {
+
+                            //get reminders ( only ischecked is false )
+                            db.collection("data")
+                                .document(UserManager.id!!)
+                                .collection("calendar")
+                                .document(calendar.id)
+                                .collection("reminders")
+                                .whereEqualTo("isChecked", false)
+                                .whereEqualTo("setRemindDate", true)
+                                .whereEqualTo("frequency", "Every day")
+                                .get()
+                                .addOnSuccessListener { documents ->
+
+                                    for (reminder in documents) {
+
+                                        val setDate = (reminder.data["setDate"] as Timestamp)
+                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+
+                                        remindAdd = Reminders(
+                                            simpleDateFormat.format(setDate.seconds * 1000),
+                                            reminder.data["title"].toString(),
+                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            simpleDateFormat.format(remindDate.seconds * 1000),
+                                            reminder.data["remindDate"] as Timestamp,
+                                            reminder.data["isChecked"].toString().toBoolean(),
+                                            reminder.data["note"].toString(),
+                                            reminder.data["frequency"].toString(),
+                                            reminder.data["documentID"].toString()
+                                        )
+
+                                        remindersItem.add(remindAdd)
+                                    }
+
+                                    for ((index, value) in remindersItem.withIndex()) {
+
+                                        val textTitle = value.title
+                                        val textContent = value.note
+                                        val CHANNEL_ID = "Calendear"
+                                        val notificationId = index
+
+
+                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setContentTitle(textTitle)
+                                            .setContentText(textContent)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setAutoCancel(true)
+
+                                        // Create the NotificationChannel, but only on API 26+ because
+                                        // the NotificationChannel class is new and not in the support library
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            val name = getString(R.string.create_channel)
+                                            val descriptionText =
+                                                getString(R.string.create_channel)
+                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
+                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                                                description = descriptionText
+                                            }
+                                            // Register the channel with the system
+                                            val notificationManager: NotificationManager =
+                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                                            notificationManager.createNotificationChannel(channel)
+                                        }
+                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
+                                            // notificationId is a unique int for each notification that you must define
+                                            notify(notificationId, builder.build())
+                                        }
+                                    }
+
+                                }
+
+                        }
+                    }
+
+            }
+            "EW" -> {
+                val db = FirebaseFirestore.getInstance()
+                val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+
+                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                lateinit var remindAdd: Reminders
+                val remindersItem = ArrayList<Reminders>()
+
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .get()
+                    .addOnSuccessListener { documents ->
+
+                        for (calendar in documents) {
+
+                            //get reminders ( only ischecked is false )
+                            db.collection("data")
+                                .document(UserManager.id!!)
+                                .collection("calendar")
+                                .document(calendar.id)
+                                .collection("reminders")
+                                .whereEqualTo("isChecked", false)
+                                .whereEqualTo("setRemindDate", true)
+                                .whereEqualTo("frequency", "Every week")
+                                .get()
+                                .addOnSuccessListener { documents ->
+
+                                    for (reminder in documents) {
+
+                                        val setDate = (reminder.data["setDate"] as Timestamp)
+                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+
+                                        remindAdd = Reminders(
+                                            simpleDateFormat.format(setDate.seconds * 1000),
+                                            reminder.data["title"].toString(),
+                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            simpleDateFormat.format(remindDate.seconds * 1000),
+                                            reminder.data["remindDate"] as Timestamp,
+                                            reminder.data["isChecked"].toString().toBoolean(),
+                                            reminder.data["note"].toString(),
+                                            reminder.data["frequency"].toString(),
+                                            reminder.data["documentID"].toString()
+                                        )
+
+                                        remindersItem.add(remindAdd)
+                                    }
+
+                                    for ((index, value) in remindersItem.withIndex()) {
+
+                                        val textTitle = value.title
+                                        val textContent = value.note
+                                        val CHANNEL_ID = "Calendear"
+                                        val notificationId = index
+
+
+                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setContentTitle(textTitle)
+                                            .setContentText(textContent)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setAutoCancel(true)
+
+                                        // Create the NotificationChannel, but only on API 26+ because
+                                        // the NotificationChannel class is new and not in the support library
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            val name = getString(R.string.create_channel)
+                                            val descriptionText =
+                                                getString(R.string.create_channel)
+                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
+                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                                                description = descriptionText
+                                            }
+                                            // Register the channel with the system
+                                            val notificationManager: NotificationManager =
+                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                                            notificationManager.createNotificationChannel(channel)
+                                        }
+                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
+                                            // notificationId is a unique int for each notification that you must define
+                                            notify(notificationId, builder.build())
+                                        }
+                                    }
+
+                                }
+
+                        }
+                    }
+
+            }
+            "EM" -> {
+                val db = FirebaseFirestore.getInstance()
+                val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+
+                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                lateinit var remindAdd: Reminders
+                val remindersItem = ArrayList<Reminders>()
+
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .get()
+                    .addOnSuccessListener { documents ->
+
+                        for (calendar in documents) {
+
+                            //get reminders ( only ischecked is false )
+                            db.collection("data")
+                                .document(UserManager.id!!)
+                                .collection("calendar")
+                                .document(calendar.id)
+                                .collection("reminders")
+                                .whereEqualTo("isChecked", false)
+                                .whereEqualTo("setRemindDate", true)
+                                .whereEqualTo("frequency", "Every month")
+                                .get()
+                                .addOnSuccessListener { documents ->
+
+                                    for (reminder in documents) {
+
+                                        val setDate = (reminder.data["setDate"] as Timestamp)
+                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+
+                                        remindAdd = Reminders(
+                                            simpleDateFormat.format(setDate.seconds * 1000),
+                                            reminder.data["title"].toString(),
+                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            simpleDateFormat.format(remindDate.seconds * 1000),
+                                            reminder.data["remindDate"] as Timestamp,
+                                            reminder.data["isChecked"].toString().toBoolean(),
+                                            reminder.data["note"].toString(),
+                                            reminder.data["frequency"].toString(),
+                                            reminder.data["documentID"].toString()
+                                        )
+
+                                        remindersItem.add(remindAdd)
+                                    }
+
+                                    for ((index, value) in remindersItem.withIndex()) {
+
+                                        val textTitle = value.title
+                                        val textContent = value.note
+                                        val CHANNEL_ID = "Calendear"
+                                        val notificationId = index
+
+
+                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setContentTitle(textTitle)
+                                            .setContentText(textContent)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setAutoCancel(true)
+
+                                        // Create the NotificationChannel, but only on API 26+ because
+                                        // the NotificationChannel class is new and not in the support library
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            val name = getString(R.string.create_channel)
+                                            val descriptionText =
+                                                getString(R.string.create_channel)
+                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
+                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                                                description = descriptionText
+                                            }
+                                            // Register the channel with the system
+                                            val notificationManager: NotificationManager =
+                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                                            notificationManager.createNotificationChannel(channel)
+                                        }
+                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
+                                            // notificationId is a unique int for each notification that you must define
+                                            notify(notificationId, builder.build())
+                                        }
+                                    }
+
+                                }
+
+                        }
+                    }
+
+            }
+            "EY" -> {
+                val db = FirebaseFirestore.getInstance()
+                val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+
+                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                lateinit var remindAdd: Reminders
+                val remindersItem = ArrayList<Reminders>()
+
+                db.collection("data")
+                    .document(UserManager.id!!)
+                    .collection("calendar")
+                    .get()
+                    .addOnSuccessListener { documents ->
+
+                        for (calendar in documents) {
+
+                            //get reminders ( only ischecked is false )
+                            db.collection("data")
+                                .document(UserManager.id!!)
+                                .collection("calendar")
+                                .document(calendar.id)
+                                .collection("reminders")
+                                .whereEqualTo("isChecked", false)
+                                .whereEqualTo("setRemindDate", true)
+                                .whereEqualTo("frequency", "Every year")
+                                .get()
+                                .addOnSuccessListener { documents ->
+
+                                    for (reminder in documents) {
+
+                                        val setDate = (reminder.data["setDate"] as Timestamp)
+                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+
+                                        remindAdd = Reminders(
+                                            simpleDateFormat.format(setDate.seconds * 1000),
+                                            reminder.data["title"].toString(),
+                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            simpleDateFormat.format(remindDate.seconds * 1000),
+                                            reminder.data["remindDate"] as Timestamp,
+                                            reminder.data["isChecked"].toString().toBoolean(),
+                                            reminder.data["note"].toString(),
+                                            reminder.data["frequency"].toString(),
+                                            reminder.data["documentID"].toString()
+                                        )
+
+                                        remindersItem.add(remindAdd)
+                                    }
+
+                                    for ((index, value) in remindersItem.withIndex()) {
+
+                                        val textTitle = value.title
+                                        val textContent = value.note
+                                        val CHANNEL_ID = "Calendear"
+                                        val notificationId = index
+
+
+                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setContentTitle(textTitle)
+                                            .setContentText(textContent)
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                            .setAutoCancel(true)
+
+                                        // Create the NotificationChannel, but only on API 26+ because
+                                        // the NotificationChannel class is new and not in the support library
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            val name = getString(R.string.create_channel)
+                                            val descriptionText =
+                                                getString(R.string.create_channel)
+                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
+                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                                                description = descriptionText
+                                            }
+                                            // Register the channel with the system
+                                            val notificationManager: NotificationManager =
+                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                                            notificationManager.createNotificationChannel(channel)
+                                        }
+                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
+                                            // notificationId is a unique int for each notification that you must define
+                                            notify(notificationId, builder.build())
+                                        }
+                                    }
+
+                                }
+
+                        }
+                    }
+
+            }
+        }
 
     }
-
 }
+
+
