@@ -4,19 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.calendar.notification.ReminderWorker
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 class MainViewModel : ViewModel() {
 
@@ -36,11 +30,10 @@ class MainViewModel : ViewModel() {
     val liveReminders: LiveData<Reminders>
         get() = _liveReminders
 
-    val remindersItem = ArrayList<Reminders>()
-    val _liveRemindersDnr = MutableLiveData<List<Reminders>>()
-    val liveRemindersDnr: LiveData<List<Reminders>>
-        get() = _liveRemindersDnr
-
+    val dnrItem = ArrayList<Reminders>()
+    val _livednr = MutableLiveData<List<Reminders>>()
+    val livednr: LiveData<List<Reminders>>
+        get() = _livednr
 
     fun getItem(documentId: String) {
         //connect to countdown data ( only the item that overdue is false )
@@ -90,10 +83,6 @@ class MainViewModel : ViewModel() {
             }
     }
 
-//    init {
-//        dnrItem()
-//    }
-
     fun dnrItem() {
         //connect to countdown data ( only the item that overdue is false )
         db.collection("data")
@@ -103,7 +92,7 @@ class MainViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-//                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     //get reminders ( only ischecked is false )
                     db.collection("data")
@@ -112,13 +101,11 @@ class MainViewModel : ViewModel() {
                         .document(calendar.id)
                         .collection("reminders")
                         .whereEqualTo("isChecked", false)
-                        .whereEqualTo("setRemindDate", true)
-                        .whereEqualTo("frequency", "Does not repeat")
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (reminder in documents) {
-                                Log.d("getDnrreminders", "${reminder.id} => ${reminder.data}")
+                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
                                 val setDate = (reminder.data["setDate"] as Timestamp)
                                 val remindDate = (reminder.data["remindDate"] as Timestamp)
@@ -134,9 +121,12 @@ class MainViewModel : ViewModel() {
                                     reminder.data["frequency"].toString(),
                                     reminder.data["documentID"].toString()
                                 )
-                                remindersItem.add(remindAdd)
+
+                                dnrItem.add(remindAdd)
                             }
-                            _liveRemindersDnr.value = remindersItem
+                            _livednr.value = dnrItem
+                            Log.d("sandraaa", "liveDate=  ${livednr.value}")
+
                         }
                 }
             }
