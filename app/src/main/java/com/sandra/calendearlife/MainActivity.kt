@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         if (UserManager.id != null) {
+            viewModel.dnrItem()
             // setup countdown notification
             val initialDate: LocalDateTime
             val timestampInitialDate: Timestamp
@@ -463,7 +464,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setSmallIcon(R.drawable.app_icon)
                                             .setContentTitle(textTitle)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                             .setAutoCancel(true)
@@ -553,7 +554,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setSmallIcon(R.drawable.app_icon)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -645,7 +646,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setSmallIcon(R.drawable.app_icon)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -737,7 +738,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setSmallIcon(R.drawable.app_icon)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -829,7 +830,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setSmallIcon(R.drawable.app_icon)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -921,7 +922,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.icon_has_google)
+                                            .setSmallIcon(R.drawable.app_icon)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

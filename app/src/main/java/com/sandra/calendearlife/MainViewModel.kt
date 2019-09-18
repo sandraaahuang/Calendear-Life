@@ -83,10 +83,6 @@ class MainViewModel : ViewModel() {
             }
     }
 
-    init {
-        dnrItem()
-    }
-
     fun dnrItem() {
         //connect to countdown data ( only the item that overdue is false )
         db.collection("data")

@@ -18,11 +18,11 @@
             android:textSize="16sp"
             android:fontFamily="@font/noto_sans"/>
 
-    <ImageView android:layout_width="25dp"
-               android:layout_height="25dp"
+    <ImageView android:layout_width="30dp"
+               android:layout_height="30dp"
                android:layout_marginStart="16dp"
-               android:layout_marginTop="8dp"
-               android:src="@drawable/icon_has_remind"/>
+               android:layout_marginTop="5dp"
+               android:src="@drawable/app_icon"/>
 
 
     <ImageView android:layout_width="match_parent"
