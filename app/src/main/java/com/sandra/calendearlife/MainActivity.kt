@@ -120,126 +120,129 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        // setup countdown notification
-        val initialDate: LocalDateTime
-        val timestampInitialDate: Timestamp
-        val zoneId = ZoneId.of("Asia/Taipei")
-        val nowHour = LocalDateTime.now(zoneId).hour
+        if (UserManager.id != null) {
+            // setup countdown notification
+            val initialDate: LocalDateTime
+            val timestampInitialDate: Timestamp
+            val zoneId = ZoneId.of("Asia/Taipei")
+            val nowHour = LocalDateTime.now(zoneId).hour
 
-        if (nowHour > 9) {
+            if (nowHour > 9) {
 
-            initialDate = LocalDateTime.of(
-                LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth.plus(1), 9, 0
-            )
+                initialDate = LocalDateTime.of(
+                    LocalDate.now().year, LocalDate.now().monthValue,
+                    LocalDateTime.now().dayOfMonth.plus(1), 9, 0
+                )
 
-            val seconds = initialDate.atZone(zoneId).toEpochSecond()
-            val nanos = initialDate.nano
-            timestampInitialDate = Timestamp(seconds, nanos)
+                val seconds = initialDate.atZone(zoneId).toEpochSecond()
+                val nanos = initialDate.nano
+                timestampInitialDate = Timestamp(seconds, nanos)
 
-            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
+                Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
 
-        } else {
-            initialDate = LocalDateTime.of(
-                LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth, 9, 0
-            )
+            } else {
+                initialDate = LocalDateTime.of(
+                    LocalDate.now().year, LocalDate.now().monthValue,
+                    LocalDateTime.now().dayOfMonth, 9, 0
+                )
 
-            val seconds = initialDate.atZone(zoneId).toEpochSecond()
-            val nanos = initialDate.nano
-            timestampInitialDate = Timestamp(seconds, nanos)
+                val seconds = initialDate.atZone(zoneId).toEpochSecond()
+                val nanos = initialDate.nano
+                timestampInitialDate = Timestamp(seconds, nanos)
 
-            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
-        }
-        val alarmManager = MyApplication.instance.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            MyApplication.instance,
-            1234, intent.setAction("countdown"), PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        alarmManager.setInexactRepeating(
-            AlarmManager.RTC_WAKEUP, Timestamp.now().seconds*1000,
-            AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent )
-
-        viewModel.livednr.observe(this, Observer {
-            it?.let {
-                for ((index, value) in it.withIndex()) {
-
-                    when (value.frequency) {
-                        "Does not repeat" ->{
-                            Log.d("sandraaa", "DNR = $value.remindTimestamp.seconds")
-                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-                            val dnrPending = PendingIntent.getBroadcast(
-                                MyApplication.instance,
-                                1234, dnrIntent.setAction("dnr"), PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                            alarmManager.setExact(
-                                AlarmManager.RTC_WAKEUP,
-                                value.remindTimestamp.seconds * 1000, dnrPending
-                            )
-                        }
-                        "Every day" -> {
-                            Log.d("sandraaa", "ED = $value.remindTimestamp.seconds")
-                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-                            val edPending = PendingIntent.getBroadcast(
-                                MyApplication.instance,
-                                1234, dnrIntent.setAction("ED"), PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                            alarmManager.setInexactRepeating(
-                                AlarmManager.RTC_WAKEUP,
-                                value.remindTimestamp.seconds * 1000,
-                                AlarmManager.INTERVAL_DAY, edPending
-                            )
-                        }
-                        "Every week" -> {
-                            Log.d("sandraaa", "EW = $value.remindTimestamp.seconds")
-                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-                            val edPending = PendingIntent.getBroadcast(
-                                MyApplication.instance,
-                                1234, dnrIntent.setAction("EW"), PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                            alarmManager.setInexactRepeating(
-                                AlarmManager.RTC_WAKEUP,
-                                value.remindTimestamp.seconds * 1000,
-                                AlarmManager.INTERVAL_DAY * 7, edPending
-                            )
-
-                        }
-                        "Every month" -> {
-                            Log.d("sandraaa", "EM = $value.remindTimestamp.seconds")
-                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-                            val edPending = PendingIntent.getBroadcast(
-                                MyApplication.instance,
-                                1234, dnrIntent.setAction("EM"), PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                            alarmManager.setInexactRepeating(
-                                AlarmManager.RTC_WAKEUP,
-                                value.remindTimestamp.seconds * 1000,
-                                AlarmManager.INTERVAL_DAY * 30, edPending
-                            )
-
-                        }
-                        "Every year" -> {
-                            Log.d("sandraaa", "EY = $value.remindTimestamp.seconds")
-                            val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-                            val edPending = PendingIntent.getBroadcast(
-                                MyApplication.instance,
-                                1234, dnrIntent.setAction("EY"), PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                            alarmManager.setInexactRepeating(
-                                AlarmManager.RTC_WAKEUP,
-                                value.remindTimestamp.seconds * 1000,
-                                AlarmManager.INTERVAL_DAY * 365, edPending
-                            )
-
-                        }
-                    }
-
-
-                }
+                Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
             }
-        })
+            val alarmManager = MyApplication.instance.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                MyApplication.instance,
+                1234, intent.setAction("countdown"), PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            alarmManager.setInexactRepeating(
+                AlarmManager.RTC_WAKEUP, Timestamp.now().seconds * 1000,
+                AlarmManager.INTERVAL_DAY, pendingIntent
+            )
+
+            viewModel.livednr.observe(this, Observer {
+                it?.let {
+                    for ((index, value) in it.withIndex()) {
+
+                        when (value.frequency) {
+                            "Does not repeat" -> {
+                                Log.d("sandraaa", "DNR = $value.remindTimestamp.seconds")
+                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val dnrPending = PendingIntent.getBroadcast(
+                                    MyApplication.instance,
+                                    1234, dnrIntent.setAction("dnr"), PendingIntent.FLAG_UPDATE_CURRENT
+                                )
+                                alarmManager.setExact(
+                                    AlarmManager.RTC_WAKEUP,
+                                    value.remindTimestamp.seconds * 1000, dnrPending
+                                )
+                            }
+                            "Every day" -> {
+                                Log.d("sandraaa", "ED = $value.remindTimestamp.seconds")
+                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val edPending = PendingIntent.getBroadcast(
+                                    MyApplication.instance,
+                                    1234, dnrIntent.setAction("ED"), PendingIntent.FLAG_UPDATE_CURRENT
+                                )
+                                alarmManager.setInexactRepeating(
+                                    AlarmManager.RTC_WAKEUP,
+                                    value.remindTimestamp.seconds * 1000,
+                                    AlarmManager.INTERVAL_DAY, edPending
+                                )
+                            }
+                            "Every week" -> {
+                                Log.d("sandraaa", "EW = $value.remindTimestamp.seconds")
+                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val edPending = PendingIntent.getBroadcast(
+                                    MyApplication.instance,
+                                    1234, dnrIntent.setAction("EW"), PendingIntent.FLAG_UPDATE_CURRENT
+                                )
+                                alarmManager.setInexactRepeating(
+                                    AlarmManager.RTC_WAKEUP,
+                                    value.remindTimestamp.seconds * 1000,
+                                    AlarmManager.INTERVAL_DAY * 7, edPending
+                                )
+
+                            }
+                            "Every month" -> {
+                                Log.d("sandraaa", "EM = $value.remindTimestamp.seconds")
+                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val edPending = PendingIntent.getBroadcast(
+                                    MyApplication.instance,
+                                    1234, dnrIntent.setAction("EM"), PendingIntent.FLAG_UPDATE_CURRENT
+                                )
+                                alarmManager.setInexactRepeating(
+                                    AlarmManager.RTC_WAKEUP,
+                                    value.remindTimestamp.seconds * 1000,
+                                    AlarmManager.INTERVAL_DAY * 30, edPending
+                                )
+
+                            }
+                            "Every year" -> {
+                                Log.d("sandraaa", "EY = $value.remindTimestamp.seconds")
+                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val edPending = PendingIntent.getBroadcast(
+                                    MyApplication.instance,
+                                    1234, dnrIntent.setAction("EY"), PendingIntent.FLAG_UPDATE_CURRENT
+                                )
+                                alarmManager.setInexactRepeating(
+                                    AlarmManager.RTC_WAKEUP,
+                                    value.remindTimestamp.seconds * 1000,
+                                    AlarmManager.INTERVAL_DAY * 365, edPending
+                                )
+
+                            }
+                        }
+
+
+                    }
+                }
+            })
+        }
 
     }
 
