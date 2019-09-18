@@ -1,8 +1,12 @@
 package com.sandra.calendearlife
 
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +18,8 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -23,30 +29,27 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
-import com.sandra.calendearlife.calendar.notification.CountdownWorker
-import com.sandra.calendearlife.calendar.notification.MyBroadCastReceiver
-import com.sandra.calendearlife.calendar.notification.ReminderWorker
-import com.sandra.calendearlife.calendar.notification.TestWorker
+import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 import com.sandra.calendearlife.sync.DeleteWorker
 import com.sandra.calendearlife.sync.ImportWorker
 import com.sandra.calendearlife.util.CurrentFragmentType
+import com.sandra.calendearlife.util.UserManager
+import com.sandra.calendearlife.util.getString
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val screenOnOffBrocastReceiver = MyBroadCastReceiver()
     lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
@@ -115,32 +118,48 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
         }
-        val testRepeat
-                = PeriodicWorkRequestBuilder<TestWorker>(1, TimeUnit.SECONDS)
-            .setPeriodStartTime(1568783580, TimeUnit.SECONDS)
-            .build()
 
-        WorkManager.getInstance()
-            .enqueue(testRepeat)
+        val initialDate: LocalDateTime
+        val timestampInitialDate: Timestamp
+        val zoneId = ZoneId.of("Asia/Taipei")
+        val nowHour = LocalDateTime.now(zoneId).hour
 
-        WorkManager.getInstance().getWorkInfoByIdLiveData(testRepeat.id)
-            .observe(this, Observer<WorkInfo> {
-                val status = it.state.name
-                Log.d("testRepeat","testRepeat status1 = $status")
-            })
+        if (nowHour > 9) {
 
-    }
+            initialDate = LocalDateTime.of(
+                LocalDate.now().year, LocalDate.now().monthValue,
+                LocalDateTime.now().dayOfMonth.plus(1), 9, 0
+            )
 
-    override fun onResume() {
-        super.onResume()
-        val filter = IntentFilter()
-        filter.addAction(Intent.ACTION_SCREEN_ON)
-        registerReceiver(screenOnOffBrocastReceiver, filter)
-    }
+            val seconds = initialDate.atZone(zoneId).toEpochSecond()
+            val nanos = initialDate.nano
+            timestampInitialDate = Timestamp(seconds, nanos)
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(screenOnOffBrocastReceiver)
+            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
+
+        } else {
+            initialDate = LocalDateTime.of(
+                LocalDate.now().year, LocalDate.now().monthValue,
+                LocalDateTime.now().dayOfMonth, 9, 0
+            )
+
+            val seconds = initialDate.atZone(zoneId).toEpochSecond()
+            val nanos = initialDate.nano
+            timestampInitialDate = Timestamp(seconds, nanos)
+
+            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
+        }
+
+        val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+        val alarmManager = MyApplication.instance.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = PendingIntent.getBroadcast(
+            MyApplication.instance,
+            1234, intent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager.setInexactRepeating(
+            AlarmManager.RTC_WAKEUP, timestampInitialDate.seconds*1000,
+            AlarmManager.INTERVAL_DAY, pendingIntent
+        )
     }
 
     fun setupToolbar() {
@@ -297,4 +316,104 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
+}
+
+
+class AlarmReceiver : BroadcastReceiver() {
+
+    override fun onReceive(p0: Context?, p1: Intent?) {
+
+        Log.d("alarmManager", "trigger time = ${Timestamp.now().seconds * 1000}")
+
+        val db = FirebaseFirestore.getInstance()
+        val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+
+        lateinit var countdownAdd: Countdown
+        val countdownItem = ArrayList<Countdown>()
+
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .get()
+            .addOnSuccessListener { documents ->
+
+                for (calendar in documents) {
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+
+                    // get countdowns
+                    db.collection("data")
+                        .document(UserManager.id!!)
+                        .collection("calendar")
+                        .document(calendar.id)
+                        .collection("countdowns")
+                        .whereEqualTo("overdue", false)
+                        .get()
+                        .addOnSuccessListener { documents ->
+
+                            for (countdown in documents) {
+                                Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
+                                val setDate = (countdown.data["setDate"] as Timestamp)
+                                val targetDate = (countdown.data["targetDate"] as Timestamp)
+
+                                countdownAdd = Countdown(
+                                    simpleDateFormat.format(setDate.seconds * 1000),
+                                    countdown.data["title"].toString(),
+                                    countdown.data["note"].toString(),
+                                    simpleDateFormat.format(targetDate.seconds * 1000),
+                                    countdown.data["targetDate"] as Timestamp,
+                                    countdown.data["overdue"].toString().toBoolean(),
+                                    countdown.data["documentID"].toString()
+                                )
+
+                                countdownItem.add(countdownAdd)
+                            }
+
+                            Log.d("sandraaacountdownItem", "countdownItem = $countdownItem")
+
+                            for ((index, value) in countdownItem.withIndex()) {
+
+                                val textTitle =
+                                    "${((value.targetTimestamp.seconds - Timestamp.now().seconds) / 86400)} days " +
+                                            "before ${value.title}"
+                                val CHANNEL_ID = "Calendear"
+                                val notificationId = index
+
+
+                                val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+                                    .setSmallIcon(R.drawable.icon_has_google)
+                                    .setContentTitle(textTitle)
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                    .setAutoCancel(true)
+
+                                // Create the NotificationChannel, but only on API 26+ because
+                                // the NotificationChannel class is new and not in the support library
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    val name = getString(R.string.create_channel)
+                                    val descriptionText =
+                                        getString(R.string.create_channel)
+                                    val importance = NotificationManager.IMPORTANCE_DEFAULT
+                                    val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                                        description = descriptionText
+                                    }
+                                    // Register the channel with the system
+                                    val notificationManager: NotificationManager =
+                                        MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                                    notificationManager.createNotificationChannel(channel)
+                                }
+                                with(NotificationManagerCompat.from(MyApplication.instance)) {
+                                    // notificationId is a unique int for each notification that you must define
+                                    notify(notificationId, builder.build())
+                                }
+                            }
+
+                        }
+
+                }
+            }
+
+
+    }
+
 }

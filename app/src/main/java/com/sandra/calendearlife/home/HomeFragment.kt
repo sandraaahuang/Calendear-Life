@@ -11,21 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
-import android.content.Intent.getIntent
-import android.util.Log
-import androidx.lifecycle.Observer
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import com.google.firebase.Timestamp
-import com.sandra.calendearlife.calendar.notification.CountdownWorker
-import java.sql.Time
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : Fragment() {
@@ -75,64 +60,64 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
-        // setNotification
-        val initialDate: LocalDateTime
-        val timestampInitialDate: Timestamp
-        val zoneId = ZoneId.of("Asia/Taipei")
-        val nowHour = LocalDateTime.now(zoneId).hour
-
-        if (nowHour > 9) {
-
-            initialDate = LocalDateTime.of(
-                LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth.plus(1), 9, 0
-            )
-
-            val seconds = initialDate.atZone(zoneId).toEpochSecond()
-            val nanos = initialDate.nano
-            timestampInitialDate = Timestamp(seconds, nanos)
-
-            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
-
-        } else {
-            initialDate = LocalDateTime.of(
-                LocalDate.now().year, LocalDate.now().monthValue,
-                LocalDateTime.now().dayOfMonth, 9, 0
-            )
-
-            val seconds = initialDate.atZone(zoneId).toEpochSecond()
-            val nanos = initialDate.nano
-            timestampInitialDate = Timestamp(seconds, nanos)
-
-            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
-        }
-
-        val countdownRequest = OneTimeWorkRequestBuilder<CountdownWorker>()
-            .setInitialDelay(timestampInitialDate.seconds - Timestamp.now().seconds, TimeUnit.SECONDS)
-            .build()
-
-        val countdownRepeat
-                = PeriodicWorkRequestBuilder<CountdownWorker>(1, TimeUnit.DAYS)
-            .setPeriodStartTime(timestampInitialDate.seconds - Timestamp.now().seconds, TimeUnit.SECONDS)
-            .build()
-
-        WorkManager.getInstance()
-            .enqueue(countdownRequest)
-
-        WorkManager.getInstance()
-            .enqueue(countdownRepeat)
-
-        WorkManager.getInstance().getWorkInfoByIdLiveData(countdownRequest.id)
-            .observe(this, Observer<WorkInfo> {
-                val status = it.state.name
-                Log.d("countdownRequest","countdownRequest status1 = $status")
-            })
-
-        WorkManager.getInstance().getWorkInfoByIdLiveData(countdownRepeat.id)
-            .observe(this, Observer<WorkInfo> {
-                val status = it.state.name
-                Log.d("countdownRequest","countdownRequest status2 = $status")
-            })
+//        // setNotification
+//        val initialDate: LocalDateTime
+//        val timestampInitialDate: Timestamp
+//        val zoneId = ZoneId.of("Asia/Taipei")
+//        val nowHour = LocalDateTime.now(zoneId).hour
+//
+//        if (nowHour > 9) {
+//
+//            initialDate = LocalDateTime.of(
+//                LocalDate.now().year, LocalDate.now().monthValue,
+//                LocalDateTime.now().dayOfMonth.plus(1), 9, 0
+//            )
+//
+//            val seconds = initialDate.atZone(zoneId).toEpochSecond()
+//            val nanos = initialDate.nano
+//            timestampInitialDate = Timestamp(seconds, nanos)
+//
+//            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
+//
+//        } else {
+//            initialDate = LocalDateTime.of(
+//                LocalDate.now().year, LocalDate.now().monthValue,
+//                LocalDateTime.now().dayOfMonth, 9, 0
+//            )
+//
+//            val seconds = initialDate.atZone(zoneId).toEpochSecond()
+//            val nanos = initialDate.nano
+//            timestampInitialDate = Timestamp(seconds, nanos)
+//
+//            Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
+//        }
+//
+//        val countdownRequest = OneTimeWorkRequestBuilder<CountdownWorker>()
+//            .setInitialDelay(timestampInitialDate.seconds - Timestamp.now().seconds, TimeUnit.SECONDS)
+//            .build()
+//
+//        val countdownRepeat
+//                = PeriodicWorkRequestBuilder<CountdownWorker>(1, TimeUnit.DAYS)
+//            .setPeriodStartTime(timestampInitialDate.seconds - Timestamp.now().seconds, TimeUnit.SECONDS)
+//            .build()
+//
+//        WorkManager.getInstance()
+//            .enqueue(countdownRequest)
+//
+//        WorkManager.getInstance()
+//            .enqueue(countdownRepeat)
+//
+//        WorkManager.getInstance().getWorkInfoByIdLiveData(countdownRequest.id)
+//            .observe(this, Observer<WorkInfo> {
+//                val status = it.state.name
+//                Log.d("countdownRequest","countdownRequest status1 = $status")
+//            })
+//
+//        WorkManager.getInstance().getWorkInfoByIdLiveData(countdownRepeat.id)
+//            .observe(this, Observer<WorkInfo> {
+//                val status = it.state.name
+//                Log.d("countdownRequest","countdownRequest status2 = $status")
+//            })
 
 //        viewModel.liveRemindersDnr.observe(this, Observer {
 //            it?.let{
