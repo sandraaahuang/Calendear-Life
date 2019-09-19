@@ -138,13 +138,12 @@
                         android:fontFamily="@font/noto_sans"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:background="@color/save_blue"
+                        android:background="@drawable/save_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintEnd_toStartOf="@+id/deleteButton2"
-                        android:layout_marginStart="16dp" android:layout_marginBottom="16dp"
                         app:layout_constraintBottom_toBottomOf="parent"/>
                 <Button
                         android:text="Delete"
@@ -153,13 +152,13 @@
                         android:fontFamily="@font/noto_sans"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:background="@color/delete_red"
+                        android:background="@drawable/delete_button"
                         android:id="@+id/deleteButton2" app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/saveButton2"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintTop_toTopOf="@+id/saveButton2"
-                        app:layout_constraintBottom_toBottomOf="@+id/saveButton2" android:layout_marginEnd="16dp"
-                        android:layout_marginStart="2dp"/>
+                        app:layout_constraintBottom_toBottomOf="@+id/saveButton2"
+                />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

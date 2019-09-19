@@ -283,17 +283,16 @@
                 <Button
                         android:id="@+id/saveButton"
                         android:text="@string/saveReminders"
-                        android:background="@color/save_blue"
+                        android:background="@drawable/save_button"
                         android:fontFamily="@font/noto_sans"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintEnd_toStartOf="@+id/deleteButton"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        android:layout_marginBottom="16dp" android:layout_marginStart="16dp"/>
+                />
                 <Button
                         android:text="Delete"
                         android:layout_width="0dp"
@@ -301,12 +300,12 @@
                         android:fontFamily="@font/noto_sans"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:background="@color/delete_red"
+                        android:background="@drawable/delete_button"
                         android:id="@+id/deleteButton" app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/saveButton" app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintTop_toTopOf="@+id/saveButton"
-                        app:layout_constraintBottom_toBottomOf="@+id/saveButton" android:layout_marginEnd="16dp"
-                        android:layout_marginStart="2dp"/>
+                        app:layout_constraintBottom_toBottomOf="@+id/saveButton"
+                />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
