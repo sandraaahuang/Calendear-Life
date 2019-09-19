@@ -15,4 +15,6 @@
     <color name="calendar_today_badge">#ffcdd2</color>
     <color name="dark_pink">#9E8690</color>
     <color name="dark_blue">#0069c0</color>
+    <color name="delete_red">#BD411E</color>
+    <color name="save_blue">#0277bd</color>
 </resources>
