@@ -11,10 +11,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.CountdownFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.text.ParseException
@@ -38,9 +40,7 @@ class CountdownFragment : Fragment() {
         binding.viewModel = viewModel
 
         val addCountdownAdapter = AddCountdownAdapter(AddCountdownAdapter.OnClickListener {
-            viewModel.displayCountdownDetails(it)
-            Log.d("sandraaa","it = $it")
-        },viewModel)
+            viewModel.displayCountdownDetails(it)}, viewModel)
 
         viewModel.navigateToCountdownProperty.observe(this, androidx.lifecycle.Observer {
             if ( null != it ) {
@@ -104,9 +104,10 @@ class CountdownFragment : Fragment() {
 
             viewModel.writeItem(calendar,countdown)
 
+            Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
             Handler().postDelayed({
                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-            },2000)
+            },3000)
         }
 
         val recyclerIndicator = binding.indicator
