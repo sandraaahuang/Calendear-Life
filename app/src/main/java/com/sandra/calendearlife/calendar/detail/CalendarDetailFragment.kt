@@ -199,7 +199,8 @@ class CalendarDetailFragment : Fragment() {
                 "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
                 "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
                 "title" to "${binding.detailTitleInput.text}",
-                "note" to "${binding.noteInput.text}"
+                "note" to "${binding.noteInput.text}",
+                "location" to "${binding.locationInput.text}"
             )
 
             val updateCountdown = hashMapOf(
@@ -207,12 +208,6 @@ class CalendarDetailFragment : Fragment() {
                 "note" to "${binding.noteInput.text}",
                 "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time)
             )
-
-            Log.d("updateItem", "id = ${calendar.documentID}, " +
-                    "updateCalendar = $updateCalendar," +
-                    "updateCountdown = $updateCountdown," +
-                    "updateRemind = $updateRemind")
-
 
             viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)
 

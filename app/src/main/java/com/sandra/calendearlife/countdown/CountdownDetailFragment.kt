@@ -3,6 +3,7 @@ package com.sandra.calendearlife.countdown
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.CountdownDetailFragmentBinding
 import com.sandra.calendearlife.reminders.DetailViewModelFactory
 import com.sandra.calendearlife.reminders.RemindersDetailFragmentArgs
@@ -73,14 +76,20 @@ class CountdownDetailFragment : Fragment() {
                 "date" to java.sql.Timestamp(putInDate.time)
             )
 
-            Log.d("sandraaa", " update = $updateItem")
             viewModel.updateItem(updateItem,calendarItem, countdown.documentID)
-            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+
+            Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            Handler().postDelayed({findNavController().navigate(NavigationDirections
+                .actionGlobalHomeFragment())}, 3000)
         }
 
         binding.deleteButton.setOnClickListener {
+
             viewModel.deleteItem(countdown.documentID)
-            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+
+            Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            Handler().postDelayed({findNavController().navigate(NavigationDirections
+                .actionGlobalHomeFragment())}, 3000)
         }
 
         return binding.root

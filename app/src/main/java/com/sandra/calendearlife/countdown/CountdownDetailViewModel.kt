@@ -33,7 +33,6 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // get update item
                     db.collection("data")
@@ -46,7 +45,6 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
-                                Log.d("getAllCalendar", "${countdown.id} => ${countdown.data}")
 
                                 // update countdowns
                                 db.collection("data")
@@ -63,14 +61,9 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                                     .collection("calendar")
                                     .document(calendar.id)
                                     .update(calendarItem)
-
                             }
                         }
                 }
-            }
-
-            .addOnFailureListener { exception ->
-                Log.w("getAllCalendar", "Error getting documents: ", exception)
             }
     }
 
@@ -85,7 +78,6 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // get delete item
                     db.collection("data")
@@ -98,7 +90,6 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
-                                Log.d("getAllCalendar", "${countdown.id} => ${countdown.data}")
 
                                 // delete countdown
                                 db.collection("data")
@@ -108,12 +99,6 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                                     .collection("countdowns")
                                     .document(countdown.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "id = $documentID"
-                                        )
-                                    }
 
                                 // delete calendar
                                 db.collection("data")
@@ -121,14 +106,9 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                                     .collection("calendar")
                                     .document(calendar.id)
                                     .delete()
-
                             }
                         }
                 }
-            }
-
-            .addOnFailureListener { exception ->
-                Log.w("getAllCalendar", "Error getting documents: ", exception)
             }
     }
 }
