@@ -22,7 +22,7 @@
     <string name="saturday">Sat</string>
 
     <!-- current fragment type -->
-    <string name="home">Home</string>
+    <string name="home">Calendear Life</string>
     <string name="detail">Detail</string>
     <string name="add_event_into_calendar">New Event</string>
     <string name="add_event_into_reminder">New Reminder</string>

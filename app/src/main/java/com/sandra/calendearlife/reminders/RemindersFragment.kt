@@ -91,25 +91,12 @@ class RemindersFragment : Fragment() {
             val year = calendar.get(Calendar.YEAR)
             val monthOfYear = calendar.get(Calendar.MONTH)
             val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-            val hour = calendar.get(Calendar.HOUR_OF_DAY)
-            val minute = calendar.get(Calendar.MINUTE)
-
-            binding.remindersDateInput.text = "${year}/${monthOfYear+1}/$dayOfMonth"
-            binding.remindersTimeInput.text = "$hour:$minute AM"
-
-            TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
-                val stringTime = SimpleDateFormat("hh:mm a").format(date)
-                binding.remindersTimeInput.text =
-                    "$stringTime" }, hour, minute, false
-            ).show()
 
             val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected setDate in textbox
-                    val date = Date(year -1900, monthOfYear, dayOfMonth, hour, minute)
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
                     val stringTime = SimpleDateFormat("yyyy/MM/dd").format(date)
                     binding.remindersDateInput.text=
                         "$stringTime" }, year, monthOfYear, dayOfMonth

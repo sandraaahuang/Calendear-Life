@@ -35,6 +35,8 @@ class PreviewFragment : Fragment() {
         ViewModelProviders.of(this).get(PreviewViewModel::class.java)
     }
 
+    val images = IntArray(3)
+
     lateinit var binding: PreviewFragmentBinding
 
     private lateinit var auth: FirebaseAuth
@@ -76,6 +78,15 @@ class PreviewFragment : Fragment() {
             setLogin(true)
             updateWidget()
         }
+
+        images[0] = R.drawable.preview_photo_widget
+        images[1] = R.drawable.preview_photo_notify
+        images[2] = R.drawable.preview_photo_home
+
+        binding.recyclerView.adapter = PreviewImageAdapter(images)
+
+        val recyclerIndicator = binding.indicator
+        recyclerIndicator.attachToRecyclerView(binding.recyclerView)
 
         return binding.root
     }
