@@ -23,7 +23,9 @@ import android.content.ContentResolver
 import android.os.Handler
 import android.util.Log
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
 
 
 class CalendarEventFragment : Fragment() {
@@ -257,9 +259,10 @@ class CalendarEventFragment : Fragment() {
                 Log.d("sandraaa", "fail")
             }
 
+            Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
             Handler().postDelayed({
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
-            },4000)
+            },3000)
         }
         
         return binding.root
