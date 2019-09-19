@@ -49,7 +49,7 @@ class CountdownViewModel : ViewModel() {
             .add(calendar)
             .addOnSuccessListener { documentReference ->
                 Log.d(
-                    "AddCalendarIntoDB",
+                    "AddNewCalendar",
                     "DocumentSnapshot added with ID: " + documentReference.id
                 )
                 db.collection("data")
@@ -66,7 +66,7 @@ class CountdownViewModel : ViewModel() {
                     .add(countdown)
                     .addOnSuccessListener { countdownID ->
                         Log.d(
-                            "AddCountdownsIntoDB",
+                            "AddNewCountdowns",
                             "DocumentSnapshot added with ID: " + countdownID.id
                         )
                         db.collection("data")
@@ -90,7 +90,6 @@ class CountdownViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // get countdowns
                     db.collection("data")
@@ -103,7 +102,7 @@ class CountdownViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
-                                Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
+
                                 val setDate =
                                     (countdown.data["setDate"] as com.google.firebase.Timestamp)
                                 val targetDate =
@@ -124,15 +123,7 @@ class CountdownViewModel : ViewModel() {
 
                             _liveCountdown.value = countdownItem
                         }
-
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllcountdown", "Error getting documents: ", exception)
-                        }
                 }
-            }
-
-            .addOnFailureListener { exception ->
-                Log.w("getAllCalendar", "Error getting documents: ", exception)
             }
     }
 
@@ -145,9 +136,8 @@ class CountdownViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // get all countdowns
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -157,9 +147,8 @@ class CountdownViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
+                                // update overdue countdowns
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -167,12 +156,6 @@ class CountdownViewModel : ViewModel() {
                                     .collection("countdowns")
                                     .document(documentId)
                                     .update("overdue", true)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "successfully updated my status!"
-                                        )
-                                    }
                             }
                         }
                 }
