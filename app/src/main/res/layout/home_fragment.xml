@@ -4,6 +4,7 @@
 
     <data>
         <variable name="viewModel" type="com.sandra.calendearlife.home.HomeViewModel"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +32,21 @@
                     app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp">
             </androidx.recyclerview.widget.RecyclerView>
 
+            <TextView
+                    android:id="@+id/no_countdown"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text='@{viewModel.liveCountdown != null ? @string/no_countdown : ""}'
+                    android:textSize="20sp"
+                    android:textColor="@color/deep_gray"
+                    android:gravity="center"
+                    android:visibility="@{viewModel.liveCountdown.size == 0 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
 
             <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
                     android:id="@+id/indicator"
@@ -56,6 +72,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"/>
+
+        <TextView
+                android:id="@+id/no_reminder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text='@{viewModel.liveReminders != null ? @string/no_reminder : ""}'
+                android:textSize="20sp"
+                android:textColor="@color/deep_gray"
+                android:gravity="center"
+                android:visibility="@{viewModel.liveReminders.size == 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/remindersRecyclerView"/>
 
         <com.github.clans.fab.FloatingActionMenu
                 android:layout_width="wrap_content"
