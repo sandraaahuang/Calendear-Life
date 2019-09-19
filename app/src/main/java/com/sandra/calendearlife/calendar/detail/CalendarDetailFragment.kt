@@ -9,16 +9,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.postDelayed
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.firestore.FieldValue
+import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.CalendarDetailFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import kotlinx.android.synthetic.main.calendar_detail_fragment.*
-import kotlinx.android.synthetic.main.calendar_show_event.view.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -169,14 +168,15 @@ class CalendarDetailFragment : Fragment() {
             Log.d("sandraaa", "delete = ${calendar.documentID}")
 
             if (calendar.fromGoogle){
-                Log.d("sandraaa", "is google item")
-                viewModel.delete_event(calendar.documentID)
+
+                viewModel.deleteEvent(calendar.documentID)
             } else {
-                Log.d("sandraaa", "nono google item")
+                Log.d("sandraaa", "is not google item")
             }
 
-            Handler().postDelayed({findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())}
-                ,3000)
+            Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            Handler().postDelayed({findNavController().navigate(NavigationDirections
+                .actionGlobalCalendarMonthFragment())}, 3000)
 
         }
 
@@ -217,15 +217,18 @@ class CalendarDetailFragment : Fragment() {
             viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)
 
             if (calendar.fromGoogle){
-                Log.d("sandraaa", "is google item")
-            viewModel.update_event(calendar.documentID!!,
+            viewModel.updateEvent(calendar.documentID,
                 "${binding.detailTitleInput.text}",
                 "${binding.noteInput.text}",
                 com.google.firebase.Timestamp(dateTimeFormat.parse(beginDate)),
                 com.google.firebase.Timestamp(dateTimeFormat.parse(endDate)))
             } else {
-                Log.d("sandraaa", "nono google item")
+                Log.d("sandraaa", "is not google item")
             }
+
+            Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            Handler().postDelayed({findNavController().navigate(NavigationDirections
+                .actionGlobalCalendarMonthFragment())}, 3000)
         }
 
 

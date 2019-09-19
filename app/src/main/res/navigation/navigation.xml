@@ -16,10 +16,6 @@
               android:name="com.sandra.calendearlife.calendar.CalendarScheduleFragment"
               android:label="CalendarScheduleFragment"/>
     <action android:id="@+id/action_global_calendarScheduleFragment" app:destination="@id/calendarScheduleFragment"/>
-    <fragment android:id="@+id/calendarSearchFragment"
-              android:name="com.sandra.calendearlife.calendar.CalendarSearchFragment"
-              android:label="CalendarSearchFragment"/>
-    <action android:id="@+id/action_global_calendarSearchFragment" app:destination="@id/calendarSearchFragment"/>
     <fragment android:id="@+id/calendarWeekFragment"
               android:name="com.sandra.calendearlife.calendar.CalendarWeekFragment"
               android:label="CalendarWeekFragment"/><action android:id="@+id/action_global_calendarWeekFragment" app:destination="@id/calendarWeekFragment"/>
