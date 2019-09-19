@@ -15,6 +15,7 @@ import com.sandra.calendearlife.util.UserManager
 import android.provider.CalendarContract.Calendars
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MyApplication
@@ -34,7 +35,7 @@ class CalendarEventViewModel : ViewModel() {
             .add(item)
             .addOnSuccessListener { CdocumentReference ->
                 Log.d(
-                    "AddCountdownsIntoDB",
+                    "AddNewCalendar",
                     "DocumentSnapshot added with ID: " + CdocumentReference.id
                 )
 
@@ -55,7 +56,7 @@ class CalendarEventViewModel : ViewModel() {
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     for (document in task.result!!) {
-                                        Log.d("All calendar", document.id + " => " + document.data)
+
                                         // add reminders
                                         db.collection("data")
                                             .document(UserManager.id!!)
@@ -65,7 +66,7 @@ class CalendarEventViewModel : ViewModel() {
                                             .add(reminder)
                                             .addOnSuccessListener { documentReference ->
                                                 Log.d(
-                                                    "AddCountdownsIntoDB",
+                                                    "AddNewReminders",
                                                     "DocumentSnapshot added with ID: " + documentReference.id
                                                 )
                                                 db.collection("data")
@@ -95,8 +96,8 @@ class CalendarEventViewModel : ViewModel() {
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     for (document in task.result!!) {
-                                        Log.d("All calendar", document.id + " => " + document.data)
-                                        // add reminders
+
+                                        // add countdown
                                         db.collection("data")
                                             .document(UserManager.id!!)
                                             .collection("calendar")
@@ -105,7 +106,7 @@ class CalendarEventViewModel : ViewModel() {
                                             .add(countdown)
                                             .addOnSuccessListener { documentReference ->
                                                 Log.d(
-                                                    "AddCountdownsIntoDB",
+                                                    "AddNewCountdowns",
                                                     "DocumentSnapshot added with ID: " + documentReference.id
                                                 )
                                                 db.collection("data")
@@ -136,10 +137,7 @@ class CalendarEventViewModel : ViewModel() {
                                                     .addOnCompleteListener { task ->
                                                         if (task.isSuccessful) {
                                                             for (document in task.result!!) {
-                                                                Log.d(
-                                                                    "All calendar",
-                                                                    document.id + " => " + document.data
-                                                                )
+
                                                                 //update color
 
                                                                 db.collection("data")
@@ -168,7 +166,6 @@ class CalendarEventViewModel : ViewModel() {
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     for (document in task.result!!) {
-                                        Log.d("All calendar", document.id + " => " + document.data)
 
                                         db.collection("data")
                                             .document(UserManager.id!!)
@@ -258,15 +255,15 @@ class CalendarEventViewModel : ViewModel() {
                     values.put(CalendarContract.Events.DESCRIPTION, note)
                     values.put(CalendarContract.Events.CALENDAR_ID, targetCalendarId)
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
-                    // 因為targetSDK=25，所以要在Apps運行時檢查權限
+
                     val permissionCheck = ContextCompat.checkSelfPermission(
                         MyApplication.instance,
                         Manifest.permission.WRITE_CALENDAR
                     )
-                    // 如果使用者給了權限便開始新增日歷
+
                     if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                         val uri = cr?.insert(CalendarContract.Events.CONTENT_URI, values)
-                        // 返回新建活動的ID
+                        // get Event ID
                         if (uri != null) {
                             val eventID = java.lang.Long.parseLong(uri.lastPathSegment!!)
                             Log.d("sandraaa", "eventID = $eventID")
@@ -278,7 +275,9 @@ class CalendarEventViewModel : ViewModel() {
                 cur.close()
             }
         } else {
-            val toast = Toast.makeText(MyApplication.instance, "沒有所需的權限", Toast.LENGTH_LONG)
+
+            val toast = Toast.makeText(MyApplication.instance,
+                "Please open the permission of calendar in settings", Toast.LENGTH_LONG)
             toast.show()
         }
     }

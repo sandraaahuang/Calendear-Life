@@ -42,5 +42,6 @@
 
     <string name="update_message">Event has already been updated!</string>
     <string name="delete_message">Event has already been deleted!</string>
+    <string name="save_message">Event has already been saved!</string>
 
 </resources>
