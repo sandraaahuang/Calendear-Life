@@ -150,6 +150,7 @@ class ReminderWidgetService : RemoteViewsService() {
 
             } else {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.GONE)
+                views.setTextColor(R.id.remindersTextView, Color.parseColor("#000000"))
 
             }
 
@@ -202,50 +203,20 @@ class ReminderWidgetService : RemoteViewsService() {
                                         .update("isChecked", true)
                                         .addOnSuccessListener {
 
-                                            db.collection("data")
-                                                .document(UserManager.id!!)
-                                                .collection("calendar")
-                                                .get()
-                                                .addOnSuccessListener { documents ->
+                                            // update success
 
-                                                    for (calendar in documents) {
-                                                        Log.d("widgetCalendar", "${calendar.id} => ${calendar.data}")
+                                            refreshData()
 
-                                                        //get reminders ( only ischecked is false )
-                                                        db.collection("data")
-                                                            .document(UserManager.id!!)
-                                                            .collection("calendar")
-                                                            .document(calendar.id)
-                                                            .collection("reminders")
-                                                            .whereEqualTo("isChecked", false)
-                                                            .get()
-                                                            .addOnSuccessListener { documents ->
+//                                            Log.i("Sandraaaa", "before remove remindersItem.size = ${remindersItem.size}")
+//                                            remindersItem.removeAt(selectedPostion)
+//                                            Log.d("Sandraaaa", "remove position = $selectedPostion")
+//                                            Log.d("Sandraaaa", "remindersItem = $remindersItem")
+//                                            Log.i("Sandraaaa", "before remove remindersItem.size = ${remindersItem.size}")
+//
+//                                            selectedPostion = -1
+//                                            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
 
-                                                                for (reminder in documents) {
-                                                                    Log.d("widgetReminder", "${reminder.id} => ${reminder.data}")
 
-                                                                    val setDate = (reminder.data["setDate"] as Timestamp)
-                                                                    val remindDate = (reminder.data["remindDate"] as Timestamp)
-
-                                                                    remindAdd = Reminders(
-                                                                        simpleDateFormat.format(setDate.seconds * 1000),
-                                                                        reminder.data["title"].toString(),
-                                                                        reminder.data["setRemindDate"].toString().toBoolean(),
-                                                                        simpleDateFormat.format(remindDate.seconds * 1000),
-                                                                        reminder.data["remindDate"] as Timestamp,
-                                                                        reminder.data["isChecked"].toString().toBoolean(),
-                                                                        reminder.data["note"].toString(),
-                                                                        reminder.data["frequency"].toString(),
-                                                                        reminder.data["documentID"].toString()
-                                                                    )
-                                                                    remindersItem.add(remindAdd)
-                                                                }
-
-                                                            }
-                                                    }
-                                                    selectedPostion = -1
-                                                    AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
-                                                }
                                             Log.d(
                                                 "RenewCountdown",
                                                 "successfully updated my status!"
@@ -256,5 +227,112 @@ class ReminderWidgetService : RemoteViewsService() {
                     }
                 }
         }
+
+
+//        fun refreshData() {
+//            db.collection("data")
+//                .document(UserManager.id!!)
+//                .collection("calendar")
+//                .document()
+//                .collection("reminders")
+//                .whereEqualTo("isChecked", false)
+//                .get()
+//                .addOnSuccessListener { documents ->
+//
+//                    Log.i("Sandraaaa", "before refresh remindersItem.size = ${remindersItem.size}")
+//                    Log.d("Sandraaaa", "documents = ${documents}")
+//
+//                    remindersItem.clear()
+//
+//                    Log.d("Sandraaaa", "documents = ${documents.size()}, query = ${documents}")
+//                    for ((index, reminder) in documents.withIndex()) {
+//                        Log.d("widgetReminder", "${reminder.id} => ${reminder.data}")
+//
+//                        val setDate = (reminder.data["setDate"] as Timestamp)
+//                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+//
+//                        remindAdd = Reminders(
+//                            simpleDateFormat.format(setDate.seconds * 1000),
+//                            reminder.data["title"].toString(),
+//                            reminder.data["setRemindDate"].toString().toBoolean(),
+//                            simpleDateFormat.format(remindDate.seconds * 1000),
+//                            reminder.data["remindDate"] as Timestamp,
+//                            reminder.data["isChecked"].toString().toBoolean(),
+//                            reminder.data["note"].toString(),
+//                            reminder.data["frequency"].toString(),
+//                            reminder.data["documentID"].toString()
+//                        )
+//                        remindersItem.add(remindAdd)
+//                        if (index == documents.size() -1 ) {
+//                            Log.i("Sandraaaa", "after refresh remindersItem.size = ${remindersItem.size}")
+//
+//                            selectedPostion = -1
+//                            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
+//
+//                        }
+//                    }
+//
+//
+//                    }
+//        }
+
+        fun refreshData() {
+            db.collection("data")
+                .document(UserManager.id!!)
+                .collection("calendar")
+                .get()
+                .addOnSuccessListener { totalDocuments ->
+
+                    Log.i("Sandraaaa", "before refresh remindersItem.size = ${remindersItem.size}")
+
+                    remindersItem.clear()
+
+                    for ((index, calendar) in totalDocuments.withIndex()) {
+                        Log.d("widgetCalendar", "${calendar.id} => ${calendar.data}")
+
+                        //get reminders ( only ischecked is false )
+                        db.collection("data")
+                            .document(UserManager.id!!)
+                            .collection("calendar")
+                            .document(calendar.id)
+                            .collection("reminders")
+                            .whereEqualTo("isChecked", false)
+                            .get()
+                            .addOnSuccessListener { documents ->
+
+                                for (reminder in documents) {
+                                    Log.d("widgetReminder", "${reminder.id} => ${reminder.data}")
+
+                                    val setDate = (reminder.data["setDate"] as Timestamp)
+                                    val remindDate = (reminder.data["remindDate"] as Timestamp)
+
+                                    remindAdd = Reminders(
+                                        simpleDateFormat.format(setDate.seconds * 1000),
+                                        reminder.data["title"].toString(),
+                                        reminder.data["setRemindDate"].toString().toBoolean(),
+                                        simpleDateFormat.format(remindDate.seconds * 1000),
+                                        reminder.data["remindDate"] as Timestamp,
+                                        reminder.data["isChecked"].toString().toBoolean(),
+                                        reminder.data["note"].toString(),
+                                        reminder.data["frequency"].toString(),
+                                        reminder.data["documentID"].toString()
+                                    )
+                                    remindersItem.add(remindAdd)
+                                }
+
+                                if (index == totalDocuments.size() -1 ) {
+                                    Log.i("Sandraaaa", "after refresh remindersItem.size = ${remindersItem.size}")
+
+                                    selectedPostion = -1
+                                    AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
+
+                                }
+                            }
+                    }
+
+                }
+        }
     }
+
+
 }

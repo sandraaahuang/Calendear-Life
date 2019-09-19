@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                         when (value.frequency) {
                             "Does not repeat" -> {
-                                Log.d("sandraaa", "DNR = $value.remindTimestamp.seconds")
+                                Log.d("sandraaa", "DNR = ${value.remindTimestamp.seconds}")
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val dnrPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
                             }
                             "Every day" -> {
-                                Log.d("sandraaa", "ED = $value.remindTimestamp.seconds")
+                                Log.d("sandraaa", "ED = ${value.remindTimestamp.seconds}")
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
                             }
                             "Every week" -> {
-                                Log.d("sandraaa", "EW = $value.remindTimestamp.seconds")
+                                Log.d("sandraaa", "EW = ${value.remindTimestamp.seconds}")
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                             }
                             "Every month" -> {
-                                Log.d("sandraaa", "EM = $value.remindTimestamp.seconds")
+                                Log.d("sandraaa", "EM = ${value.remindTimestamp.seconds}")
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                             }
                             "Every year" -> {
-                                Log.d("sandraaa", "EY = $value.remindTimestamp.seconds")
+                                Log.d("sandraaa", "EY = ${value.remindTimestamp.seconds}")
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
@@ -464,7 +464,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_icon)
+                                            .setSmallIcon(R.drawable.text)
                                             .setContentTitle(textTitle)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                             .setAutoCancel(true)
@@ -554,7 +554,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_icon)
+                                            .setSmallIcon(R.drawable.text)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -646,7 +646,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_icon)
+                                            .setSmallIcon(R.drawable.text)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -738,7 +738,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_icon)
+                                            .setSmallIcon(R.drawable.text)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -830,7 +830,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_icon)
+                                            .setSmallIcon(R.drawable.text)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -922,7 +922,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_icon)
+                                            .setSmallIcon(R.drawable.text)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
