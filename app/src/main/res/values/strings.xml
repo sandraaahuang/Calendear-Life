@@ -40,4 +40,7 @@
     <!-- notification -->
     <string name="create_channel">Create Channel</string>
 
+    <string name="update_message">Event has already been updated!</string>
+    <string name="delete_message">Event has already been deleted!</string>
+
 </resources>

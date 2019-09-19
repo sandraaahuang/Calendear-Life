@@ -281,10 +281,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
-            R.id.search -> {
-                findNavController(R.id.myNavHostFragment)
-                    .navigate(NavigationDirections.actionGlobalCalendarSearchFragment())
-            }
             R.id.home -> {
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHomeFragment())
@@ -394,7 +390,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.calendarScheduleFragment -> CurrentFragmentType.SCHEDULE
                 R.id.calendarDayFragment -> CurrentFragmentType.DAY
                 R.id.calendarWeekFragment -> CurrentFragmentType.WEEK
-                R.id.calendarSearchFragment -> CurrentFragmentType.SEARCH
                 R.id.historyReminders -> CurrentFragmentType.HISTORY
                 R.id.historyCountdown2 -> CurrentFragmentType.HISTORY
                 else -> viewModel.currentFragmentType.value

@@ -16,11 +16,6 @@
                 android:title="Month"/>
 
         <item
-                android:id="@+id/search"
-                android:icon="@drawable/icon_search"
-                android:title="Search"/>
-
-        <item
                 android:id="@+id/sync"
                 android:icon="@drawable/icon_sync"
                 android:title="Sync your Calendar"/>

@@ -51,7 +51,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // update countdowns
                     db.collection("data")
@@ -63,7 +62,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (countdowns in documents) {
-                                Log.d("getAllCountdownById", "${countdowns.id} => ${countdowns.data}")
 
                                 // update countdowns
                                 db.collection("data")
@@ -86,7 +84,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllRemindersById", "${reminders.id} => ${reminders.data}")
 
                                 // update reminders
                                 db.collection("data")
@@ -104,10 +101,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .collection("calendar")
                         .document(calendar.id)
                         .update(calendarItem)
-                        .addOnSuccessListener {
-                            Toast.makeText(MyApplication.instance, "Successfully updated", Toast.LENGTH_SHORT)
-                                .show()
-                        }
                 }
             }
 
@@ -126,7 +119,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // delete countdowns
                     db.collection("data")
@@ -138,9 +130,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (countdowns in documents) {
-                                Log.d("getAllCountdown", "${countdowns.id} => ${countdowns.data}")
 
-                                // add countdowns
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -161,9 +151,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllRemindersById", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -181,19 +169,13 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .collection("calendar")
                         .document(calendar.id)
                         .delete()
-                        .addOnSuccessListener {
-                            Toast.makeText(MyApplication.instance, "Successfully deleted", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-
-
                 }
             }
 
 
     }
 
-    fun update_event(eventId: String, title: String, note: String, beginDate: Timestamp, endDate: Timestamp) {
+    fun updateEvent(eventId: String, title: String, note: String, beginDate: Timestamp, endDate: Timestamp) {
 
         val targetEventId = eventId
         val eventId = java.lang.Long.parseLong(targetEventId)
@@ -201,14 +183,15 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
         val targetTitle = title
         val beginDate = beginDate
         val endDate = endDate
-        // 更新活動
+
+        // update event
         val cr = MyApplication.instance.contentResolver
         val values = ContentValues()
         values.put(CalendarContract.Events.TITLE, targetTitle)
         values.put(CalendarContract.Events.DESCRIPTION, note)
         values.put(CalendarContract.Events.DTSTART, beginDate.seconds*1000)
         values.put(CalendarContract.Events.DTEND, endDate.seconds*1000)
-        // 因為targetSDK=25，所以要在Apps運行時檢查權限
+
         val permissionCheck = ContextCompat.checkSelfPermission(
             MyApplication.instance, WRITE_CALENDAR)
 
@@ -218,7 +201,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
         }
     }
 
-    fun delete_event(eventId: String) {
+    fun deleteEvent(eventId: String) {
 
         val targetEventId = eventId
         val eventId = java.lang.Long.parseLong(targetEventId)
