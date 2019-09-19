@@ -31,7 +31,7 @@ class PreviewViewModel : ViewModel() {
                                 .set(userDate)
                                 .addOnSuccessListener { documentReference ->
                                     Log.d(
-                                        "AddNewDataIntoDB",
+                                        "AddNewUser",
                                         "DocumentSnapshot added with ID: $documentReference"
                                     )
                                 }
