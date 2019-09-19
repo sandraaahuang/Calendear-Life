@@ -44,4 +44,6 @@
     <string name="delete_message">Event has already been deleted!</string>
     <string name="save_message">Event has already been saved!</string>
 
+    <string name="no_countdown">Click me to add some new countdowns</string>
+    <string name="no_reminder">Click me to add some new reminders</string>
 </resources>

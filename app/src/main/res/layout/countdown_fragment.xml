@@ -3,6 +3,7 @@
 
     <data>
         <variable name="viewModel" type="com.sandra.calendearlife.countdown.CountdownViewModel"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,20 +15,21 @@
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout"
                 android:layout_width="0dp" android:layout_height="300dp"
+                android:visibility="@{viewModel.liveCountdown.size == 0 ? View.VISIBLE : View.GONE}"
                 android:background="@drawable/background_stone">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/addCountdownRecyclerView"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_countdown"
-                app:listCountdown="@{viewModel.liveCountdown}"
-                android:layout_height="match_parent" android:layout_width="match_parent"
-                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/addCountdownRecyclerView"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_countdown"
+                    app:listCountdown="@{viewModel.liveCountdown}"
+                    android:layout_height="match_parent" android:layout_width="match_parent"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
 
             <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
                     android:id="@+id/indicator"

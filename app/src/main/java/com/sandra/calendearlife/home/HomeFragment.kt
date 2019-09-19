@@ -60,6 +60,14 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
+        binding.noCountdown.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
+        }
+
+        binding.noReminder.setOnClickListener {
+            findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
+        }
+
         return binding.root
     }
 }
