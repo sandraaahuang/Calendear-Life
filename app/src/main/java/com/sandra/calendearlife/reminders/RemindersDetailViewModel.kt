@@ -32,9 +32,8 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // get update reminder item
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -45,7 +44,6 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
                                 // update reminders
                                 db.collection("data")
@@ -66,10 +64,6 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
                         }
                 }
             }
-
-            .addOnFailureListener { exception ->
-                Log.w("getAllCalendar", "Error getting documents: ", exception)
-            }
     }
 
 
@@ -83,9 +77,8 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // delete selected deleted item
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -96,9 +89,8 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
+                                // delete reminders
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")

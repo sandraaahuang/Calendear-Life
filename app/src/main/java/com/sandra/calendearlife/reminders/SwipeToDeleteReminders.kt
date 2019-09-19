@@ -18,7 +18,7 @@ class SwipeToDeleteReminders(val adapter: AddRemindersAdapter, val viewModel: Re
 
     private lateinit var icon: Drawable
 
-    private val background: ColorDrawable = ColorDrawable(Color.RED)
+    private val background: ColorDrawable = ColorDrawable(MyApplication.instance.getColor(R.color.delete_red))
 
 
     override fun onMove(

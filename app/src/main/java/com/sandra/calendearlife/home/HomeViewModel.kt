@@ -47,7 +47,6 @@ class HomeViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // get countdowns
                     db.collection("data")
@@ -60,7 +59,7 @@ class HomeViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
-                                Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
+
                                 val setDate = (countdown.data["setDate"] as Timestamp)
                                 val targetDate = (countdown.data["targetDate"] as Timestamp)
 
@@ -81,10 +80,6 @@ class HomeViewModel : ViewModel() {
 
                         }
 
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllcountdown", "Error getting documents: ", exception)
-                        }
-
                     //get reminders ( only ischecked is false )
                     db.collection("data")
                         .document(UserManager.id!!)
@@ -96,7 +91,6 @@ class HomeViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (reminder in documents) {
-                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
                                 val setDate = (reminder.data["setDate"] as Timestamp)
                                 val remindDate = (reminder.data["remindDate"] as Timestamp)
@@ -116,18 +110,9 @@ class HomeViewModel : ViewModel() {
                                 remindersItem.add(remindAdd)
                             }
                             _liveReminders.value = remindersItem
-                            Log.d("sandraaa", "liveDate=  ${liveReminders.value}")
 
-                        }
-
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllreminders", "Error getting documents: ", exception)
                         }
                 }
-            }
-
-            .addOnFailureListener { exception ->
-                Log.w("getAllCalendar", "Error getting documents: ", exception)
             }
     }
 
@@ -142,9 +127,8 @@ class HomeViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // get click item
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -155,9 +139,8 @@ class HomeViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
+                                // update item to check status
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -165,12 +148,6 @@ class HomeViewModel : ViewModel() {
                                     .collection("reminders")
                                     .document(documentID)
                                     .update("isChecked", true)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "successfully updated my status!"
-                                        )
-                                    }
                             }
                         }
                 }
@@ -186,9 +163,8 @@ class HomeViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // get overdue countdowns
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -198,9 +174,8 @@ class HomeViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
-                                Log.d("getAllCalendar", "${countdown.id} => ${countdown.data}")
 
-                                // add countdowns
+                                // update countdowns to overdue status
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -208,12 +183,6 @@ class HomeViewModel : ViewModel() {
                                     .collection("countdowns")
                                     .document(documentId)
                                     .update("overdue", true)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "successfully updated my status!"
-                                        )
-                                    }
                             }
                         }
                 }
@@ -230,9 +199,8 @@ class HomeViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // delete reminders
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -243,9 +211,7 @@ class HomeViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -253,12 +219,6 @@ class HomeViewModel : ViewModel() {
                                     .collection("reminders")
                                     .document(reminders.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "delete",
-                                            "successfully updated my status!"
-                                        )
-                                    }
 
                                 // delete calendar
                                 db.collection("data")
@@ -266,12 +226,6 @@ class HomeViewModel : ViewModel() {
                                     .collection("calendar")
                                     .document(calendar.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "delete",
-                                            "successfully updated my status!"
-                                        )
-                                    }
                             }
                         }
                 }

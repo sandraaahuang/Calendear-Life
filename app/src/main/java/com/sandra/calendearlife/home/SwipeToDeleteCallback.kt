@@ -21,7 +21,7 @@ class SwipeToDeleteCallback(val adapter: HomeRemindersAdapter, val viewModel: Ho
 
     private lateinit var icon: Drawable
 
-    private val background: ColorDrawable = ColorDrawable(Color.RED)
+    private val background: ColorDrawable = ColorDrawable(MyApplication.instance.getColor(R.color.delete_red))
 
 
     override fun onMove(
@@ -38,7 +38,6 @@ class SwipeToDeleteCallback(val adapter: HomeRemindersAdapter, val viewModel: Ho
         viewModel.remindersItem.removeAt(position)
         val title = viewHolder.itemView.remindersTitle.text.toString()
         viewModel.deleteItem(title)
-        Log.d("sandraaa", "hi = $title")
         adapter.notifyDataSetChanged()
     }
 
