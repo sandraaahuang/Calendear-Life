@@ -13,6 +13,7 @@
             android:icon="@mipmap/app_icon_round"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/app_icon_round"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <receiver android:name=".widget.RemindersWidget">

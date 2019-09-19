@@ -49,7 +49,7 @@ class RemindersViewModel : ViewModel() {
             .add(calendar)
             .addOnSuccessListener { documentReference ->
                 Log.d(
-                    "AddCalendarIntoDB",
+                    "AddNewCalendar",
                     "DocumentSnapshot added with ID: " + documentReference.id
                 )
                 db.collection("data")
@@ -66,7 +66,7 @@ class RemindersViewModel : ViewModel() {
                     .add(reminder)
                     .addOnSuccessListener { reminderID ->
                         Log.d(
-                            "AddCountdownsIntoDB",
+                            "AddNewReminders",
                             "DocumentSnapshot added with ID: " + reminderID.id
                         )
                         db.collection("data")
@@ -91,10 +91,8 @@ class RemindersViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // get reminders
-
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -105,7 +103,6 @@ class RemindersViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (reminder in documents) {
-                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
                                 val setDate =
                                     (reminder.data["setDate"] as com.google.firebase.Timestamp)
@@ -128,17 +125,8 @@ class RemindersViewModel : ViewModel() {
                             }
                             _liveReminders.value = remindersItem
                         }
-
-                        .addOnFailureListener { exception ->
-                            Log.w("getAllreminders", "Error getting documents: ", exception)
-                        }
                 }
             }
-
-            .addOnFailureListener { exception ->
-                Log.w("getAllCalendar", "Error getting documents: ", exception)
-            }
-
     }
 
     // update isChecked to true when user click the button
@@ -151,9 +139,8 @@ class RemindersViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // update reminders
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -164,9 +151,8 @@ class RemindersViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
+                                // update reminders
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -174,12 +160,6 @@ class RemindersViewModel : ViewModel() {
                                     .collection("reminders")
                                     .document(documentID)
                                     .update("isChecked", true)
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "RenewCountdown",
-                                            "successfully updated my status!"
-                                        )
-                                    }
                             }
                         }
                 }
@@ -196,9 +176,8 @@ class RemindersViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
-                    // add countdowns
+                    // delete selected reminders
                     db.collection("data")
                         .document(UserManager.id!!)
                         .collection("calendar")
@@ -209,9 +188,8 @@ class RemindersViewModel : ViewModel() {
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
-                                Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
-                                // add countdowns
+                                // delete
                                 db.collection("data")
                                     .document(UserManager.id!!)
                                     .collection("calendar")
@@ -219,12 +197,7 @@ class RemindersViewModel : ViewModel() {
                                     .collection("reminders")
                                     .document(reminders.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "delete",
-                                            "successfully updated my status!"
-                                        )
-                                    }
+
 
                                 // delete calendar
                                 db.collection("data")
@@ -232,12 +205,6 @@ class RemindersViewModel : ViewModel() {
                                     .collection("calendar")
                                     .document(calendar.id)
                                     .delete()
-                                    .addOnSuccessListener {
-                                        Log.d(
-                                            "delete",
-                                            "successfully updated my status!"
-                                        )
-                                    }
                             }
                         }
                 }

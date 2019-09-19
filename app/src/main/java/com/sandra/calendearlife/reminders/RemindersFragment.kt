@@ -4,6 +4,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +14,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.RemindersFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.dialog.RepeatDialog
@@ -48,7 +51,6 @@ class RemindersFragment : Fragment() {
 
         val addRemindersAdapter = AddRemindersAdapter(AddRemindersAdapter.OnClickListener{
             viewModel.displayReminderDetails(it)
-            Log.d("sandraaa","it = $it")
         }, viewModel)
 
         viewModel.navigateToReminderProperty.observe(this, androidx.lifecycle.Observer {
@@ -169,6 +171,11 @@ class RemindersFragment : Fragment() {
             )
 
             viewModel.writeItem(calendar,reminders)
+
+            Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
+            Handler().postDelayed({
+                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+            },3000)
 
         }
 
