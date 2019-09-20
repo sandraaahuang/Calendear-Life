@@ -14,7 +14,7 @@
         <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:cardBackgroundColor="@color/translucent_white"
+                app:cardBackgroundColor="?attr/cardbackground"
                 app:cardCornerRadius="@dimen/card_raduis"
                 app:cardElevation="@dimen/card_elevation"
                 android:elevation="@dimen/card_elevation"
@@ -38,6 +38,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
+                        android:textColor="?attr/textcolor"
                         android:layout_marginTop="16dp"
                         app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                         android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
@@ -46,7 +47,7 @@
                         android:id="@+id/view_spacing_line"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="?attr/linecolor"
                         app:layout_constraintTop_toBottomOf="@+id/remindersTitle" android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
                 <Switch
@@ -54,6 +55,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/switchRemindDay"
+                        android:textColor="?attr/textcolor"
                         android:fontFamily="@font/noto_sans"
                         android:checked="@{viewModel.selectedItem.setRemindDate}"
                         app:layout_constraintStart_toStartOf="@+id/remindersTitle"
@@ -76,6 +78,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans"
+                            android:textColor="?attr/textcolor"
                             android:text="@{viewModel.selectedItem.remindDate.substring(0,10)}"
                             app:layout_constraintEnd_toStartOf="@+id/remindTime" android:layout_marginEnd="8dp"
                             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
@@ -84,6 +87,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans"
                             android:id="@+id/remindTime"
+                            android:textColor="?attr/textcolor"
                             android:text="@{viewModel.selectedItem.remindDate.substring(10)}"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginEnd="8dp" android:layout_marginTop="16dp"
@@ -94,6 +98,7 @@
                             android:fontFamily="@font/noto_sans"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="?attr/textcolor"
                             android:id="@+id/date" app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="8dp" android:layout_marginTop="16dp"
                             app:layout_constraintTop_toTopOf="parent"/>
@@ -103,7 +108,7 @@
                         android:id="@+id/view_spacing_line2"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="?attr/linecolor"
                         app:layout_constraintTop_toBottomOf="@+id/remindLayout" android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,6 +124,7 @@
                             android:fontFamily="@font/noto_sans"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="?attr/textcolor"
                             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="16dp" android:id="@+id/remindNote"/>
                     <EditText
@@ -126,6 +132,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:background="@null"
+                            android:textColor="?attr/textcolor"
                             android:id="@+id/editText_remindNote"
                             app:layout_constraintStart_toStartOf="@+id/remindNote" android:layout_marginEnd="16dp"
                             app:layout_constraintEnd_toEndOf="parent"

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -42,7 +43,12 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val viewModel: R
             }
 
             if (reminders.remindTimestamp.seconds < Timestamp.now().seconds){
-                binding.remindersTime.setTextColor(Color.parseColor("#f44336"))
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+                    binding.remindersTime.setTextColor(Color.parseColor("#DFCE88"))
+                } else {
+                    binding.remindersTime.setTextColor(Color.parseColor("#f44336"))
+                }
+
             }
 
             if (!reminders.setRemindDate){

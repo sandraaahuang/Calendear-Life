@@ -24,7 +24,7 @@
             <androidx.appcompat.widget.Toolbar
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
-                    android:background="@color/gray"
+                    android:background="?attr/toolbarcolor"
                     android:elevation="3dp"
                     android:visibility="@{viewModel.currentFragmentType == CurrentFragmentType.PREVIEW ? View.GONE : View.VISIBLE}"
                     android:id="@+id/toolbar"
@@ -36,6 +36,7 @@
                         android:textSize="20sp"
                         android:fontFamily="@font/noto_sans"
                         android:textStyle="bold"
+                        android:textColor="?attr/textcolor"
                         android:text="@{viewModel.currentFragmentType.value}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" tools:layout_editor_absoluteY="16dp"
@@ -49,6 +50,7 @@
                     android:layout_height="0dp"
                     app:navGraph="@navigation/navigation"
                     app:defaultNavHost="true"
+                    android:background="?attr/backgroundcolor"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
@@ -63,6 +65,7 @@
                 android:layout_gravity="start"
                 android:fitsSystemWindows="true"
                 app:itemIconTint="@color/black"
+                android:theme="@style/AppTheme"
                 app:menu="@menu/activity_main_drawer"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>

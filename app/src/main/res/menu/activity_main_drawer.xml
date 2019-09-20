@@ -52,4 +52,14 @@
         </menu>
     </item>
 
+    <item android:title="Setting">
+        <menu>
+
+            <item
+                    android:id="@+id/changeMode"
+
+                    android:title="Change to dark mode"/>
+        </menu>
+    </item>
+
 </menu>

@@ -6,6 +6,28 @@
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/deep_gray</item>
+        <item name="backgroundcolor">@color/white</item>
+        <item name="cardbackground">@color/translucent_white</item>
+        <item name="textcolor">#868686</item>
+        <item name="toolbarcolor">@color/gray</item>
+        <item name="linecolor">@android:color/darker_gray</item>
+        <item name="dotcolor">@color/black</item>
+        <item name="buttoncolor">@color/black</item>
+    </style>
+
+    <!-- dark theme. -->
+    <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/deep_gray</item>
+        <item name="backgroundcolor">@color/deep_gray</item>
+        <item name="cardbackground">@color/translucent_dark</item>
+        <item name="textcolor">@color/white</item>
+        <item name="toolbarcolor">@color/deep_gray</item>
+        <item name="linecolor">@color/white</item>
+        <item name="dotcolor">@color/black</item>
+        <item name="buttoncolor">@color/white</item>
     </style>
 
     <style name="MessageDialog">
