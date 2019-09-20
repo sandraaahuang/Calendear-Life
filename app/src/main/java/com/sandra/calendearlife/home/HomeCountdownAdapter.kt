@@ -18,12 +18,9 @@ class HomeCountdownAdapter(val onClickListener: OnClickListener, val viewModel: 
         fun bind(countdown: Countdown, viewModel: HomeViewModel) {
             binding.countdown = countdown
             binding.countdownDate.text = "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)} days"
-            Log.d("sandraaa","binding.countdownDate.text = ${binding.countdownDate.text}")
 
             if (countdown.targetTimestamp.seconds < Timestamp.now().seconds){
                 viewModel.updateCountdown(countdown.documentID)
-                Log.d("sandraaa", "countdown.targetTimestamp.seconds = ${countdown.targetTimestamp.seconds}," +
-                        "Timestamp.now().seconds = ${Timestamp.now().seconds}")
             }
             binding.executePendingBindings()
         }

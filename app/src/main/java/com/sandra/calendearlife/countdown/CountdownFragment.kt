@@ -77,37 +77,53 @@ class CountdownFragment : Fragment() {
 
         binding.saveText.setOnClickListener {
 
-            val targetDate = binding.countdownDateInput.text.toString()
-            val putInDate = Date(targetDate)
+            if (binding.countdownDateInput.text == ""){
+                val y = cal.get(Calendar.YEAR)
+                val m = cal.get(Calendar.MONTH)
+                val d = cal.get(Calendar.DAY_OF_MONTH)
 
-            val calendar = hashMapOf(
-                "color" to "100038",
-                "setDate" to FieldValue.serverTimestamp(),
-                "beginDate" to java.sql.Timestamp(putInDate.time),
-                "endDate" to java.sql.Timestamp(putInDate.time),
-                "date" to java.sql.Timestamp(putInDate.time),
-                "title" to "${binding.countdownTitleInput.text}",
-                "note" to "${binding.noteInput.text}",
-                "hasCountdown" to true,
-                "fromGoogle" to false
-            )
+                val datepickerdialog = DatePickerDialog(
+                    it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+                    { _, year, monthOfYear, dayOfMonth ->
+                        val date = Date(year -1900, monthOfYear, dayOfMonth)
+                        val stringDate = SimpleDateFormat("yyyy/MM/dd").format(date)
+                        // Display Selected setDate in textbox
+                        binding.countdownDateInput.text = "$stringDate" }, y, m, d
+                )
+                datepickerdialog.show()
+            } else {
+
+                val targetDate = binding.countdownDateInput.text.toString()
+                val putInDate = Date(targetDate)
+
+                val calendar = hashMapOf(
+                    "color" to "100038",
+                    "setDate" to FieldValue.serverTimestamp(),
+                    "beginDate" to java.sql.Timestamp(putInDate.time),
+                    "endDate" to java.sql.Timestamp(putInDate.time),
+                    "date" to java.sql.Timestamp(putInDate.time),
+                    "title" to "${binding.countdownTitleInput.text}",
+                    "note" to "${binding.noteInput.text}",
+                    "hasCountdown" to true,
+                    "fromGoogle" to false
+                )
 
 
 
-            val countdown = hashMapOf(
-                "setDate" to FieldValue.serverTimestamp(),
-                "title" to "${binding.countdownTitleInput.text}",
-                "note" to "${binding.noteInput.text}",
-                "targetDate" to java.sql.Timestamp(putInDate.time),
-                "overdue" to false
-            )
+                val countdown = hashMapOf(
+                    "setDate" to FieldValue.serverTimestamp(),
+                    "title" to "${binding.countdownTitleInput.text}",
+                    "note" to "${binding.noteInput.text}",
+                    "targetDate" to java.sql.Timestamp(putInDate.time),
+                    "overdue" to false
+                )
 
-            viewModel.writeItem(calendar,countdown)
-
-            Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({
-               findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-            },3000)
+                viewModel.writeItem(calendar,countdown)
+                Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
+                Handler().postDelayed({
+                    findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+                },3000)
+            }
         }
 
         val recyclerIndicator = binding.indicator
