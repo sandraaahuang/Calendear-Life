@@ -98,6 +98,7 @@
                 app:menu_colorRipple="?attr/dotcolor"
                 app:menu_labels_colorRipple="@color/translucent_80"
                 app:menu_labels_colorNormal="@color/translucent_80"
+                app:menu_labels_textColor="?attr/textcolor"
                 app:menu_labels_showShadow="false"
                 android:layout_marginBottom="16dp"
                 app:fab_showShadow="true"
