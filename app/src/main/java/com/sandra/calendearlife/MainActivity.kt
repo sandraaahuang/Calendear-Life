@@ -16,12 +16,15 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.CompoundButton
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -32,6 +35,7 @@ import androidx.navigation.findNavController
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Countdown
@@ -87,7 +91,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme)
         }
 
@@ -250,6 +254,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             })
         }
 
+
+        val menuItem = binding.navView.menu.findItem(R.id.changeMode)
+        val actionView = MenuItemCompat.getActionView(menuItem) as SwitchCompat
+
+        actionView.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                restartApp()
+
+                actionView.isChecked = true
+                Log.d("sandraa", "change mode")
+            } else if ( !isChecked ) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                restartApp2()
+                actionView.isChecked = false
+            }
+        }
     }
 
     fun setupToolbar() {
@@ -328,17 +350,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.changeMode -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                restartApp()
-                Log.d("sandraa", "change mode")
+                return true
             }
         }
+
 
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
-    private fun restartApp(){
+    private fun restartApp() {
+
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+
+    }
+
+    private fun restartApp2() {
 
         val intent = Intent(applicationContext, MainActivity::class.java)
         startActivity(intent)
