@@ -33,6 +33,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:visibility="gone"
+                    android:tint="?attr/buttoncolor"
                     app:srcCompat="@drawable/icon_checked"
                     android:id="@+id/checkStatus" app:layout_constraintEnd_toStartOf="@+id/remindersChecked"
                     app:layout_constraintTop_toBottomOf="@+id/remindersChecked"

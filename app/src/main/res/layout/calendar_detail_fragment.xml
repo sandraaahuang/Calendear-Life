@@ -9,6 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/background_stone2"
             android:layout_width="match_parent"
+            android:backgroundTintMode="src_atop"
+            android:backgroundTint="?attr/stoneTint"
             android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
@@ -37,6 +39,8 @@
                         android:id="@+id/detailTitleInput"
                         android:text="@{viewModel.selectedItem.title}"
                         android:hint="@string/enter_title"
+                        android:textColorHint="?attr/textcolor"
+                        android:background="@null"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/noto_sans"
@@ -47,6 +51,7 @@
                         app:layout_constraintTop_toTopOf="parent"/>
                 <ImageView
                         android:id="@+id/removeIcon"
+                        android:tint="?attr/drawableTint"
                         android:layout_width="16dp"
                         android:layout_height="16dp" app:srcCompat="@drawable/icon_remove"
                         android:layout_marginBottom="8dp"
@@ -221,6 +226,7 @@
                 <ImageView
 
                         android:id="@+id/locationIcon"
+                        android:tint="?attr/drawableTint"
                         android:layout_width="24dp"
                         android:layout_height="24dp" app:srcCompat="@drawable/icon_location"
                         app:layout_constraintStart_toStartOf="parent"
@@ -266,6 +272,7 @@
                         app:layout_constraintVertical_bias="0.0"/>
                 <ImageView
                         android:id="@+id/noteIcon"
+                        android:tint="?attr/drawableTint"
                         android:layout_width="24dp"
                         android:layout_height="24dp" app:srcCompat="@drawable/icon_note"
                         app:layout_constraintTop_toBottomOf="@+id/view_spacing_line5"

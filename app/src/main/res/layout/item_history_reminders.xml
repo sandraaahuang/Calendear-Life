@@ -27,6 +27,7 @@
                     android:background="@drawable/icon_checked"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:backgroundTint="?attr/drawableTint"
                     android:id="@+id/remindersChecked"
                     android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"/>

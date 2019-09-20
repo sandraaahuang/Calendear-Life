@@ -6,6 +6,7 @@
     <color name="primary_gray">#efebe9</color>
     <color name="dark_gray">#bdb9b7</color>
     <color name="deep_gray">#707070</color>
+    <color name="darkest_gray">#EB353535</color>
     <color name="translucent_white">#CCFFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
