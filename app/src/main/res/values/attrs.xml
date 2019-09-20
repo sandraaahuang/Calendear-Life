@@ -10,5 +10,8 @@
         <attr name="dotcolor" format="color"/>
         <attr name="redText" format="color"/>
         <attr name="buttoncolor" format="color"/>
+        <attr name="drawableTint" format="color"/>
+        <attr name="stoneTint" format="color"/>
+        <attr name="saveColor" format="color"/>
     </declare-styleable>
 </resources>

@@ -23,6 +23,7 @@
 
         <ImageView
                 android:background="@drawable/icon_overdue"
+                android:backgroundTint="?attr/drawableTint"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:id="@+id/countdownOverdue"
@@ -94,16 +95,6 @@
                 app:layout_constraintTop_toTopOf="@+id/textView4"
                 app:layout_constraintBottom_toBottomOf="@+id/textView4"
                 app:layout_constraintStart_toEndOf="@+id/textView4" android:layout_marginStart="8dp"/>
-        <View
-                android:id="@+id/view_spacing_line2"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="?attr/linecolor"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/countdownTime"
-                android:layout_marginTop="8dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

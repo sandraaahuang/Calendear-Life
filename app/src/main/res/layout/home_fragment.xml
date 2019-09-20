@@ -9,14 +9,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
-            android:background="?attr/backgroundcolor"
+            android:background="?attr/stoneTint"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout2"
-                android:layout_width="0dp" android:layout_height="300dp"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:backgroundTintMode="src_atop"
+                android:backgroundTint="?attr/stoneTint"
                 android:background="@drawable/background_stone">
 
 
@@ -93,9 +96,9 @@
         <com.github.clans.fab.FloatingActionMenu
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:menu_colorNormal="?attr/dotcolor"
-                app:menu_colorPressed="?attr/dotcolor"
-                app:menu_colorRipple="?attr/dotcolor"
+                app:menu_colorNormal="@color/black"
+                app:menu_colorPressed="@color/black"
+                app:menu_colorRipple="@color/black"
                 app:menu_labels_colorRipple="@color/translucent_80"
                 app:menu_labels_colorNormal="@color/translucent_80"
                 app:menu_labels_textColor="?attr/textcolor"
@@ -110,8 +113,8 @@
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/remindersFab"
                     app:fab_label="New Reminder"
-                    app:fab_colorNormal="?attr/dotcolor"
-                    app:fab_colorPressed="?attr/dotcolor"
+                    app:fab_colorNormal="@color/black"
+                    app:fab_colorPressed="@color/black"
                     app:fab_colorRipple="?attr/backgroundcolor"
                     android:src="@drawable/icon_add_reminder_2"
                     android:layout_width="wrap_content"
@@ -122,8 +125,8 @@
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/countdownsFab"
                     app:fab_label="New Countdown"
-                    app:fab_colorNormal="?attr/dotcolor"
-                    app:fab_colorPressed="?attr/dotcolor"
+                    app:fab_colorNormal="@color/black"
+                    app:fab_colorPressed="@color/black"
                     app:fab_colorRipple="?attr/backgroundcolor"
                     android:src="@drawable/icon_add_countdown"
                     android:layout_width="wrap_content"
@@ -134,8 +137,8 @@
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/calendarFab"
                 app:fab_label="New Event"
-                app:fab_colorNormal="?attr/dotcolor"
-                app:fab_colorPressed="?attr/dotcolor"
+                app:fab_colorNormal="@color/black"
+                app:fab_colorPressed="@color/black"
                 app:fab_colorRipple="?attr/backgroundcolor"
                 android:src="@drawable/icon_add_calendar"
                 android:layout_width="wrap_content"
