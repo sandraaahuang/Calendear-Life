@@ -213,7 +213,7 @@ class CalendarMonthFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.dark_gray))
+        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.attr.toolbarcolor))
         requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.dark_gray)
     }
 

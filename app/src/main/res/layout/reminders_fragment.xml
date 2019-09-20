@@ -8,6 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/background_stone2"
+            android:backgroundTintMode="src_atop"
+            android:backgroundTint="?attr/stoneTint"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -35,6 +37,7 @@
         <EditText
                 android:id="@+id/remindersTitleInput"
                 android:hint="@string/enter_title"
+                android:textColorHint="?attr/textcolor"
                 android:textColor="?attr/textcolor"
                 android:background="@null"
                 android:layout_width="wrap_content"
@@ -45,6 +48,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
         <ImageView
                 android:id="@+id/removeIcon"
+                android:tint="?attr/drawableTint"
                 android:layout_width="16dp"
                 android:layout_height="16dp" app:srcCompat="@drawable/icon_remove"
                 app:layout_constraintTop_toTopOf="parent"
@@ -83,6 +87,7 @@
 
             <ImageView
                     android:id="@+id/bellIcon"
+                    android:tint="?attr/drawableTint"
                     android:layout_width="24dp"
                     android:layout_height="24dp" app:srcCompat="@drawable/icon_bell"
                     android:layout_marginTop="8dp"
@@ -113,6 +118,7 @@
                     android:layout_marginEnd="16dp"/>
             <ImageView
                     android:id="@+id/repeatIcon"
+                    android:tint="?attr/drawableTint"
                     android:layout_width="20dp"
                     android:layout_height="20dp" app:srcCompat="@drawable/icon_repeat"
                     app:layout_constraintStart_toStartOf="@+id/bellIcon"
@@ -142,6 +148,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/setRemindLayout" android:layout_marginTop="8dp"/>
         <ImageView
                 android:id="@+id/noteIcon"
+                android:tint="?attr/drawableTint"
                 android:layout_width="24dp"
                 android:layout_height="24dp" app:srcCompat="@drawable/icon_note"
                 app:layout_constraintTop_toBottomOf="@+id/view_spacing_line3"
@@ -149,6 +156,7 @@
                 android:layout_marginTop="8dp"/>
         <EditText
                 android:id="@+id/remindersNoteInput"
+                android:textColorHint="?attr/textcolor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/add_note"
@@ -169,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
                 android:textSize="12sp"
-                android:textColor="@color/white"
+                android:textColor="?attr/saveColor"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/view_spacing_line4"

@@ -43,12 +43,8 @@ class AddRemindersAdapter(val onClickListener: OnClickListener, val viewModel: R
             }
 
             if (reminders.remindTimestamp.seconds < Timestamp.now().seconds){
-                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
-                    binding.remindersTime.setTextColor(Color.parseColor("#DFCE88"))
-                } else {
-                    binding.remindersTime.setTextColor(Color.parseColor("#f44336"))
-                }
 
+                binding.remindersTime.setTextColor(Color.parseColor("#f44336"))
             }
 
             if (!reminders.setRemindDate){

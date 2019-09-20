@@ -7,6 +7,8 @@
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/background_stone2"
+            android:backgroundTintMode="src_atop"
+            android:backgroundTint="?attr/stoneTint"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -66,6 +68,7 @@
         <EditText
                 android:id="@+id/countdownTitleInput"
                 android:hint="@string/enter_title"
+                android:textColorHint="?attr/textcolor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
@@ -76,6 +79,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
         <ImageView
                 android:id="@+id/removeIcon"
+                android:tint="?attr/drawableTint"
                 android:layout_width="16dp"
                 android:layout_height="16dp" app:srcCompat="@drawable/icon_remove"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout" android:layout_marginTop="8dp"
@@ -98,6 +102,7 @@
 
             <ImageView
                     android:id="@+id/dateIcon"
+                    android:tint="?attr/drawableTint"
                     android:layout_width="24dp"
                     android:layout_height="24dp" app:srcCompat="@drawable/icon_schedule"
                     android:layout_marginTop="8dp"
@@ -137,6 +142,7 @@
 
         <ImageView
                 android:id="@+id/noteIcon"
+                android:tint="?attr/drawableTint"
                 android:layout_width="24dp"
                 android:layout_height="24dp" app:srcCompat="@drawable/icon_note"
                 android:layout_marginTop="16dp"
@@ -144,6 +150,7 @@
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
         <EditText
                 android:hint="@string/add_note"
+                android:textColorHint="?attr/textcolor"
                 android:background="@null"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -161,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
                 android:textSize="12sp"
-                android:textColor="@color/white"
+                android:textColor="?attr/saveColor"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/editCountdownLayout"
