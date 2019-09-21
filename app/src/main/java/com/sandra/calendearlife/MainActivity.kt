@@ -342,22 +342,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.sync -> {
-                val deleteRequest = OneTimeWorkRequestBuilder<DeleteWorker>()
-                    .build()
-
                 val importWorker = OneTimeWorkRequestBuilder<ImportWorker>()
-                    .setInitialDelay(3, TimeUnit.SECONDS)
                     .build()
 
                 WorkManager.getInstance()
-                    .beginWith(deleteRequest)
-                    .then(importWorker)
-                    .enqueue()
-
-            }
-
-            R.id.changeMode -> {
-//                return true
+                    .enqueue(importWorker)
             }
 
             R.id.changeLanguage -> {
