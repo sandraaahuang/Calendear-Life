@@ -7,62 +7,61 @@
         <item
                 android:id="@+id/home"
                 android:icon="@drawable/icon_home"
-                android:title="Home"/>
+                android:title="@string/home_"/>
 
         <item
                 android:id="@+id/month"
                 android:icon="@drawable/icon_month"
-                android:title="Month"/>
+                android:title="@string/month_"/>
 
         <item
                 android:id="@+id/sync"
                 android:icon="@drawable/icon_sync"
-                android:title="Sync your Calendar"/>
+                android:title="@string/sync_your_calendar_"/>
 
 
     </group>
 
-    <item android:title="History">
+    <item android:title="@string/history">
         <menu>
             <item
                     android:id="@+id/historyReminder"
                     android:icon="@drawable/icon_checked"
-                    android:title="Reminder record"/>
+                    android:title="@string/reminder_record"/>
             <item
                     android:id="@+id/historyCountdown"
                     android:icon="@drawable/icon_overdue"
-                    android:title="Countdown record"/>
+                    android:title="@string/countdown_record"/>
         </menu>
     </item>
 
-    <item android:title="Add Event">
+    <item android:title="@string/add_event_">
         <menu>
             <item
                     android:id="@+id/addCalendar"
                     android:icon="@drawable/icon_add_calendar"
-                    android:title="Add Calendar"/>
+                    android:title="@string/add_calendar"/>
             <item
                     android:id="@+id/addReminder"
                     android:icon="@drawable/icon_add_reminder"
-                    android:title="Add Reminder"/>
+                    android:title="@string/add_reminder"/>
             <item android:id="@+id/addCountdown"
                   android:icon="@drawable/icon_add_countdown"
-                  android:title="Add Countdown"/>
+                  android:title="@string/add_countdown"/>
         </menu>
     </item>
 
-    <item android:title="Setting">
+    <item android:title="@string/setting">
         <menu>
 
             <item
                     android:id="@+id/changeMode"
-                    android:title="Dark Mode"
+                    android:title="@string/dark_mode"
                     app:actionViewClass="androidx.appcompat.widget.SwitchCompat"/>
 
             <item
                     android:id="@+id/changeLanguage"
-                    android:title="Chinese Mode"
-                    app:actionViewClass="androidx.appcompat.widget.SwitchCompat"/>
+                    android:title="@string/chinese_mode"/>
         </menu>
     </item>
 

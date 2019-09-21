@@ -49,7 +49,7 @@
                     android:layout_marginEnd="8dp"/>
             <TextView
                     android:id="@+id/countdownTargetDate"
-                    android:text='@{"Target Date : "+countdown.targetDate}'
+                    android:text='@{@string/target_date_ + countdown.targetDate}'
                     tools:text="Target Date : Nov 22, 2019 ( Fri )"
                     android:fontFamily="@font/noto_sans"
                     android:textSize="16sp"

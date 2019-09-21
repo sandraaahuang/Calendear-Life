@@ -112,7 +112,7 @@
 
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/remindersFab"
-                    app:fab_label="New Reminder"
+                    app:fab_label="@string/new_reminder"
                     app:fab_colorNormal="@color/black"
                     app:fab_colorPressed="@color/black"
                     app:fab_colorRipple="?attr/backgroundcolor"
@@ -124,7 +124,7 @@
 
             <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/countdownsFab"
-                    app:fab_label="New Countdown"
+                    app:fab_label="@string/new_countdown"
                     app:fab_colorNormal="@color/black"
                     app:fab_colorPressed="@color/black"
                     app:fab_colorRipple="?attr/backgroundcolor"
@@ -136,7 +136,7 @@
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/calendarFab"
-                app:fab_label="New Event"
+                app:fab_label="@string/new_event"
                 app:fab_colorNormal="@color/black"
                 app:fab_colorPressed="@color/black"
                 app:fab_colorRipple="?attr/backgroundcolor"

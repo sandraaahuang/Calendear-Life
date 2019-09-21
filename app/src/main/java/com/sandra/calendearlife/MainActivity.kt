@@ -1,11 +1,10 @@
 package com.sandra.calendearlife
 
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.annotation.TargetApi
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -16,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.widget.CompoundButton
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -32,10 +30,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import androidx.work.Configuration
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Countdown
@@ -51,7 +49,9 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -88,12 +88,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme)
         }
+
+        val actionbar = actionBar
+        actionbar?.title = resources.getString(R.string.app_name)
+        loadLocale()
+
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -268,13 +274,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.d("sandraa", "change mode")
             } else if ( !isChecked ) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                restartApp2()
+                restartApp()
                 actionView.isChecked = false
             }
         }
     }
 
-    fun setupToolbar() {
+
+    private fun setupToolbar() {
         binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
         drawerLayout = binding.drawerLayout
         navView = binding.navView
@@ -352,6 +359,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.changeMode -> {
 //                return true
             }
+
+            R.id.changeLanguage -> {
+                showChangeLanguageList()
+            }
         }
 
 
@@ -359,15 +370,46 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun restartApp() {
+    private fun showChangeLanguageList() {
 
-        val intent = Intent(applicationContext, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        val listItem = arrayOfNulls<String>(2)
+        listItem[0] = getString(R.string.chinese)
+        listItem[1] = getString(R.string.english)
+        val builder = AlertDialog.Builder(this@MainActivity)
+        builder.setTitle(getString(R.string.language))
+        builder.setSingleChoiceItems(listItem, -1) { dialogInterface, i ->
+            if (i == 0) {
+                setLocale("zh")
+                recreate()
+            } else if (i ==1 ) {
+                setLocale("en")
+                recreate()
+            }
+            dialogInterface.dismiss()
+        }
 
+        val dialog = builder.create()
+        dialog.show()
     }
 
-    private fun restartApp2() {
+    private fun setLocale (lang: String) {
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = android.content.res.Configuration()
+        config.locale = locale
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
+        val editor = getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
+        editor.putString("Lang", lang)
+        editor.apply()
+    }
+
+    private fun loadLocale() {
+        val prefs = getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        val language = prefs.getString("Lang", "")
+        setLocale(language!!)
+    }
+
+    private fun restartApp() {
 
         val intent = Intent(applicationContext, MainActivity::class.java)
         startActivity(intent)
@@ -435,9 +477,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.calendarEventFragment -> CurrentFragmentType.NEWEVENT
                 R.id.countdownFragment -> CurrentFragmentType.NEWCOUNTDOWN
                 R.id.remindersFragment -> CurrentFragmentType.NEWREMINDER
-                R.id.calendarScheduleFragment -> CurrentFragmentType.SCHEDULE
-                R.id.calendarDayFragment -> CurrentFragmentType.DAY
-                R.id.calendarWeekFragment -> CurrentFragmentType.WEEK
                 R.id.historyReminders -> CurrentFragmentType.HISTORY
                 R.id.historyCountdown2 -> CurrentFragmentType.HISTORY
                 else -> viewModel.currentFragmentType.value
