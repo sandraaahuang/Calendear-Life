@@ -535,7 +535,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.text)
+                                            .setSmallIcon(R.drawable.app_line)
                                             .setContentTitle(textTitle)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                                             .setAutoCancel(true)
@@ -625,7 +625,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.text)
+                                            .setSmallIcon(R.drawable.app_line)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -717,7 +717,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.text)
+                                            .setSmallIcon(R.drawable.app_line)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -809,7 +809,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.text)
+                                            .setSmallIcon(R.drawable.app_line)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -901,7 +901,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.text)
+                                            .setSmallIcon(R.drawable.app_line)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -993,7 +993,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
                                         val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.text)
+                                            .setSmallIcon(R.drawable.app_line)
                                             .setContentTitle(textTitle)
                                             .setContentText(textContent)
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
