@@ -1,6 +1,7 @@
 package com.sandra.calendearlife.sync
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -21,6 +23,7 @@ import androidx.work.WorkManager
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
@@ -54,28 +57,15 @@ class SyncDialog : AppCompatDialogFragment() {
         }
 
         binding.syncImage.setOnClickListener {
-
-////            val deleteRequest = OneTimeWorkRequestBuilder<DeleteWorker>()
-////                .build()
-//
-//            val importWorker = OneTimeWorkRequestBuilder<ImportWorker>()
-////                .setInitialDelay(3,TimeUnit.SECONDS)
-//                .build()
-//
-////            WorkManager.getInstance()
-////                .beginWith(importWorker)
-////                .then(importWorker)
-////                .enqueue()
-//
-//            WorkManager.getInstance()
-//                .enqueue(importWorker)
             query_calendar()
-
-            Handler().postDelayed({findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())},
-                2000)
         }
 
         return binding.root
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions((activity as MainActivity),
+            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1)
     }
 
     fun query_calendar() {
@@ -229,11 +219,10 @@ class SyncDialog : AppCompatDialogFragment() {
                     }
                 }
                 cur.close()
+                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
             }
         } else {
-            val toast = Toast.makeText(MyApplication.instance, "Please open the permission of Calendar",
-                Toast.LENGTH_LONG)
-            toast.show()
+            requestPermission()
         }
     }
 
