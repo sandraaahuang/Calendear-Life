@@ -46,4 +46,30 @@
 
     <string name="no_countdown">Click me to add some new countdowns</string>
     <string name="no_reminder">Click me to add some new reminders</string>
+    <string name="begin_date">Begin Date</string>
+    <string name="end_date">End Date</string>
+    <string name="target_date">Target Date</string>
+    <string name="remind_date">Remind Date</string>
+    <string name="location">Location</string>
+    <string name="note">Note</string>
+    <string name="delete">Delete</string>
+    <string name="all_day">All-day</string>
+    <string name="_2019_09_06_friday">2019/09/06 Friday</string>
+    <string name="_00_00_am">00:00 AM</string>
+    <string name="add_location">Add Location</string>
+    <string name="set_as_reminder_event">Set as Reminder event</string>
+    <string name="never">Never</string>
+    <string name="add_in_google_calendar">Add in Google calendar</string>
+    <string name="set_as_countdown_event">Set as Countdown event</string>
+    <string name="date">date</string>
+    <string name="repeat">Repeat</string>
+    <string name="does_not_repeat">Does not repeat</string>
+    <string name="every_day">Every day</string>
+    <string name="every_week">Every week</string>
+    <string name="every_month">Every month</string>
+    <string name="every_year">Every year</string>
+    <string name="title">Title :</string>
+    <string name="note_">Note :</string>
+    <string name="target_date_">Target Date :</string>
+    <string name="remind_date_">Remind Date :</string>
 </resources>

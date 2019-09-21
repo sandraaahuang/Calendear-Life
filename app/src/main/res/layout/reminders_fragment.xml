@@ -106,7 +106,7 @@
                     android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/remindersTimeInput"/>
             <TextView
                     android:id="@+id/remindersTimeInput"
-                    android:text="00:00 AM"
+                    android:text="@string/_00_00_am"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
@@ -128,7 +128,7 @@
                     android:id="@+id/repeatChoose"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Does not repeat"
+                    android:text="@string/does_not_repeat"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="?attr/textcolor"
                     android:textSize="16sp"

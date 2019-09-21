@@ -129,11 +129,11 @@ class CalendarMonthFragment : Fragment() {
                             textView.setBackgroundResource(R.drawable.today_bg)
 //                            dotView.makeInVisible()
                         }
-                        selectedDate -> {
-                            textView.setTextColorRes(R.color.calendar_today_badge)
-                            textView.setBackgroundResource(R.drawable.selected_bg)
-//                            dotView.makeInVisible()
-                        }
+//                        selectedDate -> {
+//                            textView.setTextColorRes(R.color.calendar_today_badge)
+//                            textView.setBackgroundResource(R.drawable.selected_bg)
+////                            dotView.makeInVisible()
+//                        }
                         else -> {
 
 //                            dotView.isVisible = viewModel.liveCalendar.value?.isNotEmpty() ?: false

@@ -25,10 +25,10 @@
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             />
             <TextView
-                    android:text="Repeat"
+                    android:text="@string/repeat"
                     android:fontFamily="@font/noto_sans"
                     android:textSize="16sp"
-                    android:textColor="?attr/totalB2W"
+                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/repeatText"
@@ -43,7 +43,7 @@
                     app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/buttonBack"/>
             <Button
-                    android:text="Does not repeat"
+                    android:text="@string/does_not_repeat"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/buttonDoesNotRepeat"
@@ -56,7 +56,7 @@
                     android:layout_marginStart="1dp"
                     app:layout_constraintTop_toBottomOf="@+id/buttonBack" android:layout_marginTop="1dp"/>
             <Button
-                    android:text="Every day"
+                    android:text="@string/every_day"
                     android:layout_width="0dp"
                     android:background="?attr/totalWhite2Black"
                     android:textColor="?attr/totalB2W"
@@ -70,7 +70,7 @@
                     android:layout_marginEnd="1dp" android:layout_marginStart="1dp"
                     app:layout_constraintTop_toBottomOf="@+id/buttonDoesNotRepeat"/>
             <Button
-                    android:text="Every week"
+                    android:text="@string/every_week"
                     android:layout_width="0dp"
                     android:background="?attr/totalWhite2Black"
                     android:textColor="?attr/totalB2W"
@@ -81,7 +81,7 @@
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="1dp"
                     android:layout_marginTop="1dp" app:layout_constraintTop_toBottomOf="@+id/buttonEveryDay"/>
             <Button
-                    android:text="Every month"
+                    android:text="@string/every_month"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="?attr/totalWhite2Black"
@@ -93,7 +93,7 @@
                     android:layout_marginTop="1dp" app:layout_constraintTop_toBottomOf="@+id/buttonEveryWeek"
                     android:id="@+id/buttonEveryMonth"/>
             <Button
-                    android:text="Every year"
+                    android:text="@string/every_year"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="?attr/totalWhite2Black"

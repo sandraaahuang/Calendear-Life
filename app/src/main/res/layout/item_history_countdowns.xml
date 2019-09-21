@@ -30,7 +30,7 @@
                     android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"/>
             <TextView
-                    android:text="Title : "
+                    android:text="@string/title"
                     android:textSize="16sp"
                     android:textColor="?attr/totalB2W"
                     android:fontFamily="@font/noto_sans"
@@ -53,7 +53,7 @@
                     app:layout_constraintStart_toEndOf="@+id/textTitle" android:layout_marginStart="8dp"/>
 
             <TextView
-                    android:text="Note : "
+                    android:text="@string/note_"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -77,7 +77,7 @@
 
 
             <TextView
-                    android:text="Target Date : "
+                    android:text="@string/target_date_"
                     android:textSize="16sp"
                     android:textColor="?attr/totalB2W"
                     android:fontFamily="@font/noto_sans"

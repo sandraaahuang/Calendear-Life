@@ -58,6 +58,11 @@
                     android:id="@+id/changeMode"
                     android:title="Dark Mode"
                     app:actionViewClass="androidx.appcompat.widget.SwitchCompat"/>
+
+            <item
+                    android:id="@+id/changeLanguage"
+                    android:title="Chinese Mode"
+                    app:actionViewClass="androidx.appcompat.widget.SwitchCompat"/>
         </menu>
     </item>
 
