@@ -9,14 +9,15 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/nav_header_height"
             android:background="@drawable/background_stone"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+            android:backgroundTintMode="src_atop"
+            android:backgroundTint="?attr/stoneTint">
 
         <TextView
                 android:id="@+id/nav_header_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/calendar"
-                android:textColor="@color/black"
+                android:textColor="?attr/buttoncolor"
                 android:textSize="25sp"
                 android:fontFamily="@font/noto_sans"
                 android:textStyle="bold"
@@ -28,7 +29,7 @@
                 android:id="@+id/view_spacing_line"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"
+                android:background="?attr/linecolor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/nav_header_title"
                 android:layout_marginTop="8dp"/>
@@ -48,7 +49,7 @@
                 tools:text="Sample@gmail.com"
                 android:text="@{viewModel.userEmail}"
                 android:fontFamily="@font/noto_sans"
-                android:textColor="@color/black"
+                android:textColor="?attr/buttoncolor"
                 android:textSize="14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

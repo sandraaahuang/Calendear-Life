@@ -12,7 +12,7 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:textColor="?attr/textcolor"
+            android:textColor="?attr/totalB2W"
             android:textSize="16sp"
             tools:text="22" />
 

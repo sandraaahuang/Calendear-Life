@@ -6,6 +6,7 @@
         <attr name="cardbackground" format="color"/>
         <attr name="textcolor" format="color"/>
         <attr name="toolbarcolor" format="color"/>
+        <attr name="toolbarText" format="color"/>
         <attr name="linecolor" format="color"/>
         <attr name="dotcolor" format="color"/>
         <attr name="redText" format="color"/>
@@ -13,5 +14,8 @@
         <attr name="drawableTint" format="color"/>
         <attr name="stoneTint" format="color"/>
         <attr name="saveColor" format="color"/>
+        <attr name="monthBackground" format="color"/>
+        <attr name="totalWhite2Black" format="color"/>
+        <attr name="totalB2W" format="color"/>
     </declare-styleable>
 </resources>

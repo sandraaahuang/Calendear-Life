@@ -350,7 +350,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.changeMode -> {
-                return true
+//                return true
             }
         }
 

@@ -36,7 +36,7 @@
                         android:textSize="20sp"
                         android:fontFamily="@font/noto_sans"
                         android:textStyle="bold"
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/toolbarText"
                         android:text="@{viewModel.currentFragmentType.value}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" tools:layout_editor_absoluteY="16dp"
@@ -52,7 +52,8 @@
                     app:defaultNavHost="true"
                     android:background="?attr/backgroundcolor"
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                    app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
 
 
 
@@ -64,8 +65,10 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:fitsSystemWindows="true"
-                app:itemIconTint="@color/black"
-                android:theme="@style/AppTheme"
+                android:background="?attr/totalWhite2Black"
+                android:theme="@style/NavigationView"
+                app:itemIconTint="?attr/drawableTint"
+                app:itemTextColor="?attr/buttoncolor"
                 app:menu="@menu/activity_main_drawer"/>
 
     </androidx.drawerlayout.widget.DrawerLayout>
