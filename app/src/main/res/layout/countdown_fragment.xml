@@ -109,7 +109,7 @@
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="16dp"/>
             <TextView
-                    android:text="Date"
+                    android:text="@string/date"
                     android:textColor="?attr/totalB2W"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

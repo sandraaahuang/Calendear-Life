@@ -122,7 +122,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/view_spacing_line2" android:layout_marginTop="16dp">
 
                     <TextView
-                            android:text="Note"
+                            android:text="@string/note"
                             android:fontFamily="@font/noto_sans"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                         app:layout_constraintEnd_toStartOf="@+id/deleteButton2"
                         app:layout_constraintBottom_toBottomOf="parent"/>
                 <Button
-                        android:text="Delete"
+                        android:text="@string/delete"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/noto_sans"
