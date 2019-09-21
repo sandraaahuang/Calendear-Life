@@ -34,7 +34,7 @@
             <TextView
                     android:text="Title : "
                     android:textSize="16sp"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/totalB2W"
                     android:fontFamily="@font/noto_sans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
 
             <TextView
                     android:text="Note : "
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/totalB2W"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -81,7 +81,7 @@
             <TextView
                     android:text="Remind Date : "
                     android:textSize="16sp"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/totalB2W"
                     android:fontFamily="@font/noto_sans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

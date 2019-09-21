@@ -32,7 +32,7 @@ class HomeRemindersAdapter(val viewModel: HomeViewModel, val onClickListener: On
 
             }
             if (reminders.remindTimestamp.seconds < Timestamp.now().seconds){
-                binding.remindersTime.setTextColor(Color.parseColor("#f44336"))
+                binding.remindersTime.setTextColor(MyApplication.instance.getColor(R.color.delete_red))
                 Log.d("sandraaa", "reminders.remindTimestamp.seconds = ${reminders.remindTimestamp.seconds}," +
                         "Timestamp.now().seconds = ${Timestamp.now().seconds}")
             }

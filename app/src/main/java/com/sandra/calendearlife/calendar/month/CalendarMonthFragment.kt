@@ -2,6 +2,7 @@ package com.sandra.calendearlife.calendar.month
 
 import android.content.Context
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColor
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -46,13 +48,13 @@ class CalendarMonthFragment : Fragment() {
     private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy")
     private val selectionFormatter = DateTimeFormatter.ofPattern("d MMM yyyy")
 
-    private val viewModel: CalenderMonthViewModel by lazy{
+    private val viewModel: CalenderMonthViewModel by lazy {
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
     }
 
     lateinit var binding: CalendarMonthFragmentBinding
 
-    private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener{
+    private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener {
         viewModel.displayCalendarDetails(it)
         Log.d("sandraaa", "click item = $it")
     })
@@ -66,7 +68,7 @@ class CalendarMonthFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         viewModel.navigateToCalendarProperty.observe(this, androidx.lifecycle.Observer {
-            if ( null != it ) {
+            if (null != it) {
                 // Must find the NavController from the Fragment
                 this.findNavController().navigate(NavigationDirections.actionGlobalCalendarDetailFragment(it))
                 // Tell the ViewModel we've made the navigate call to prevent multiple navigation
@@ -74,7 +76,7 @@ class CalendarMonthFragment : Fragment() {
             }
         })
 
-        return  binding.root
+        return binding.root
 
     }
 
@@ -133,8 +135,7 @@ class CalendarMonthFragment : Fragment() {
 //                            dotView.makeInVisible()
                         }
                         else -> {
-                            textView.setTextColorRes(R.color.black)
-                            textView.background = null
+
 //                            dotView.isVisible = viewModel.liveCalendar.value?.isNotEmpty() ?: false
                         }
                     }
@@ -149,8 +150,7 @@ class CalendarMonthFragment : Fragment() {
 
             requireActivity().textView.text = if (it.year == today.year) {
                 titleSameYearFormatter.format(it.yearMonth)
-            }
-            else {
+            } else {
                 titleFormatter.format(it.yearMonth)
             }
 
@@ -170,7 +170,7 @@ class CalendarMonthFragment : Fragment() {
                     container.legendLayout.tag = month.yearMonth
                     container.legendLayout.children.map { it as TextView }.forEachIndexed { index, tv ->
                         tv.text = daysOfWeek[index].name.first().toString()
-                        tv.setTextColorRes(R.color.black)
+//                        tv.setTextColorRes(R.color.black)
                     }
                 }
             }
@@ -197,31 +197,36 @@ class CalendarMonthFragment : Fragment() {
 
             viewModel.queryToday(Timestamp(localDate))
             adapter.notifyDataSetChanged()
-            Log.d("sandraaa", "Timestamp(localDate) = ${Timestamp(localDate)}, liveDate = ${viewModel.liveCalendar.value}")
+            Log.d(
+                "sandraaa",
+                "Timestamp(localDate) = ${Timestamp(localDate)}, liveDate = ${viewModel.liveCalendar.value}"
+            )
 
 
             oldDate?.let { calendar.notifyDateChanged(it) }
             calendar.notifyDateChanged(date)
             updateAdapterForDate(date)
         }
-        Log.d("sandraaa","select date = $date")
+        Log.d("sandraaa", "select date = $date")
     }
 
     private fun updateAdapterForDate(date: LocalDate) {
         selectedDateText.text = selectionFormatter.format(date)
     }
 
-    override fun onStart() {
-        super.onStart()
-        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.attr.toolbarcolor))
-        requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.dark_gray)
-    }
+//    override fun onStart() {
+//        super.onStart()
+//
+//        (activity as AppCompatActivity).toolbar.setBackgroundColor(R.styleable.ds_backgroundcolor)
+//        requireActivity().window.statusBarColor = R.styleable.ds_backgroundcolor
+//
+//    }
 
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity).toolbar.setBackgroundColor(requireContext().getColorCompat(R.color.dark_gray))
-        requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.dark_gray)
-    }
+//    override fun onStop() {
+//        super.onStop()
+//        (activity as AppCompatActivity).toolbar.setBackgroundColor(R.styleable.ds_backgroundcolor)
+//        requireActivity().window.statusBarColor = R.styleable.ds_backgroundcolor
+//    }
 
     private fun daysOfWeekFromLocale(): Array<DayOfWeek> {
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek

@@ -110,7 +110,7 @@
                     android:layout_marginStart="16dp"/>
             <TextView
                     android:text="Date"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/totalB2W"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/countdownDate"
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
                 android:textSize="12sp"
-                android:textColor="?attr/saveColor"
+                android:textColor="@color/white"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/editCountdownLayout"

@@ -16,7 +16,7 @@
             android:gravity="center"
             android:text="SUN"
             android:fontFamily="@font/noto_sans"
-            android:textColor="@color/black"
+            android:textColor="?attr/totalB2W"
             android:textSize="14sp"/>
 
     <TextView
@@ -27,7 +27,7 @@
             android:gravity="center"
             android:text="MON"
             android:fontFamily="@font/noto_sans"
-            android:textColor="@color/black"
+            android:textColor="?attr/totalB2W"
             android:textSize="14sp"/>
 
     <TextView
@@ -38,7 +38,7 @@
             android:gravity="center"
             android:text="TUE"
             android:fontFamily="@font/noto_sans"
-            android:textColor="@color/black"
+            android:textColor="?attr/totalB2W"
             android:textSize="14sp"/>
 
     <TextView
@@ -49,7 +49,7 @@
             android:gravity="center"
             android:text="WED"
             android:fontFamily="@font/noto_sans"
-            android:textColor="@color/black"
+            android:textColor="?attr/totalB2W"
             android:textSize="14sp"/>
 
     <TextView
@@ -60,7 +60,7 @@
             android:gravity="center"
             android:text="THU"
             android:fontFamily="@font/noto_sans"
-            android:textColor="@color/black"
+            android:textColor="?attr/totalB2W"
             android:textSize="14sp"/>
 
     <TextView
@@ -71,7 +71,7 @@
             android:gravity="center"
             android:text="FRI"
             android:fontFamily="@font/noto_sans"
-            android:textColor="@color/black"
+            android:textColor="?attr/totalB2W"
             android:textSize="14sp"/>
 
     <TextView
@@ -82,7 +82,7 @@
             android:gravity="center"
             android:text="SAT"
             android:fontFamily="@font/noto_sans"
-            android:textColor="@color/black"
+            android:textColor="?attr/totalB2W"
             android:textSize="14sp"/>
 
 </LinearLayout>

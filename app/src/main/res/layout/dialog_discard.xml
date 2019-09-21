@@ -3,7 +3,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
-            android:background="?attr/backgroundcolor"
+            android:background="?attr/totalWhite2Black"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -11,7 +11,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/makesureLayout"
-                android:background="?attr/backgroundcolor"
+                android:background="?attr/totalWhite2Black"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0">
 
@@ -30,14 +30,14 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
                     android:textStyle="bold"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/totalB2W"
                     android:layout_marginTop="16dp"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="16dp"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="?attr/backgroundcolor"
+                    android:background="?attr/totalWhite2Black"
                     app:layout_constraintTop_toBottomOf="@+id/makesureText"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:id="@+id/discardLayout" app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
                         android:text="@string/discard"
                         android:fontFamily="@font/noto_sans"
                         android:layout_width="wrap_content"
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/totalB2W"
                         android:layout_height="wrap_content" android:id="@+id/discardText"
                         app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
@@ -55,7 +55,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="?attr/backgroundcolor"
+                    android:background="?attr/totalWhite2Black"
                     app:layout_constraintTop_toBottomOf="@+id/discardLayout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" android:id="@+id/keepEditingLayout">
@@ -65,7 +65,7 @@
                         android:fontFamily="@font/noto_sans"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/totalB2W"
                         android:id="@+id/keepEditingText" app:layout_constraintStart_toStartOf="parent"
                         android:layout_marginStart="16dp" android:layout_marginTop="16dp"
                         app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
