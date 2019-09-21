@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CalendearLife</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="calendar">行事曆</string>
+    <string name="enter_title">新增標題</string>
+    <string name="remind_me_on_a_day">新增提醒功能</string>
+    <string name="add_note">新增註記</string>
+    <string name="saveReminders">儲存</string>
+    <string name="are_you_sure_you_want_to_discard_this_event">是否捨棄尚未儲存的變更內容？</string>
+    <string name="discard">捨棄</string>
+    <string name="keep_editing">取消</string>
+    <string name="sunday">Sun</string>
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tues</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thur</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+
+    <!-- current fragment type -->
+    <string name="home">Calendear Life</string>
+    <string name="detail">詳細資訊</string>
+    <string name="add_event_into_calendar">新增事件</string>
+    <string name="add_event_into_reminder">新增提醒事件</string>
+    <string name="add_event_into_countdown">新增倒數事件</string>
+    <string name="calendarFragment">行事曆</string>
+    <string name="history">歷史紀錄</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="configure">Configure</string>
+
+    <!-- notification -->
+    <string name="create_channel">Create Channel</string>
+
+    <string name="update_message">已更新</string>
+    <string name="delete_message">已刪除</string>
+    <string name="save_message">已儲存</string>
+
+    <string name="no_countdown">點此新增第一筆倒數事件</string>
+    <string name="no_reminder">點此新增第一筆提醒事件</string>
+    <string name="begin_date">起始日</string>
+    <string name="end_date">結束日</string>
+    <string name="target_date">目標日</string>
+    <string name="remind_date">提醒日</string>
+    <string name="location">地點</string>
+    <string name="note">註記</string>
+    <string name="delete">刪除</string>
+    <string name="all_day">整日</string>
+    <string name="_2019_09_06_friday">2019/09/06 星期五</string>
+    <string name="_00_00_am">00:00 早上</string>
+    <string name="add_location">新增地點</string>
+    <string name="set_as_reminder_event">加入提醒功能</string>
+    <string name="add_in_google_calendar">加入 Google 行事曆</string>
+    <string name="set_as_countdown_event">加入倒數功能</string>
+    <string name="date">日期</string>
+    <string name="repeat">重複選項</string>
+    <string name="does_not_repeat">不重複</string>
+    <string name="every_day">每日</string>
+    <string name="every_week">每週</string>
+    <string name="every_month">每月</string>
+    <string name="every_year">每年</string>
+    <string name="title">標題 :</string>
+    <string name="note_">註記 :</string>
+    <string name="target_date_">目標日 : </string>
+    <string name="remind_date_">提醒日 : </string>
+    <string name="home_">主頁</string>
+    <string name="month_">月曆</string>
+    <string name="sync_your_calendar_">更新 Google Calendar 事件</string>
+    <string name="reminder_record">提醒事項紀錄</string>
+    <string name="countdown_record">倒數事件紀錄</string>
+    <string name="add_event_">新增事件</string>
+    <string name="add_calendar">新增行事曆</string>
+    <string name="add_reminder">新增提醒事件</string>
+    <string name="add_countdown">新增倒數事件</string>
+    <string name="setting">設定</string>
+    <string name="dark_mode">啟動暗黑模式</string>
+    <string name="chinese_mode">切換語言</string>
+    <string name="new_reminder">新增提醒事件</string>
+    <string name="new_countdown">新增倒數事件</string>
+    <string name="new_event">新增事件</string>
+    <string name="language">選擇要切換的語言</string>
+    <string name="chinese">中文模式</string>
+    <string name="english">英語模式</string>
+    <string name="days">日</string>
+</resources>

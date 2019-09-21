@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
+import com.sandra.calendearlife.util.getString
 
 class AddCountdownAdapter(val onClickListener: OnClickListener, val viewModel: CountdownViewModel) :
     ListAdapter<Countdown, RecyclerView.ViewHolder>(DiffCallback) {
@@ -32,7 +34,8 @@ class AddCountdownAdapter(val onClickListener: OnClickListener, val viewModel: C
 
         fun bind(countdown: Countdown, onClickListener: OnClickListener, viewModel: CountdownViewModel) {
             binding.countdown = countdown
-            binding.countdownDate.text = "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)} days"
+            binding.countdownDate.text =
+                "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)} ${getString(R.string.days)}"
 
             if (countdown.targetTimestamp.seconds < Timestamp.now().seconds) {
                 viewModel.updateItem(countdown.documentID)
