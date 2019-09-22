@@ -157,13 +157,16 @@ class RemindersFragment : Fragment() {
                 "frequency" to RepeatDialog.value
             )
 
-            viewModel.writeItem(calendar,reminders)
+            if ("${binding.remindersTitleInput.text}" == ""){
+                binding.remindersTitleInput.setHintTextColor(resources.getColor(R.color.delete_red))
+            } else {
+                viewModel.writeItem(calendar,reminders)
 
-            Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({
-                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-            },3000)
-
+                Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
+                Handler().postDelayed({
+                    findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+                },3000)
+            }
         }
 
         return binding.root

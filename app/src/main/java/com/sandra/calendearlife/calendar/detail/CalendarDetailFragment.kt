@@ -65,13 +65,13 @@ class CalendarDetailFragment : Fragment() {
 
 
 
-        if (calendar.color == "C02942" || calendar.color == "542437" || calendar.color == "A6292F"){
+        if (calendar.color == "C02942" || calendar.color == "542437" || calendar.color == "A6292F" ||calendar.hasReminders){
             binding.remindLayout.visibility = View.VISIBLE
         } else {
             binding.remindLayout.visibility = View.GONE
         }
 
-        if (calendar.color == "100038" ||calendar.color == "53777A" ||calendar.color == "A6292F") {
+        if (calendar.color == "100038" ||calendar.color == "53777A" ||calendar.color == "A6292F" ||calendar.hasCountdown) {
             binding.countdownLayout.visibility = View.VISIBLE
         } else {
             binding.countdownLayout.visibility = View.GONE

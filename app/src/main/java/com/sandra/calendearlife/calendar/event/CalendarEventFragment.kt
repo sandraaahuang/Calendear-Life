@@ -1,5 +1,6 @@
 package com.sandra.calendearlife.calendar.event
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -20,12 +21,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.provider.CalendarContract.Calendars
 import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.pm.PackageManager
+import android.database.Cursor
 import android.os.Handler
+import android.provider.CalendarContract
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.util.UserManager
 
 
 class CalendarEventFragment : Fragment() {
@@ -35,6 +44,7 @@ class CalendarEventFragment : Fragment() {
     var EVALUATE_DIALOG = "evaluate_dialog"
     var REQUEST_EVALUATE = 0X110
 
+    var db = FirebaseFirestore.getInstance()
     private val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
     private val timeFormat = SimpleDateFormat("hh:mm a")
     private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
@@ -87,21 +97,6 @@ class CalendarEventFragment : Fragment() {
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
-        val transferDay = when (dayOfWeek){
-            2 -> "Monday"
-            3 -> "Tuesday"
-            4 -> "Wednesday"
-            5 -> "Thursday"
-            6 -> "Friday"
-            7 -> "Saturday"
-            else -> "Sunday"
-        }
-
-        val chooseDate = "$year/${monthOfYear + 1 }/$dayOfMonth $transferDay"
-
-
-        binding.beginDate.text = chooseDate
-        binding.endDate.text = chooseDate
 
         binding.beginDate.setOnClickListener {
 
@@ -136,7 +131,7 @@ class CalendarEventFragment : Fragment() {
             val minute = calendar.get(Calendar.MINUTE)
 
             binding.remindersDateInput.text = "${year}/${monthOfYear+1}/$dayOfMonth"
-            binding.remindersTimeInput.text = "$hour:$minute AM"
+            binding.remindersTimeInput.text = "$hour:$minute ${getString(R.string.am)}"
 
             TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
@@ -197,72 +192,76 @@ class CalendarEventFragment : Fragment() {
         }
 
         binding.saveText.setOnClickListener {
-
-            val date: String
-            val beginDate: String
-            val endDate: String
-
-            if (binding.allDaySwitch.isChecked){
-                date = "${binding.beginDate.text}"
-                beginDate = "${binding.beginDate.text} 00:01 AM"
-                endDate = "${binding.beginDate.text} 11:59 PM"
+            // error handle
+            if ("${binding.eventTitleInput.text}" == "") {
+                binding.eventTitleInput.setHintTextColor(resources.getColor(R.color.delete_red))
             } else {
-                date = "${binding.beginDate.text}"
-                beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
-                endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                val date: String
+                val beginDate: String
+                val endDate: String
+
+                if (binding.allDaySwitch.isChecked){
+                    date = "${binding.beginDate.text}"
+                    beginDate = "${binding.beginDate.text} 00:01 ${getString(R.string.am)}"
+                    endDate = "${binding.beginDate.text} 11:59 ${getString(R.string.pm)}"
+                } else {
+                    date = "${binding.beginDate.text}"
+                    beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+                    endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                }
+
+                val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
+
+                val countdown = hashMapOf(
+                    "setDate" to FieldValue.serverTimestamp(),
+                    "title" to "${binding.eventTitleInput.text}",
+                    "note" to "${binding.noteInput.text}",
+                    "targetDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
+                    "overdue" to false)
+
+                val reminders = hashMapOf(
+                    "setDate" to FieldValue.serverTimestamp(),
+                    "title" to "${binding.eventTitleInput.text}",
+                    "setRemindDate" to true,
+                    "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
+                    "isChecked" to false,
+                    "note" to "${binding.noteInput.text}",
+                    "frequency" to RepeatDialog.value)
+
+                val item = hashMapOf(
+                    "frequency" to RepeatDialog.value,
+                    "date" to Timestamp(simpleDateFormat.parse(date).time),
+                    "setDate" to FieldValue.serverTimestamp(),
+                    "beginDate" to Timestamp(dateWeekTimeFormat.parse(beginDate).time),
+                    "endDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
+                    "title" to "${binding.eventTitleInput.text}",
+                    "note" to "${binding.noteInput.text}",
+                    "isAllDay" to "${binding.allDaySwitch.isChecked}",
+                    "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
+                    "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
+                    "fromGoogle" to "${binding.switchSetAsGoogle.isChecked}".toBoolean()
+                )
+
+                if (binding.switchSetAsGoogle.isChecked){
+                    val gBeginDate = com.google.firebase.Timestamp(dateWeekTimeFormat.parse(beginDate))
+                    val gEndDate = com.google.firebase.Timestamp(dateWeekTimeFormat.parse(endDate))
+                    val gTitle = "${binding.eventTitleInput.text}"
+                    val gNote = "${binding.noteInput.text}"
+
+                    viewModel.writeGoogle(gBeginDate, gEndDate, gNote, gTitle,
+                        item, countdown, reminders)
+                }
+
+                 else {
+                    viewModel.writeItem(item, countdown, reminders)
+                    Log.d("sandraaa", "fail")
+                }
+
+                Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
+                Handler().postDelayed({
+                    findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
+                },3000)
             }
-
-            val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
-
-            val countdown = hashMapOf(
-                "setDate" to FieldValue.serverTimestamp(),
-                "title" to "${binding.eventTitleInput.text}",
-                "note" to "${binding.noteInput.text}",
-                "targetDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
-                "overdue" to false)
-
-            val reminders = hashMapOf(
-                "setDate" to FieldValue.serverTimestamp(),
-                "title" to "${binding.eventTitleInput.text}",
-                "setRemindDate" to true,
-                "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
-                "isChecked" to false,
-                "note" to "${binding.noteInput.text}",
-                "frequency" to RepeatDialog.value)
-
-            val item = hashMapOf(
-                "frequency" to RepeatDialog.value,
-                "date" to Timestamp(simpleDateFormat.parse(date).time),
-                "setDate" to FieldValue.serverTimestamp(),
-                "beginDate" to Timestamp(dateWeekTimeFormat.parse(beginDate).time),
-                "endDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
-                "title" to "${binding.eventTitleInput.text}",
-                "note" to "${binding.noteInput.text}",
-                "isAllDay" to "${binding.allDaySwitch.isChecked}",
-                "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
-                "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
-                "fromGoogle" to "${binding.switchSetAsGoogle.isChecked}".toBoolean()
-            )
-
-            viewModel.writeItem(item, countdown, reminders)
-
-            if (binding.switchSetAsGoogle.isChecked){
-                viewModel.insertIntoGoogle(
-                    com.google.firebase.Timestamp(dateWeekTimeFormat.parse(beginDate)),
-                    com.google.firebase.Timestamp(dateWeekTimeFormat.parse(endDate)),
-                    "${binding.eventTitleInput.text}",
-                    "${binding.noteInput.text}")
-
-
-                Log.d("sandraaa", "beginDate = ${com.google.firebase.Timestamp(dateWeekTimeFormat.parse(beginDate))} ")
-            } else{
-                Log.d("sandraaa", "fail")
-            }
-
-            Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({
-                findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
-            },3000)
         }
         
         return binding.root
