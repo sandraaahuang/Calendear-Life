@@ -41,12 +41,13 @@ class CalendarDetailFragment : Fragment() {
         binding.viewModel = viewModel
 
         if (calendar.color == "245E2C" ||calendar.color == "8C6B8B" || calendar.color == "542437"
-            || calendar.color == "53777A" ||calendar.color == "A6292F"){
+            || calendar.color == "53777A" ||calendar.color == "A6292F" || calendar.color == "cb9b8c"){
             binding.allDayLayout.visibility = View.VISIBLE
             binding.beginDate.visibility = View.VISIBLE
 
 
-            if (calendar.color == "8C6B8B" || calendar.color == "542437"||calendar.color == "A6292F"){
+            if (calendar.color == "8C6B8B" || calendar.color == "542437"||calendar.color == "A6292F"
+                || calendar.color == "cb9b8c"){
                 if (calendar.isAllDay){
                     binding.beginTime.visibility = View.GONE
                     binding.endDateText.visibility = View.GONE
@@ -71,7 +72,8 @@ class CalendarDetailFragment : Fragment() {
             binding.remindLayout.visibility = View.GONE
         }
 
-        if (calendar.color == "100038" ||calendar.color == "53777A" ||calendar.color == "A6292F" ||calendar.hasCountdown) {
+        if (calendar.color == "100038" ||calendar.color == "53777A" ||calendar.color == "A6292F" ||calendar.hasCountdown
+            || calendar.color == "cb9b8c") {
             binding.countdownLayout.visibility = View.VISIBLE
         } else {
             binding.countdownLayout.visibility = View.GONE
@@ -157,7 +159,7 @@ class CalendarDetailFragment : Fragment() {
                 { _, year, monthOfYear, dayOfMonth ->
                     val date = Date(year -1900, monthOfYear, dayOfMonth)
                     val stringDate = simpleDateFormat.format(date)
-                    binding.beginDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
+                    binding.targetDateInput.text = "$stringDate" }, year, monthOfYear, dayOfMonth
             )
 
             datePickerDialog.show()
@@ -182,19 +184,19 @@ class CalendarDetailFragment : Fragment() {
 
         binding.saveButton.setOnClickListener {
 
-            val beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
-            val endDate = "${binding.endDate.text} ${binding.endTime.text}"
-            val tatgetDate = "${binding.endDate.text}"
+            var beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+            var endDate = "${binding.endDate.text} ${binding.endTime.text}"
+            val tatgetDate = "${binding.targetDateInput.text}"
             val remindDate = "${binding.remindDate.text} ${binding.remindTime.text}"
 
 
-            val updateRemind = hashMapOf(
+            var updateRemind = hashMapOf(
                 "title" to "${binding.detailTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
                 "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
             )
 
-            val updateCalendar = hashMapOf(
+            var updateCalendar = hashMapOf(
                 "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
                 "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
                 "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
@@ -203,21 +205,157 @@ class CalendarDetailFragment : Fragment() {
                 "location" to "${binding.locationInput.text}"
             )
 
-            val updateCountdown = hashMapOf(
+            var updateCountdown = hashMapOf(
                 "title" to "${binding.detailTitleInput.text}",
                 "note" to "${binding.noteInput.text}",
                 "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time)
             )
 
-            viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)
+            when (calendar.color) {
+
+                "C02942" -> {
+                    updateRemind = hashMapOf(
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
+                    updateCalendar = hashMapOf(
+                        "date" to Timestamp(simpleDateFormat.parse(remindDate).time),
+                        "beginDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
+                        "endDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}")
+
+                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+
+                "100038" -> {
+                    updateCountdown = hashMapOf(
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
+                    updateCalendar = hashMapOf(
+                        "date" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
+                        "beginDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
+                        "endDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}")
+
+                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+
+                "8C6B8B" -> {
+                    if (calendar.isAllDay) {
+                        beginDate = "${binding.beginDate.text} 00:01 ${getString(R.string.am)}"
+                        endDate = "${binding.beginDate.text} 11:59 ${getString(R.string.pm)}"
+                    } else {
+                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                    }
+
+                    updateCalendar = hashMapOf(
+                        "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
+                        "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
+                        "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "location" to "${binding.locationInput.text}")
+                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+
+                "542437" -> {
+                    if (calendar.isAllDay) {
+                        beginDate = "${binding.beginDate.text} 00:01 ${getString(R.string.am)}"
+                        endDate = "${binding.beginDate.text} 11:59 ${getString(R.string.pm)}"
+                    } else {
+                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                    }
+                    updateCalendar = hashMapOf(
+                        "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
+                        "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
+                        "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "location" to "${binding.locationInput.text}")
+                    updateRemind = hashMapOf(
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
+                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+
+                "cb9b8c" -> {
+                    if (calendar.isAllDay) {
+                        beginDate = "${binding.beginDate.text} 00:01 ${getString(R.string.am)}"
+                        endDate = "${binding.beginDate.text} 11:59 ${getString(R.string.pm)}"
+                    } else {
+                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                    }
+                    updateCalendar = hashMapOf(
+                        "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
+                        "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
+                        "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "location" to "${binding.locationInput.text}")
+                    updateCountdown = hashMapOf(
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
+                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)}
+
+                "A6292F" -> {
+                    if (calendar.isAllDay) {
+                        beginDate = "${binding.beginDate.text} 00:01 ${getString(R.string.am)}"
+                        endDate = "${binding.beginDate.text} 11:59 ${getString(R.string.pm)}"
+                    } else {
+                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                    }
+                    updateCalendar = hashMapOf(
+                        "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
+                        "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
+                        "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "location" to "${binding.locationInput.text}")
+                    updateCountdown = hashMapOf(
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
+                    updateRemind = hashMapOf(
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
+                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+
+                "245E2C" -> {
+                    if (calendar.isAllDay) {
+                        beginDate = "${binding.beginDate.text} 00:01 ${getString(R.string.am)}"
+                        endDate = "${binding.beginDate.text} 11:59 ${getString(R.string.pm)}"
+                    } else {
+                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                    }
+                    updateCalendar = hashMapOf(
+                        "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
+                        "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
+                        "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
+                        "title" to "${binding.detailTitleInput.text}",
+                        "note" to "${binding.noteInput.text}",
+                        "location" to "${binding.locationInput.text}")
+
+                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+
+
+
+            }
 
             if (calendar.fromGoogle){
-            viewModel.updateEvent(calendar.documentID,
+            viewModel.updateEvent(calendar.documentID!!,
                 "${binding.detailTitleInput.text}",
                 "${binding.noteInput.text}",
                 com.google.firebase.Timestamp(dateTimeFormat.parse(beginDate)),
                 com.google.firebase.Timestamp(dateTimeFormat.parse(endDate)))
             } else {
+//                viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)
                 Log.d("sandraaa", "is not google item")
             }
 
