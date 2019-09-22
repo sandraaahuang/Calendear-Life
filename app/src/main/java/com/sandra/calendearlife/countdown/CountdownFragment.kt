@@ -91,6 +91,8 @@ class CountdownFragment : Fragment() {
                         binding.countdownDateInput.text = "$stringDate" }, y, m, d
                 )
                 datepickerdialog.show()
+            } else if ("${binding.countdownTitleInput.text}" == "") {
+                binding.countdownTitleInput.setHintTextColor(resources.getColor(R.color.delete_red))
             } else {
 
                 val targetDate = binding.countdownDateInput.text.toString()

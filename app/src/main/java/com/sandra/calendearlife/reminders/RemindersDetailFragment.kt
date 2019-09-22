@@ -45,7 +45,25 @@ class RemindersDetailFragment : Fragment() {
             }
         }
 
-        binding.remindLayout.setOnClickListener {
+        binding.remindDate.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val monthOfYear = calendar.get(Calendar.MONTH)
+            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+                { _, year, monthOfYear, dayOfMonth ->
+                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val stringDate = SimpleDateFormat("yyyy/MM/dd").format(date)
+                    // Display Selected setDate in textbox
+                    binding.remindDate.text=
+                        "$stringDate" }, year, monthOfYear, dayOfMonth
+            )
+            datePickerDialog.show()
+        }
+
+        binding.remindTime.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
             val monthOfYear = calendar.get(Calendar.MONTH)
@@ -61,17 +79,6 @@ class RemindersDetailFragment : Fragment() {
                 binding.remindTime.text =
                     "$stringTime" }, hour, minute, false
             ).show()
-
-            val datePickerDialog = DatePickerDialog(
-                it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-                { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth, hour, minute)
-                    val stringDate = SimpleDateFormat("yyyy/MM/dd").format(date)
-                    // Display Selected setDate in textbox
-                    binding.remindDate.text=
-                        "$stringDate" }, year, monthOfYear, dayOfMonth
-            )
-            datePickerDialog.show()
         }
 
         binding.saveButton2.setOnClickListener {

@@ -369,10 +369,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         builder.setSingleChoiceItems(listItem, -1) { dialogInterface, i ->
             if (i == 0) {
                 setLocale("zh")
-                recreate()
+                restartApp()
             } else if (i ==1 ) {
                 setLocale("en")
-                recreate()
+                restartApp()
             }
             dialogInterface.dismiss()
         }

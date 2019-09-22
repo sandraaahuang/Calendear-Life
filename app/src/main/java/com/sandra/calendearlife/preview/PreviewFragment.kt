@@ -35,7 +35,7 @@ class PreviewFragment : Fragment() {
         ViewModelProviders.of(this).get(PreviewViewModel::class.java)
     }
 
-    val images = IntArray(3)
+    val images = IntArray(4)
 
     lateinit var binding: PreviewFragmentBinding
 
@@ -82,6 +82,7 @@ class PreviewFragment : Fragment() {
         images[0] = R.drawable.preview_photo_widget
         images[1] = R.drawable.preview_photo_notify
         images[2] = R.drawable.preview_photo_home
+        images[3] = R.drawable.preview_photo_mode
 
         binding.recyclerView.adapter = PreviewImageAdapter(images)
 

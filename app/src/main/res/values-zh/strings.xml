@@ -51,7 +51,7 @@
     <string name="delete">刪除</string>
     <string name="all_day">整日</string>
     <string name="_2019_09_06_friday">2019/09/06 星期五</string>
-    <string name="_00_00_am">00:00 早上</string>
+    <string name="_00_00_am">00:00 上午</string>
     <string name="add_location">新增地點</string>
     <string name="set_as_reminder_event">加入提醒功能</string>
     <string name="add_in_google_calendar">加入 Google 行事曆</string>
@@ -86,4 +86,6 @@
     <string name="chinese">中文模式</string>
     <string name="english">英語模式</string>
     <string name="days">日</string>
+    <string name="am">上午</string>
+    <string name="pm">下午</string>
 </resources>

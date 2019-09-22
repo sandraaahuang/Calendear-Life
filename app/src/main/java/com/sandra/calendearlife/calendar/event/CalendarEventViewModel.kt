@@ -180,7 +180,11 @@ class CalendarEventViewModel : ViewModel() {
             }
     }
 
-    fun insertIntoGoogle(beginDate: Timestamp, endDate: Timestamp, title: String, note: String) {
+    fun writeGoogle(
+        gBeginDate: Timestamp, gEndDate: Timestamp, gNote: String, gTitle: String,
+        item: Any, countdown: Any, reminders: Any
+    ) {
+
         val EVENT_PROJECTION = arrayOf(
             Calendars._ID, // 0 calendar id
             Calendars.ACCOUNT_NAME, // 1 account name
@@ -247,12 +251,12 @@ class CalendarEventViewModel : ViewModel() {
                     // add event
                     val cr = MyApplication.instance.contentResolver
                     val values = ContentValues()
-                    values.put(CalendarContract.Events.DTSTART, beginDate.seconds * 1000)
+                    values.put(CalendarContract.Events.DTSTART, gBeginDate.seconds * 1000)
                     values.put(
-                        CalendarContract.Events.DTEND, endDate.seconds * 1000
+                        CalendarContract.Events.DTEND, gEndDate.seconds * 1000
                     )
-                    values.put(CalendarContract.Events.TITLE, title)
-                    values.put(CalendarContract.Events.DESCRIPTION, note)
+                    values.put(CalendarContract.Events.TITLE, gTitle)
+                    values.put(CalendarContract.Events.DESCRIPTION, gNote)
                     values.put(CalendarContract.Events.CALENDAR_ID, targetCalendarId)
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
 
@@ -267,6 +271,155 @@ class CalendarEventViewModel : ViewModel() {
                         if (uri != null) {
                             val eventID = java.lang.Long.parseLong(uri.lastPathSegment!!)
                             Log.d("sandraaa", "eventID = $eventID")
+
+                            // get all data from user at first
+                            db.collection("data")
+                                .document(UserManager.id!!)
+                                .collection("calendar")
+                                .document(eventID.toString())
+                                .set(item)
+                                .addOnSuccessListener { CdocumentReference ->
+
+
+                                    // update calendar document id and color ( pure calendar first)
+                                    db.collection("data")
+                                        .document(UserManager.id!!)
+                                        .collection("calendar")
+                                        .document(eventID.toString())
+                                        .update("documentID", eventID.toString(), "color", "8C6B8B")
+                                        .addOnSuccessListener {
+                                            // add reminders
+                                            db.collection("data")
+                                                .document(UserManager.id!!)
+                                                .collection("calendar")
+                                                .whereEqualTo("hasReminders", true)
+                                                .whereEqualTo("documentID", eventID.toString())
+                                                .get()
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        for (document in task.result!!) {
+
+                                                            // add reminders
+                                                            db.collection("data")
+                                                                .document(UserManager.id!!)
+                                                                .collection("calendar")
+                                                                .document(eventID.toString())
+                                                                .collection("reminders")
+                                                                .add(reminders)
+                                                                .addOnSuccessListener { documentReference ->
+                                                                    Log.d(
+                                                                        "AddNewReminders",
+                                                                        "DocumentSnapshot added with ID: " + documentReference.id
+                                                                    )
+                                                                    db.collection("data")
+                                                                        .document(UserManager.id!!)
+                                                                        .collection("calendar")
+                                                                        .document(document.id)
+                                                                        .collection("reminders")
+                                                                        .document(documentReference.id)
+                                                                        .update("documentID", documentReference.id)
+
+                                                                    db.collection("data")
+                                                                        .document(UserManager.id!!)
+                                                                        .collection("calendar")
+                                                                        .document(document.id)
+                                                                        .update("color", "542437")
+                                                                }
+                                                        }
+                                                    }
+                                                }
+                                            // add countdown
+                                            db.collection("data")
+                                                .document(UserManager.id!!)
+                                                .collection("calendar")
+                                                .whereEqualTo("hasCountdown", true)
+                                                .whereEqualTo("documentID", eventID.toString())
+                                                .get()
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        for (document in task.result!!) {
+
+                                                            // add countdown
+                                                            db.collection("data")
+                                                                .document(UserManager.id!!)
+                                                                .collection("calendar")
+                                                                .document(eventID.toString())
+                                                                .collection("countdowns")
+                                                                .add(countdown)
+                                                                .addOnSuccessListener { documentReference ->
+                                                                    Log.d(
+                                                                        "AddNewCountdowns",
+                                                                        "DocumentSnapshot added with ID: " + documentReference.id
+                                                                    )
+                                                                    db.collection("data")
+                                                                        .document(UserManager.id!!)
+                                                                        .collection("calendar")
+                                                                        .document(document.id)
+                                                                        .collection("countdowns")
+                                                                        .document(documentReference.id)
+                                                                        .update("documentID", documentReference.id)
+
+
+                                                                    db.collection("data")
+                                                                        .document(UserManager.id!!)
+                                                                        .collection("calendar")
+                                                                        .document(document.id)
+                                                                        .update("color", "cb9b8c")
+
+
+                                                                    // item that have both reminders and countdown
+
+                                                                    db.collection("data")
+                                                                        .document(UserManager.id!!)
+                                                                        .collection("calendar")
+                                                                        .whereEqualTo("hasCountdown", true)
+                                                                        .whereEqualTo("hasReminders", true)
+                                                                        .whereEqualTo("documentID", eventID.toString())
+                                                                        .get()
+                                                                        .addOnCompleteListener { task ->
+                                                                            if (task.isSuccessful) {
+                                                                                for (document in task.result!!) {
+
+                                                                                    //update color
+
+                                                                                    db.collection("data")
+                                                                                        .document(UserManager.id!!)
+                                                                                        .collection("calendar")
+                                                                                        .document(document.id)
+                                                                                        .update("color", "A6292F")
+
+
+                                                                                }
+                                                                            }
+                                                                        }
+
+                                                                }
+                                                        }
+                                                    }
+                                                }
+
+                                            // update google item
+                                            db.collection("data")
+                                                .document(UserManager.id!!)
+                                                .collection("calendar")
+                                                .whereEqualTo("fromGoogle", true)
+                                                .whereEqualTo("documentID", eventID.toString())
+                                                .get()
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        for (document in task.result!!) {
+
+                                                            db.collection("data")
+                                                                .document(UserManager.id!!)
+                                                                .collection("calendar")
+                                                                .document(document.id)
+                                                                .update("color", "245E2C")
+
+                                                        }
+                                                    }
+                                                }
+                                        }
+                                }
                         }
                     }
 
@@ -274,12 +427,6 @@ class CalendarEventViewModel : ViewModel() {
 
                 cur.close()
             }
-        } else {
-
-            val toast = Toast.makeText(MyApplication.instance,
-                "Please open the permission of calendar in settings", Toast.LENGTH_LONG)
-            toast.show()
         }
     }
-
 }
