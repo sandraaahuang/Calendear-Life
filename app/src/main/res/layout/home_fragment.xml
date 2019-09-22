@@ -116,7 +116,7 @@
                     app:fab_colorNormal="@color/black"
                     app:fab_colorPressed="@color/black"
                     app:fab_colorRipple="?attr/backgroundcolor"
-                    android:src="@drawable/icon_add_reminder_2"
+                    android:src="@drawable/icon_add_reminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:fab_showShadow="true"
