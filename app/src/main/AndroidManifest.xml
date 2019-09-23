@@ -32,8 +32,6 @@
         <receiver android:name=".AlarmReceiver">
         </receiver>
 
-        <receiver android:name=".TestReceiver"/>
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
