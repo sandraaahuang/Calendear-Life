@@ -33,7 +33,7 @@
                     app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"/>
             <TextView
                     android:text="@string/title"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     android:textColor="?attr/totalB2W"
                     android:fontFamily="@font/noto_sans"
                     android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
             <TextView
                     android:text="@{reminders.title}"
                     tools:text="Please remind me"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/dark_blue"
                     android:fontFamily="@font/noto_sans"
                     android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
                     android:textColor="?attr/totalB2W"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     android:fontFamily="@font/noto_sans"
                     android:id="@+id/textNote" app:layout_constraintStart_toStartOf="@+id/textTitle"
                     app:layout_constraintTop_toBottomOf="@+id/textTitle" android:layout_marginTop="16dp"
@@ -67,7 +67,7 @@
             <TextView
                     android:text="@{reminders.note}"
                     tools:text="this is note :D"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/dark_blue"
                     android:fontFamily="@font/noto_sans"
                     android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
 
             <TextView
                     android:text="@string/remind_date_"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     android:textColor="?attr/totalB2W"
                     android:fontFamily="@font/noto_sans"
                     android:layout_width="wrap_content"
@@ -95,6 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/remindersTime"
+                    android:textSize="@dimen/normal_text_size"
                     android:textColor="@color/dark_blue"
                     app:layout_constraintTop_toTopOf="@+id/textView4"
                     app:layout_constraintBottom_toBottomOf="@+id/textView4"

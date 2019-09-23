@@ -38,12 +38,12 @@
                 android:id="@+id/remindersTitleInput"
                 android:hint="@string/enter_title"
                 android:textColorHint="?attr/textcolor"
-                android:textColor="?attr/textcolor"
+                android:textColor="?attr/totalB2W"
                 android:background="@null"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
-                android:textSize="18sp"
+                android:textSize="@dimen/enter_title_size"
                 app:layout_constraintTop_toBottomOf="@+id/removeIcon" android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"/>
         <ImageView
@@ -69,7 +69,7 @@
                 android:text="@string/remind_me_on_a_day"
                 android:layout_width="0dp"
                 android:fontFamily="@font/noto_sans"
-                android:textSize="16sp"
+                android:textSize="@dimen/normal_text_size"
                 android:textColor="?attr/totalB2W"
                 android:checked="false"
                 android:layout_height="wrap_content"
@@ -100,10 +100,10 @@
                     android:text="2019/09/06"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="?attr/textcolor"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     app:layout_constraintTop_toTopOf="@+id/bellIcon"
                     app:layout_constraintBottom_toBottomOf="@+id/bellIcon" app:layout_constraintVertical_bias="1.0"
-                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/remindersTimeInput"/>
+                    app:layout_constraintStart_toEndOf="@+id/bellIcon" android:layout_marginStart="8dp"/>
             <TextView
                     android:id="@+id/remindersTimeInput"
                     android:text="@string/_00_00_am"
@@ -111,11 +111,11 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="?attr/textcolor"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     app:layout_constraintTop_toTopOf="@+id/remindersDateInput"
                     app:layout_constraintBottom_toBottomOf="@+id/remindersDateInput"
-                    app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="16dp"/>
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/remindersDateInput" android:layout_marginStart="8dp"/>
             <ImageView
                     android:id="@+id/repeatIcon"
                     android:tint="?attr/drawableTint"
@@ -131,10 +131,11 @@
                     android:text="@string/does_not_repeat"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="?attr/textcolor"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/normal_text_size"
                     app:layout_constraintTop_toTopOf="@+id/repeatIcon"
-                    app:layout_constraintBottom_toBottomOf="@+id/repeatIcon" android:layout_marginEnd="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="@+id/repeatIcon"
+                    app:layout_constraintStart_toEndOf="@+id/repeatIcon"
+                    android:layout_marginStart="10dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
@@ -161,9 +162,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/add_note"
                 android:fontFamily="@font/noto_sans"
-                android:textSize="16sp"
+                android:textSize="@dimen/normal_text_size"
                 android:background="@null"
-                android:textColor="?attr/textcolor"
+                android:textColor="?attr/totalB2W"
                 app:layout_constraintStart_toEndOf="@+id/noteIcon"
                 android:layout_marginStart="8dp"
                 app:layout_constraintTop_toTopOf="@+id/noteIcon"
@@ -176,7 +177,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
-                android:textSize="12sp"
+                android:textSize="@dimen/normal_text_size"
                 android:textColor="@color/white"
                 android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"

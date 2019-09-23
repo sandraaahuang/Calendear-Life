@@ -8,6 +8,7 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 29
@@ -109,4 +110,9 @@ dependencies {
 
     // custom rounded layout
     implementation 'com.jcminarro:RoundKornerLayouts:0.2.0'
+// (Recommended) Add Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+
+    // Add dependency
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 }

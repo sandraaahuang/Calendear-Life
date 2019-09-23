@@ -79,13 +79,14 @@
     <string name="setting">Setting</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="chinese_mode">Language</string>
-    <string name="new_reminder">New Reminder</string>
-    <string name="new_countdown">New Countdown</string>
-    <string name="new_event">New Event</string>
+    <string name="new_reminder">Reminder</string>
+    <string name="new_countdown">Countdown</string>
+    <string name="new_event">Event</string>
     <string name="language">Language</string>
     <string name="chinese">Chinese</string>
     <string name="english">English</string>
     <string name="days">days</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
+    <string name="date_b">Date</string>
 </resources>

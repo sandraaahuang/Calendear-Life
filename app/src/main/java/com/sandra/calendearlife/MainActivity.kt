@@ -170,16 +170,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             val alarmManager = MyApplication.instance.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-
+            intent.action = "countdown"
             val pendingIntent = PendingIntent.getBroadcast(
                 MyApplication.instance,
-                1234, intent.setAction("countdown"), PendingIntent.FLAG_UPDATE_CURRENT
-            )
-            alarmManager.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, Timestamp.now().seconds * 1000,
-                AlarmManager.INTERVAL_DAY, pendingIntent
+                1234, intent, PendingIntent.FLAG_UPDATE_CURRENT
             )
 
+            alarmManager.setInexactRepeating(
+                AlarmManager.RTC_WAKEUP, Timestamp.now().seconds * 1000 + 10000,
+                AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent
+            )
+            Log.i("sandraaa", "alarm set success")
+
+//            Log.d("sandraaa", "${alarmManager.nextAlarmClock.showIntent}")
             viewModel.livednr.observe(this, Observer {
                 it?.let {
                     for ((index, value) in it.withIndex()) {
@@ -478,6 +481,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
+
+        Log.d("sandraaa", "onreceive $p1")
+        Log.d("sandraaa", "onreceive ${p1?.action}")
 
         when (p1?.action) {
             "countdown" -> {
@@ -1032,5 +1038,3 @@ class AlarmReceiver : BroadcastReceiver() {
 
     }
 }
-
-

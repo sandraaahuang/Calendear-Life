@@ -56,7 +56,7 @@ class SyncDialog : AppCompatDialogFragment() {
             findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
-        binding.syncImage.setOnClickListener {
+        binding.nextButton.setOnClickListener {
             query_calendar()
         }
 
