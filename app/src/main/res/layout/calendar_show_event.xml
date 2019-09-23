@@ -37,8 +37,8 @@
                     android:layout_height="20dp" app:srcCompat="@drawable/icon_has_countdown"
                     android:id="@+id/hasCountdown"
                     android:visibility="gone"
-                    app:layout_constraintTop_toTopOf="@+id/typeText"
-                    app:layout_constraintBottom_toBottomOf="@+id/typeText"
+                    app:layout_constraintTop_toTopOf="@+id/hasReminder"
+                    app:layout_constraintBottom_toBottomOf="@+id/hasReminder"
                     app:layout_constraintVertical_bias="1.0" app:layout_constraintEnd_toStartOf="@+id/hasReminder"
                     android:layout_marginEnd="8dp"/>
             <ImageView
@@ -60,16 +60,19 @@
 
             <TextView
                     android:id="@+id/itemEventText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="26dp"
                     android:textSize="16sp"
                     android:textColor="@color/white"
                     android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:text="@{calendar.title}"
                     tools:text="Play football with friends"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/typeText"
-                    android:layout_marginStart="16dp" app:layout_constraintTop_toTopOf="parent"/>
+                    android:layout_marginStart="16dp" app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="16dp" app:layout_constraintEnd_toStartOf="@+id/hasCountdown"/>
             <View
                     android:layout_width="1dp"
                     android:layout_height="0dp"

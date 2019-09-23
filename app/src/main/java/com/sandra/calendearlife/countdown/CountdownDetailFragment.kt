@@ -59,7 +59,6 @@ class CountdownDetailFragment : Fragment() {
         }
 
         binding.saveButton.setOnClickListener {
-
             val targetDate = binding.targetDateInput.text.toString()
             val putInDate = Date(targetDate)
 
@@ -77,10 +76,12 @@ class CountdownDetailFragment : Fragment() {
             )
 
             viewModel.updateItem(updateItem,calendarItem, countdown.documentID)
+            Log.d("sandraaa", "clickkk")
 
             Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
             Handler().postDelayed({findNavController().navigate(NavigationDirections
                 .actionGlobalHomeFragment())}, 3000)
+
         }
 
         binding.deleteButton.setOnClickListener {

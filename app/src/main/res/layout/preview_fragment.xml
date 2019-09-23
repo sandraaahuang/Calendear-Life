@@ -35,7 +35,7 @@
                 android:textAllCaps="false"
                 android:text="Sign in with Google"
                 android:background="@drawable/login_border"
-                android:textColor="@color/dark_blue"
+                android:textColor="@color/black"
                 android:fontFamily="@font/noto_sans"
                 app:layout_constraintEnd_toEndOf="@+id/imageView"
                 android:paddingLeft="32dp"
@@ -45,6 +45,7 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="horizontal"
                 tools:listitem="@layout/item_preview_image"
