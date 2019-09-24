@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
 
@@ -44,6 +45,10 @@ class HomeFragment : Fragment() {
 
         binding.countdownRecyclerView.adapter = countdownAdapter
         binding.remindersRecyclerView.adapter = remindersAdapter
+
+        LinearSnapHelper().apply {
+            attachToRecyclerView(binding.countdownRecyclerView)
+        }
 
         val recyclerIndicator = binding.indicator
         recyclerIndicator.attachToRecyclerView(binding.countdownRecyclerView)

@@ -1,10 +1,19 @@
 package com.sandra.calendearlife
 
+import android.Manifest
+import android.content.ContentUris
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.provider.CalendarContract
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.CurrentFragmentType
@@ -128,6 +137,24 @@ class MainViewModel : ViewModel() {
                             Log.d("sandraaa", "liveDate=  ${livednr.value}")
                         }
                 }
+            }
+    }
+
+
+
+    fun writeGoogleItem(item: Any, documentId: String) {
+
+        // get all data from user at first
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .document(documentId)
+            .set(item)
+            .addOnSuccessListener { CdocumentReference ->
+                Log.d(
+                    "AddCountdownsIntoDB",
+                    "DocumentSnapshot added with ID = $documentId"
+                )
             }
     }
 }
