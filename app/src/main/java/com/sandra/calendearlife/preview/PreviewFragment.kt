@@ -152,7 +152,7 @@ class PreviewFragment : Fragment() {
                         MyApplication.instance.
                             getSharedPreferences("GoogleMessage", Context.MODE_PRIVATE)
                     preferences.edit().putString("id", id).apply()
-                    preferences.getString("id",id)
+                    preferences.getString("id","")
                     UserManager.id = id
                     Log.d("UserManager", "id = ${UserManager.id}")
 
