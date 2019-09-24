@@ -86,11 +86,15 @@ class RemindersFragment : Fragment() {
             dialog.show(fragmentManager!!, EVALUATE_DIALOG)
         }
 
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val monthOfYear = calendar.get(Calendar.MONTH)
+        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+        binding.remindersDateInput.text = SimpleDateFormat("yyyy/MM/dd").format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.remindersTimeInput.text = SimpleDateFormat("hh:mm a").format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+
         binding.remindersDateInput.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val monthOfYear = calendar.get(Calendar.MONTH)
-            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
             val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
@@ -119,8 +123,6 @@ class RemindersFragment : Fragment() {
                     "$stringTime" }, hour, minute, false
             ).show()
         }
-
-
 
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(this.fragmentManager!!, "show")

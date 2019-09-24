@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -85,7 +86,6 @@ class CalendarMonthFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
 
         val daysOfWeek = daysOfWeekFromLocale()
         val currentMonth = YearMonth.now()
