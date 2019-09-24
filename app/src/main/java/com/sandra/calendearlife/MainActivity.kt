@@ -57,6 +57,10 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private val preferences =
+        MyApplication.instance.
+            getSharedPreferences("DarkMode", Context.MODE_PRIVATE)
+
     lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
@@ -92,6 +96,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @TargetApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (preferences.getString("status", null) == "dark") {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme)
@@ -178,8 +188,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             )
 
             alarmManager.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, Timestamp.now().seconds * 1000 + 10000,
-                AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent
+                AlarmManager.RTC_WAKEUP, timestampInitialDate.seconds * 1000,
+                AlarmManager.INTERVAL_DAY, pendingIntent
             )
             Log.i("sandraaa", "alarm set success")
 
@@ -272,14 +282,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (isChecked) {
 
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                preferences.edit().putString("status", "dark").apply()
                 restartApp()
 
-                actionView.isChecked = true
+
                 Log.d("sandraa", "change mode")
             } else if ( !isChecked ) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                preferences.edit().putString("status", "light").apply()
                 restartApp()
-                actionView.isChecked = false
+
             }
         }
     }
