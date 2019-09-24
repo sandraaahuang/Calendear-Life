@@ -158,17 +158,21 @@
         <EditText
                 android:id="@+id/remindersNoteInput"
                 android:textColorHint="?attr/textcolor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:hint="@string/add_note"
                 android:fontFamily="@font/noto_sans"
                 android:textSize="@dimen/normal_text_size"
+                android:gravity="top"
+                android:ellipsize="end"
                 android:background="@null"
                 android:textColor="?attr/totalB2W"
                 app:layout_constraintStart_toEndOf="@+id/noteIcon"
                 android:layout_marginStart="8dp"
                 app:layout_constraintTop_toTopOf="@+id/noteIcon"
-                app:layout_constraintBottom_toBottomOf="@+id/noteIcon"/>
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/saveText"/>
 
         <Button
                 android:id="@+id/saveText"

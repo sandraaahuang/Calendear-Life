@@ -63,10 +63,10 @@
     <string name="every_week">每週</string>
     <string name="every_month">每月</string>
     <string name="every_year">每年</string>
-    <string name="title">標題：</string>
-    <string name="note_">註記：</string>
-    <string name="target_date_">目標日：</string>
-    <string name="remind_date_">提醒日：</string>
+    <string name="title">標題</string>
+    <string name="note_">註記</string>
+    <string name="target_date_">目標日</string>
+    <string name="remind_date_">提醒日</string>
     <string name="home_">主頁</string>
     <string name="month_">月曆</string>
     <string name="sync_your_calendar_">更新 Google Calendar 事件</string>
