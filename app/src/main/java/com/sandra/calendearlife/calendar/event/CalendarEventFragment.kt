@@ -94,9 +94,15 @@ class CalendarEventFragment : Fragment() {
         val year = calendar.get(Calendar.YEAR)
         val monthOfYear = calendar.get(Calendar.MONTH)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
+
+        binding.beginDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.endDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.remindersDateInput.text = simpleDateFormat.format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.beginTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.endTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.remindersTimeInput.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds*1000))
 
         binding.beginDate.setOnClickListener {
 
@@ -130,16 +136,6 @@ class CalendarEventFragment : Fragment() {
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
 
-            binding.remindersDateInput.text = "${year}/${monthOfYear+1}/$dayOfMonth"
-            binding.remindersTimeInput.text = "$hour:$minute ${getString(R.string.am)}"
-
-            TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
-                val stringTime = timeFormat.format(date)
-                binding.remindersTimeInput.text =
-                    "$stringTime" }, hour, minute, false
-            ).show()
 
             val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener

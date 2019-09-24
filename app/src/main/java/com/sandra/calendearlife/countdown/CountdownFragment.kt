@@ -53,12 +53,16 @@ class CountdownFragment : Fragment() {
 
         binding.addCountdownRecyclerView.adapter = addCountdownAdapter
 
-        addCountdownAdapter.notifyDataSetChanged()
         val cal = Calendar.getInstance()
+        val y = cal.get(Calendar.YEAR)
+        val m = cal.get(Calendar.MONTH)
+        val d = cal.get(Calendar.DAY_OF_MONTH)
+
+        binding.countdownDateInput.text = SimpleDateFormat("yyyy/MM/dd").format(Date(Timestamp.now().seconds*1000))
+
+        addCountdownAdapter.notifyDataSetChanged()
+
         binding.editCountdownLayout.setOnClickListener {
-            val y = cal.get(Calendar.YEAR)
-            val m = cal.get(Calendar.MONTH)
-            val d = cal.get(Calendar.DAY_OF_MONTH)
 
             val datepickerdialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
