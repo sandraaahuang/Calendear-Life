@@ -160,16 +160,19 @@
         <EditText
                 android:id="@+id/locationInput"
                 android:background="@null"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:hint="@string/add_location"
                 android:textColorHint="?attr/textcolor"
                 android:fontFamily="@font/noto_sans"
                 android:textColor="?attr/totalB2W"
                 android:textSize="@dimen/normal_text_size"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintTop_toTopOf="@+id/locationIcon"
                 app:layout_constraintBottom_toBottomOf="@+id/locationIcon"
-                app:layout_constraintStart_toEndOf="@+id/locationIcon" android:layout_marginStart="16dp"/>
+                app:layout_constraintStart_toEndOf="@+id/locationIcon" android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"/>
 
         <View
                 android:id="@+id/view_spacing_line3"
@@ -184,19 +187,19 @@
                 android:id="@+id/noteInput"
                 android:background="@null"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:hint="@string/add_note"
-                android:maxLines="1"
+                android:gravity="top"
                 android:ellipsize="end"
                 android:textColorHint="?attr/textcolor"
                 android:fontFamily="@font/noto_sans"
                 android:textColor="?attr/totalB2W"
                 android:textSize="@dimen/normal_text_size"
                 app:layout_constraintTop_toTopOf="@+id/noteIcon"
-                app:layout_constraintBottom_toBottomOf="@+id/noteIcon"
                 app:layout_constraintStart_toEndOf="@+id/noteIcon" android:layout_marginStart="16dp"
-                app:layout_constraintVertical_bias="0.0" android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/saveText"/>
         <ImageView
                 android:id="@+id/noteIcon"
                 android:tint="?attr/drawableTint"

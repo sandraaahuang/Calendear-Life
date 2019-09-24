@@ -63,10 +63,10 @@
     <string name="every_week">Every week</string>
     <string name="every_month">Every month</string>
     <string name="every_year">Every year</string>
-    <string name="title">Title :</string>
-    <string name="note_">Note :</string>
-    <string name="target_date_">Target Date :</string>
-    <string name="remind_date_">Remind Date :</string>
+    <string name="title">Title</string>
+    <string name="note_">Note</string>
+    <string name="target_date_">Target Date</string>
+    <string name="remind_date_">Remind Date</string>
     <string name="home_">Home</string>
     <string name="month_">Month</string>
     <string name="sync_your_calendar_">Sync your Calendar</string>

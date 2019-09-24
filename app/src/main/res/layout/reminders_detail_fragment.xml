@@ -120,11 +120,12 @@
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintTop_toBottomOf="@+id/view_spacing_line2" android:layout_marginTop="16dp">
+                        app:layout_constraintTop_toBottomOf="@+id/view_spacing_line2" android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/deleteButton2">
 
                     <TextView
                             android:text="@string/note"
@@ -138,14 +139,17 @@
                     <EditText
                             android:text="@{viewModel.selectedItem.note}"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:background="@null"
                             android:textSize="@dimen/normal_text_size"
+                            android:gravity="top"
+                            android:ellipsize="end"
                             android:textColor="?attr/textcolor"
                             android:id="@+id/editText_remindNote"
                             app:layout_constraintStart_toStartOf="@+id/remindNote" android:layout_marginEnd="16dp"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/remindNote" android:layout_marginTop="8dp"/>
+                            app:layout_constraintTop_toBottomOf="@+id/remindNote" android:layout_marginTop="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <Button
