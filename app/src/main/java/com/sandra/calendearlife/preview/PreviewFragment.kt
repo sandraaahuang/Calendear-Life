@@ -14,6 +14,7 @@ import android.widget.RemoteViews
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearSnapHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -85,6 +86,10 @@ class PreviewFragment : Fragment() {
         images[3] = R.drawable.preview_photo_mode
 
         binding.recyclerView.adapter = PreviewImageAdapter(images)
+
+        LinearSnapHelper().apply {
+            attachToRecyclerView(binding.recyclerView)
+        }
 
         val recyclerIndicator = binding.indicator
         recyclerIndicator.attachToRecyclerView(binding.recyclerView)
