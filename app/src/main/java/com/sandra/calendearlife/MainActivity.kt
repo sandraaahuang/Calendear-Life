@@ -3,7 +3,10 @@ package com.sandra.calendearlife
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.*
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Color
@@ -33,9 +36,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
-import androidx.work.Configuration
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
@@ -52,7 +52,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 

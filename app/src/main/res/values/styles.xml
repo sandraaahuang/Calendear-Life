@@ -22,6 +22,7 @@
         <item name="totalWhite2Black">@color/white</item>
         <item name="totalB2W">@color/black</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
 
     </style>
 
@@ -47,6 +48,7 @@
         <item name="totalWhite2Black">@color/black</item>
         <item name="totalB2W">@color/white</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
