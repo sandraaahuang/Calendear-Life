@@ -258,11 +258,14 @@ class CalendarEventFragment : Fragment() {
                 }
 
                 Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
-                Handler().postDelayed({
-                    findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
-                },3000)
             }
         }
+
+        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
+            }
+        })
         
         return binding.root
     }

@@ -15,6 +15,8 @@ import com.sandra.calendearlife.util.UserManager
 import android.provider.CalendarContract.Calendars
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
@@ -25,6 +27,11 @@ import java.util.*
 
 class CalendarEventViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
+
+    private var _updateCompleted = MutableLiveData<Boolean>()
+
+    val updateCompleted: LiveData<Boolean>
+        get() = _updateCompleted
 
     fun writeItem(item: Any, countdown: Any, reminder: Any) {
 
@@ -177,6 +184,9 @@ class CalendarEventViewModel : ViewModel() {
                                 }
                             }
                     }
+            }
+            .addOnCompleteListener {
+                _updateCompleted.value = true
             }
     }
 

@@ -161,13 +161,15 @@ class RemindersFragment : Fragment() {
                 binding.remindersTitleInput.setHintTextColor(resources.getColor(R.color.delete_red))
             } else {
                 viewModel.writeItem(calendar,reminders)
-
                 Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
-                Handler().postDelayed({
-                    findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-                },3000)
             }
         }
+
+        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+            }
+        })
 
         return binding.root
     }

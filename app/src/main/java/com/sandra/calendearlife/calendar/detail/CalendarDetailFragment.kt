@@ -177,9 +177,6 @@ class CalendarDetailFragment : Fragment() {
             }
 
             Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({findNavController().navigate(NavigationDirections
-                .actionGlobalCalendarMonthFragment())}, 3000)
-
         }
 
         binding.saveButton.setOnClickListener {
@@ -196,14 +193,7 @@ class CalendarDetailFragment : Fragment() {
                 "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
             )
 
-            var updateCalendar = hashMapOf(
-                "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
-                "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
-                "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
-                "title" to "${binding.detailTitleInput.text}",
-                "note" to "${binding.noteInput.text}",
-                "location" to "${binding.locationInput.text}"
-            )
+            var updateCalendar: HashMap<String, Any>
 
             var updateCountdown = hashMapOf(
                 "title" to "${binding.detailTitleInput.text}",
@@ -360,9 +350,14 @@ class CalendarDetailFragment : Fragment() {
             }
 
             Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({findNavController().navigate(NavigationDirections
-                .actionGlobalCalendarMonthFragment())}, 3000)
+
+
         }
+        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
+            }
+        })
 
 
 

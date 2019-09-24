@@ -101,17 +101,19 @@ class RemindersDetailFragment : Fragment() {
             viewModel.updateItem(updateItem, calendarItem, reminders.documentID)
 
             Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({findNavController().navigate(NavigationDirections
-                .actionGlobalHomeFragment())}, 3000)
         }
 
         binding.deleteButton2.setOnClickListener {
             viewModel.deleteItem(reminders.documentID)
-
             Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({findNavController().navigate(NavigationDirections
-                .actionGlobalHomeFragment())}, 3000)
         }
+
+        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections
+                    .actionGlobalHomeFragment())
+            }
+        })
 
         return binding.root
     }

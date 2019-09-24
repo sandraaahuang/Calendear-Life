@@ -76,22 +76,20 @@ class CountdownDetailFragment : Fragment() {
             )
 
             viewModel.updateItem(updateItem,calendarItem, countdown.documentID)
-            Log.d("sandraaa", "clickkk")
-
             Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({findNavController().navigate(NavigationDirections
-                .actionGlobalHomeFragment())}, 3000)
-
         }
 
         binding.deleteButton.setOnClickListener {
 
             viewModel.deleteItem(countdown.documentID)
-
             Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
-            Handler().postDelayed({findNavController().navigate(NavigationDirections
-                .actionGlobalHomeFragment())}, 3000)
         }
+        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections
+                    .actionGlobalHomeFragment())
+            }
+        })
 
         return binding.root
     }

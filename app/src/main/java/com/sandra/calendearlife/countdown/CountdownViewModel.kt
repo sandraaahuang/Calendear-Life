@@ -25,6 +25,11 @@ class CountdownViewModel : ViewModel() {
     val liveCountdown: LiveData<List<Countdown>>
         get() = _liveCountdown
 
+    private var _updateCompleted = MutableLiveData<Boolean>()
+
+    val updateCompleted: LiveData<Boolean>
+        get() = _updateCompleted
+
     init {
         getItem()
     }
@@ -77,6 +82,9 @@ class CountdownViewModel : ViewModel() {
                             .document(countdownID.id)
                             .update("documentID", countdownID.id)
                     }
+            }
+            .addOnCompleteListener {
+                _updateCompleted.value = true
             }
     }
 

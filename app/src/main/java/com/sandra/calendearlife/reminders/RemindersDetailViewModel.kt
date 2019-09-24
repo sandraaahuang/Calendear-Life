@@ -18,6 +18,11 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
     val selectedItem: LiveData<Reminders>
         get() = _selectedItem
 
+    private var _updateCompleted = MutableLiveData<Boolean>()
+
+    val updateCompleted: LiveData<Boolean>
+        get() = _updateCompleted
+
     init {
         _selectedItem.value = reminders
     }
@@ -31,7 +36,7 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
             .get()
             .addOnSuccessListener { documents ->
 
-                for (calendar in documents) {
+                for ((index, calendar) in documents.withIndex()) {
 
                     // get update reminder item
                     db.collection("data")
@@ -62,6 +67,10 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
                                     .update(calendarItem)
                             }
                         }
+
+                    if (index == documents.size() -1) {
+                        _updateCompleted.value = true
+                    }
                 }
             }
     }
@@ -76,7 +85,7 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
             .get()
             .addOnSuccessListener { documents ->
 
-                for (calendar in documents) {
+                for ((index, calendar) in documents.withIndex()) {
 
                     // delete selected deleted item
                     db.collection("data")
@@ -107,6 +116,10 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
 
                             }
                         }
+
+                    if (index == documents.size() -1) {
+                        _updateCompleted.value = true
+                    }
                 }
             }
     }
