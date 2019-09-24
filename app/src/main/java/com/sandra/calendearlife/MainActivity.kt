@@ -542,7 +542,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         builder.setTitle(getString(R.string.language))
         builder.setSingleChoiceItems(listItem, -1) { dialogInterface, i ->
             if (i == 0) {
-                setLocale("zh")
+                setLocale("zh-rTW")
                 restartApp()
             } else if (i ==1 ) {
                 setLocale("en")
@@ -556,8 +556,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setLocale (lang: String) {
-        val locale = Locale(lang)
+        var locale = Locale(lang)
         Locale.setDefault(locale)
+        if (lang == "zh-rTW") {
+            locale = Locale.TAIWAN
+        }
         val config = android.content.res.Configuration()
         config.locale = locale
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)

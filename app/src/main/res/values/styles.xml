@@ -57,7 +57,17 @@
 
     <style name="NavigationView">
         <item name="android:textColorSecondary">?attr/textcolor</item>
+    </style>
 
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">?attr/totalB2W</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">?attr/toolbarText</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">?attr/toolbarText</item>
     </style>
 
     <style name="MessageDialog">
