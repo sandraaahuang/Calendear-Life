@@ -25,6 +25,11 @@ class RemindersViewModel : ViewModel() {
     val liveReminders: LiveData<List<Reminders>>
         get() = _liveReminders
 
+    private var _updateCompleted = MutableLiveData<Boolean>()
+
+    val updateCompleted: LiveData<Boolean>
+        get() = _updateCompleted
+
     init {
         getItem()
     }
@@ -77,6 +82,9 @@ class RemindersViewModel : ViewModel() {
                             .document(reminderID.id)
                             .update("documentID", reminderID.id)
                     }
+            }
+            .addOnCompleteListener {
+                _updateCompleted.value = true
             }
     }
 

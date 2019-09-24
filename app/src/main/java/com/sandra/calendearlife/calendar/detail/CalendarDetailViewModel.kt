@@ -20,9 +20,14 @@ import android.Manifest.permission.WRITE_CALENDAR
 import com.sandra.calendearlife.MainActivity
 import androidx.core.content.ContextCompat
 import android.content.ContentValues
+import android.os.Handler
 import android.widget.EditText
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
-
+import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidViewModel(app) {
@@ -32,6 +37,11 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
     val selectedItem: LiveData<Calendar>
         get() = _selectedItem
+
+    private var _updateCompleted = MutableLiveData<Boolean>()
+
+    val updateCompleted: LiveData<Boolean>
+        get() = _updateCompleted
 
     init {
         _selectedItem.value = calendar
@@ -50,7 +60,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
             .get()
             .addOnSuccessListener { documents ->
 
-                for (calendar in documents) {
+                for ((index, calendar) in documents.withIndex()) {
 
                     // update countdowns
                     db.collection("data")
@@ -101,8 +111,16 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .collection("calendar")
                         .document(calendar.id)
                         .update(calendarItem)
+
+
+                    if (index == documents.size() -1) {
+                        _updateCompleted.value = true
+                    }
                 }
+
+
             }
+
 
 
     }
@@ -118,7 +136,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
             .get()
             .addOnSuccessListener { documents ->
 
-                for (calendar in documents) {
+                for ((index, calendar) in documents.withIndex()) {
 
                     // delete countdowns
                     db.collection("data")
@@ -169,6 +187,10 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .collection("calendar")
                         .document(calendar.id)
                         .delete()
+
+                    if (index == documents.size() -1) {
+                        _updateCompleted.value = true
+                    }
                 }
             }
 

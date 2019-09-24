@@ -122,11 +122,14 @@ class CountdownFragment : Fragment() {
 
                 viewModel.writeItem(calendar,countdown)
                 Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
-                Handler().postDelayed({
-                    findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-                },3000)
             }
         }
+
+        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+            }
+        })
 
         val recyclerIndicator = binding.indicator
         recyclerIndicator.attachToRecyclerView(binding.addCountdownRecyclerView)
