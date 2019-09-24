@@ -70,6 +70,7 @@
                 android:layout_width="0dp"
                 android:fontFamily="@font/noto_sans"
                 android:textSize="@dimen/normal_text_size"
+                android:theme="@style/SCBSwitch"
                 android:textColor="?attr/totalB2W"
                 android:checked="false"
                 android:layout_height="wrap_content"

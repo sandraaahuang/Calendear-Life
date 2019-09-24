@@ -39,14 +39,14 @@
         <menu>
             <item
                     android:id="@+id/addCalendar"
-                    android:icon="@drawable/icon_add_calendar"
+                    android:icon="@drawable/icon_add_calendar_h"
                     android:title="@string/add_calendar"/>
             <item
                     android:id="@+id/addReminder"
-                    android:icon="@drawable/icon_add_reminder"
+                    android:icon="@drawable/icon_add_reminder_h"
                     android:title="@string/add_reminder"/>
             <item android:id="@+id/addCountdown"
-                  android:icon="@drawable/icon_add_countdown"
+                  android:icon="@drawable/icon_add_countdown_h"
                   android:title="@string/add_countdown"/>
         </menu>
     </item>
@@ -57,6 +57,7 @@
             <item
                     android:id="@+id/changeMode"
                     android:title="@string/dark_mode"
+                    android:theme="@style/SCBSwitch"
                     app:actionViewClass="androidx.appcompat.widget.SwitchCompat"/>
 
             <item
