@@ -34,6 +34,10 @@ class CalenderMonthViewModel : ViewModel() {
     val liveCalendar: LiveData<List<com.sandra.calendearlife.data.Calendar>>
         get() = _liveCalendar
 
+    val _liveAllCalendar = MutableLiveData<List<com.sandra.calendearlife.data.Calendar>>()
+    val liveAllCalendar: LiveData<List<com.sandra.calendearlife.data.Calendar>>
+        get() = _liveAllCalendar
+
     private val _navigateToCalendarProperty = MutableLiveData<com.sandra.calendearlife.data.Calendar>()
 
     val navigateToCalendarProperty: LiveData<com.sandra.calendearlife.data.Calendar>
@@ -45,6 +49,10 @@ class CalenderMonthViewModel : ViewModel() {
 
     fun displayCalendarDetailsComplete() {
         _navigateToCalendarProperty.value = null
+    }
+
+    init {
+        queryAll()
     }
 
     // get user's today calendar
@@ -89,6 +97,49 @@ class CalenderMonthViewModel : ViewModel() {
 
                 }
                 _liveCalendar.value = calendarItem
+            }
+    }
+
+    fun queryAll() {
+
+        db.collection("data")
+            .document(UserManager.id!!)
+            .collection("calendar")
+            .get()
+            .addOnSuccessListener { documents ->
+                // put today calendar into recyclerView
+                val calendarItem = ArrayList<com.sandra.calendearlife.data.Calendar>()
+                for (calendar in documents) {
+                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
+
+                    // need to transfer date from timestamp into string
+                    val date = (calendar.data["date"] as Timestamp)
+                    val setDate = (calendar.data["setDate"] as Timestamp)
+                    val beginDate = (calendar.data["beginDate"] as Timestamp)
+                    val endDate = (calendar.data["endDate"] as Timestamp)
+
+
+                    calenderAdd = com.sandra.calendearlife.data.Calendar(
+                        calendar.data["color"].toString(),
+                        simpleDateFormat.format(date.seconds * 1000),
+                        simpleDateFormat.format(setDate.seconds * 1000),
+                        simpleDateTimeFormat.format(beginDate.seconds * 1000),
+                        simpleDateTimeFormat.format(endDate.seconds * 1000),
+                        calendar.data["title"].toString(),
+                        calendar.data["note"].toString(),
+                        calendar.data["isAllDay"].toString().toBoolean(),
+                        calendar.data["hasLocation"].toString().toBoolean(),
+                        calendar.data["location"].toString(),
+                        calendar.data["hasReminders"].toString().toBoolean(),
+                        calendar.data["hasCountdown"].toString().toBoolean(),
+                        calendar.data["documentID"].toString(),
+                        calendar.data["frequency"].toString(),
+                        calendar.data["fromGoogle"].toString().toBoolean()
+                    )
+                    calendarItem.add(calenderAdd)
+
+                }
+                _liveAllCalendar.value = calendarItem
             }
     }
 }

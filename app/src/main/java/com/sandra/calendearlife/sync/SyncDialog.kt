@@ -30,6 +30,7 @@ import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.DialogSyncBinding
 import com.sandra.calendearlife.util.UserManager
 import tr.com.harunkor.gifviewplayer.GifMovieView
+import java.security.Permission
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -66,6 +67,7 @@ class SyncDialog : AppCompatDialogFragment() {
     private fun requestPermission() {
         ActivityCompat.requestPermissions((activity as MainActivity),
             arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1)
+
     }
 
     fun query_calendar() {
