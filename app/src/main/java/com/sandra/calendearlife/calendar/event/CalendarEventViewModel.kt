@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.util.UserManager
 import android.provider.CalendarContract.Calendars
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -28,10 +28,12 @@ import android.os.Handler
 import android.provider.CalendarContract
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
@@ -251,8 +253,16 @@ class CalendarEventFragment : Fragment() {
                     val gTitle = "${binding.eventTitleInput.text}"
                     val gNote = "${binding.noteInput.text}"
 
-                    viewModel.writeGoogle(gBeginDate, gEndDate, gNote, gTitle,
-                        item, countdown, reminders)
+                    if (ContextCompat.checkSelfPermission(this.context!!,
+                            Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions((activity as MainActivity),
+                            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1)
+                    } else {
+
+                        viewModel.writeGoogle(gBeginDate, gEndDate, gNote, gTitle,
+                            item, countdown, reminders)
+                    }
+
                 }
 
                  else {
