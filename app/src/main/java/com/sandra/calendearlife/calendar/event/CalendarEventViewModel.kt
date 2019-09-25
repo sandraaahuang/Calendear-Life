@@ -33,8 +33,13 @@ class CalendarEventViewModel : ViewModel() {
     val updateCompleted: LiveData<Boolean>
         get() = _updateCompleted
 
-    fun writeItem(item: Any, countdown: Any, reminder: Any) {
+    private var _clicked = MutableLiveData<Boolean>()
 
+    val clicked: LiveData<Boolean>
+        get() = _clicked
+
+    fun writeItem(item: Any, countdown: Any, reminder: Any) {
+        _clicked.value = true
         // get all data from user at first
         db.collection("data")
             .document(UserManager.id!!)
@@ -191,10 +196,11 @@ class CalendarEventViewModel : ViewModel() {
     }
 
     fun writeGoogle(
+
         gBeginDate: Timestamp, gEndDate: Timestamp, gNote: String, gTitle: String,
         item: Any, countdown: Any, reminders: Any
     ) {
-
+        _clicked.value = true
         val EVENT_PROJECTION = arrayOf(
             Calendars._ID, // 0 calendar id
             Calendars.ACCOUNT_NAME, // 1 account name

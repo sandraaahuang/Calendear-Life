@@ -55,7 +55,7 @@ class CalendarMonthFragment : Fragment() {
 
     private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMMM")
     private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy")
-    private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy MM d")
+    private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy/MM/d")
 
 
     private val viewModel: CalenderMonthViewModel by lazy {

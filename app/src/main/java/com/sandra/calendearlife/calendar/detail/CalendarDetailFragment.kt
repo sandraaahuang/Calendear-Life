@@ -183,6 +183,7 @@ class CalendarDetailFragment : Fragment() {
         }
 
         binding.saveButton.setOnClickListener {
+            Log.d("sandraaa", "clickkkk")
 
             var beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
             var endDate = "${binding.endDate.text} ${binding.endTime.text}"
@@ -356,9 +357,17 @@ class CalendarDetailFragment : Fragment() {
 
 
         }
+
         viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
+            }
+        })
+
+        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                binding.saveButton.isClickable = false
+                binding.deleteButton.isClickable = false
             }
         })
 

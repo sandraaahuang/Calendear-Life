@@ -43,6 +43,11 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     val updateCompleted: LiveData<Boolean>
         get() = _updateCompleted
 
+    private var _clicked = MutableLiveData<Boolean>()
+
+    val clicked: LiveData<Boolean>
+        get() = _clicked
+
     init {
         _selectedItem.value = calendar
     }
@@ -52,6 +57,8 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                    calendarItem: HashMap<String, Any>,
                    countdown: HashMap<String, Any>,
                    updateRemind: HashMap<String, Any>) {
+
+        _clicked.value = true
 
         db.collection("data")
             .document(UserManager.id!!)
@@ -128,7 +135,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
     //delete item
     fun deleteItem(documentID: String) {
-
+        _clicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
@@ -198,7 +205,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     }
 
     fun updateEvent(eventId: String, title: String, note: String, beginDate: Timestamp, endDate: Timestamp) {
-
+        _clicked.value = true
         val targetEventId = eventId
         val eventId = java.lang.Long.parseLong(targetEventId)
 
@@ -224,7 +231,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     }
 
     fun deleteEvent(eventId: String) {
-
+        _clicked.value = true
         val targetEventId = eventId
         val eventId = java.lang.Long.parseLong(targetEventId)
 

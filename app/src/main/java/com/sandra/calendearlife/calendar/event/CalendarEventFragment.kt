@@ -269,6 +269,12 @@ class CalendarEventFragment : Fragment() {
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
         })
+
+        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                binding.saveText.isClickable = false
+            }
+        })
         
         return binding.root
     }
