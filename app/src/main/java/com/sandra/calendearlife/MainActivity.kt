@@ -45,6 +45,7 @@ import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 import com.sandra.calendearlife.util.CurrentFragmentType
+import com.sandra.calendearlife.util.FragmentType
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.util.getString
 import java.text.SimpleDateFormat
@@ -490,31 +491,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
 
             R.id.month -> {
+                putType("calendar")
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
             R.id.home -> {
+                putType("home")
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHomeFragment())
             }
             R.id.addCalendar -> {
+                putType("calendar")
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarEventFragment())
             }
             R.id.addCountdown -> {
+                putType("home")
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCountdownFragment())
             }
             R.id.addReminder -> {
+                putType("home")
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalRemindersFragment())
             }
             R.id.historyReminder -> {
+                putType("home")
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryReminders())
             }
 
             R.id.historyCountdown -> {
+                putType("home")
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryCountdown2())
             }
@@ -531,6 +539,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun putType (type: String) {
+        val preferences =
+            MyApplication.instance.
+                getSharedPreferences("fragment", Context.MODE_PRIVATE)
+        preferences.edit().putString("type", type).apply()
+        preferences.getString("type","")
+        FragmentType.type = type
+        Log.d("sandraaa", "type = ${FragmentType.type}")
     }
 
     private fun showChangeLanguageList() {

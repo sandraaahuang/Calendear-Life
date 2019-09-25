@@ -51,9 +51,10 @@
                 android:layout_marginEnd="16dp"/>
         <ImageView
                 android:id="@+id/removeIcon"
-                android:tint="?attr/drawableTint"
+                android:background="@drawable/icon_remove"
+                android:backgroundTint="?attr/totalB2W"
                 android:layout_width="16dp"
-                android:layout_height="16dp" app:srcCompat="@drawable/icon_remove"
+                android:layout_height="16dp"
                 android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"/>
 
@@ -90,14 +91,15 @@
                     app:layout_constraintBottom_toBottomOf="@+id/timeIcon"/>
             <TextView
                     android:text="@string/_2019_09_06_friday"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="?attr/textcolor"
                     android:textSize="@dimen/normal_text_size"
                     android:id="@+id/endDate"
                     app:layout_constraintStart_toStartOf="@+id/beginDate" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/beginDate"/>
+                    app:layout_constraintTop_toBottomOf="@+id/beginDate" android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/endTime"/>
             <TextView
                     android:text="@string/_00_00_am"
                     android:layout_width="wrap_content"
@@ -111,14 +113,15 @@
                     app:layout_constraintBottom_toBottomOf="@+id/endDate"/>
             <TextView
                     android:text="@string/_2019_09_06_friday"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="?attr/textcolor"
                     android:textSize="@dimen/normal_text_size"
                     android:id="@+id/beginDate"
                     app:layout_constraintStart_toStartOf="@+id/allDaySwitch" android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/timeIcon"/>
+                    app:layout_constraintTop_toBottomOf="@+id/timeIcon" android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/beginTime"/>
             <TextView
                     android:text="@string/_00_00_am"
                     android:layout_width="wrap_content"

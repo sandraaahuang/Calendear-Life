@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.RemindersDetailFragmentBinding
+import com.sandra.calendearlife.dialog.DiscardDialog
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -114,6 +116,17 @@ class RemindersDetailFragment : Fragment() {
                     .actionGlobalHomeFragment())
             }
         })
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                DiscardDialog().show(this@RemindersDetailFragment.fragmentManager!!, "show")
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+
+        binding.removeIcon.setOnClickListener {
+            DiscardDialog().show(this.fragmentManager!!, "show")
+        }
 
         return binding.root
     }

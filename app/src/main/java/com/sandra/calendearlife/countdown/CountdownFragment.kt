@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -74,6 +75,14 @@ class CountdownFragment : Fragment() {
             )
             datepickerdialog.show()
         }
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                DiscardDialog().show(this@CountdownFragment.fragmentManager!!, "show")
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(this.fragmentManager!!, "show")

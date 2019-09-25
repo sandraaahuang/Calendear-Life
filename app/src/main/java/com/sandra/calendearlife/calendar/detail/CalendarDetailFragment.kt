@@ -10,14 +10,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.CalendarDetailFragmentBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
+import kotlinx.android.synthetic.main.dialog_discard.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -193,7 +196,7 @@ class CalendarDetailFragment : Fragment() {
                 "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
             )
 
-            var updateCalendar: HashMap<String, Any>
+            val updateCalendar: HashMap<String, Any>
 
             var updateCountdown = hashMapOf(
                 "title" to "${binding.detailTitleInput.text}",
@@ -360,6 +363,12 @@ class CalendarDetailFragment : Fragment() {
         })
 
 
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                DiscardDialog().show(this@CalendarDetailFragment.fragmentManager!!, "show")
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(this.fragmentManager!!, "show")

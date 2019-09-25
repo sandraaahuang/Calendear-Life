@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.DialogDiscardBinding
+import com.sandra.calendearlife.util.CurrentFragmentType
+import com.sandra.calendearlife.util.FragmentType
 
 class DiscardDialog : BottomSheetDialogFragment() {
 
@@ -28,8 +31,19 @@ class DiscardDialog : BottomSheetDialogFragment() {
         }
 
         binding.discardLayout.setOnClickListener {
-            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-            this.dismiss()}
+
+            when (FragmentType.type) {
+                "calendar" -> {
+                    findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
+                    this.dismiss()
+                }
+                else -> {
+                    findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+                    this.dismiss()
+                }
+            }
+
+        }
 
         return binding.root
     }
