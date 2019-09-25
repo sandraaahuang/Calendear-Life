@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
@@ -89,6 +90,52 @@ class CalendarMonthFragment : Fragment() {
                 viewModel.displayCalendarDetailsComplete()
             }
         })
+
+        // floating action button
+        val fabOpen = AnimationUtils.loadAnimation(this.context, R.anim.fab_open)
+        val fabClose = AnimationUtils.loadAnimation(this.context, R.anim.fab_close)
+        val rotateForward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_forward)
+        val rotateBackward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_backward)
+        var isOpen = false
+
+        binding.fabAdd.setOnClickListener {
+
+            isOpen = if (isOpen) {
+
+                binding.fabAdd.startAnimation(rotateBackward)
+                binding.remindersFab.startAnimation(fabClose)
+                binding.countdownsFab.startAnimation(fabClose)
+                binding.calendarFab.startAnimation(fabClose)
+                binding.addReminderText.startAnimation(fabClose)
+                binding.addCountdownText.startAnimation(fabClose)
+                binding.addEventText.startAnimation(fabClose)
+                false
+
+            } else {
+                binding.fabAdd.startAnimation(rotateForward)
+                binding.remindersFab.startAnimation(fabOpen)
+                binding.countdownsFab.startAnimation(fabOpen)
+                binding.calendarFab.startAnimation(fabOpen)
+                binding.addReminderText.startAnimation(fabOpen)
+                binding.addCountdownText.startAnimation(fabOpen)
+                binding.addEventText.startAnimation(fabOpen)
+                true
+            }
+        }
+
+        binding.remindersFab.setOnClickListener {
+            putType("calendar")
+            findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
+        }
+        binding.countdownsFab.setOnClickListener {
+            putType("calendar")
+            findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
+        }
+
+        binding.calendarFab.setOnClickListener {
+            putType("calendar")
+            findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
+        }
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -194,20 +241,6 @@ class CalendarMonthFragment : Fragment() {
                     }
                 }
             }
-        }
-
-        remindersFab.setOnClickListener {
-            putType("home")
-            findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
-        }
-        countdownsFab.setOnClickListener {
-            putType("home")
-            findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
-        }
-
-        calendarFab.setOnClickListener {
-            putType("calendar")
-            findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
     }
 

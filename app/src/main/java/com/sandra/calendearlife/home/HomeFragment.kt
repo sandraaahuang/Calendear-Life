@@ -7,13 +7,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
 import com.sandra.calendearlife.util.FragmentType
 
@@ -60,6 +63,36 @@ class HomeFragment : Fragment() {
         recyclerIndicator.attachToRecyclerView(binding.countdownRecyclerView)
 
         // floating action button
+        val fabOpen = AnimationUtils.loadAnimation(this.context, R.anim.fab_open)
+        val fabClose = AnimationUtils.loadAnimation(this.context, R.anim.fab_close)
+        val rotateForward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_forward)
+        val rotateBackward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_backward)
+        var isOpen = false
+
+        binding.fabAdd.setOnClickListener {
+
+            isOpen = if (isOpen) {
+
+                binding.fabAdd.startAnimation(rotateBackward)
+                binding.remindersFab.startAnimation(fabClose)
+                binding.countdownsFab.startAnimation(fabClose)
+                binding.calendarFab.startAnimation(fabClose)
+                binding.addReminderText.startAnimation(fabClose)
+                binding.addCountdownText.startAnimation(fabClose)
+                binding.addEventText.startAnimation(fabClose)
+                false
+
+            } else {
+                binding.fabAdd.startAnimation(rotateForward)
+                binding.remindersFab.startAnimation(fabOpen)
+                binding.countdownsFab.startAnimation(fabOpen)
+                binding.calendarFab.startAnimation(fabOpen)
+                binding.addReminderText.startAnimation(fabOpen)
+                binding.addCountdownText.startAnimation(fabOpen)
+                binding.addEventText.startAnimation(fabOpen)
+                true
+            }
+        }
         binding.remindersFab.setOnClickListener {
             putType("home")
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
@@ -70,7 +103,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.calendarFab.setOnClickListener {
-            putType("calendar")
+            putType("home")
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
