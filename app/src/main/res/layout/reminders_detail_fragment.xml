@@ -44,8 +44,8 @@
                         android:textSize="@dimen/normal_text_size"
                         android:layout_marginTop="16dp"
                         app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        android:layout_marginStart="16dp" android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toStartOf="@+id/removeIcon"/>
                 <View
                         android:id="@+id/view_spacing_line"
                         android:layout_width="0dp"
@@ -181,6 +181,14 @@
                         app:layout_constraintTop_toTopOf="@+id/saveButton2"
                         app:layout_constraintBottom_toBottomOf="@+id/saveButton2"
                 />
+                <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:tint="?attr/totalB2W"
+                        app:srcCompat="@drawable/icon_remove"
+                        android:id="@+id/removeIcon" app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

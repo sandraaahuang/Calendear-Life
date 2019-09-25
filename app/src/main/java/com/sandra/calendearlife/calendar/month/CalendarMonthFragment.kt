@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -28,6 +29,8 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.sandra.calendearlife.*
 import com.sandra.calendearlife.databinding.CalendarMonthFragmentBinding
+import com.sandra.calendearlife.dialog.DiscardDialog
+import com.sandra.calendearlife.util.FragmentType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
 import kotlinx.android.synthetic.main.calendar_month_fragment.*
@@ -56,10 +59,20 @@ class CalendarMonthFragment : Fragment() {
     lateinit var binding: CalendarMonthFragmentBinding
 
     private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener {
+        putType("calendar")
         viewModel.displayCalendarDetails(it)
         Log.d("sandraaa", "click item = $it")
     })
 
+    private fun putType (type: String) {
+        val preferences =
+            MyApplication.instance.
+                getSharedPreferences("fragment", Context.MODE_PRIVATE)
+        preferences.edit().putString("type", type).apply()
+        preferences.getString("type","")
+        FragmentType.type = type
+        Log.d("sandraaa", "type = ${FragmentType.type}")
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -76,6 +89,13 @@ class CalendarMonthFragment : Fragment() {
                 viewModel.displayCalendarDetailsComplete()
             }
         })
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         return binding.root
 
@@ -177,13 +197,16 @@ class CalendarMonthFragment : Fragment() {
         }
 
         remindersFab.setOnClickListener {
+            putType("home")
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
         countdownsFab.setOnClickListener {
+            putType("home")
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
         calendarFab.setOnClickListener {
+            putType("calendar")
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
     }

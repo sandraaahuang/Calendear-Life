@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.CountdownDetailFragmentBinding
+import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.reminders.DetailViewModelFactory
 import com.sandra.calendearlife.reminders.RemindersDetailFragmentArgs
 import com.sandra.calendearlife.reminders.RemindersDetailViewModel
@@ -90,6 +92,17 @@ class CountdownDetailFragment : Fragment() {
                     .actionGlobalHomeFragment())
             }
         })
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                DiscardDialog().show(this@CountdownDetailFragment.fragmentManager!!, "show")
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+
+        binding.removeIcon.setOnClickListener {
+            DiscardDialog().show(this.fragmentManager!!, "show")
+        }
 
         return binding.root
     }

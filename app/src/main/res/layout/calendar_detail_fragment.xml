@@ -54,9 +54,10 @@
                         app:layout_constraintEnd_toStartOf="@+id/removeIcon"/>
                 <ImageView
                         android:id="@+id/removeIcon"
-                        android:tint="?attr/drawableTint"
+                        android:backgroundTint="?attr/totalB2W"
                         android:layout_width="16dp"
-                        android:layout_height="16dp" app:srcCompat="@drawable/icon_remove"
+                        android:layout_height="16dp"
+                        android:background="@drawable/icon_remove"
                         android:layout_marginBottom="8dp"
                         app:layout_constraintBottom_toTopOf="@+id/view_spacing_line2"
                         android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"

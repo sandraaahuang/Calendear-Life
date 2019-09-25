@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -123,6 +124,13 @@ class RemindersFragment : Fragment() {
                     "$stringTime" }, hour, minute, false
             ).show()
         }
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                DiscardDialog().show(this@RemindersFragment.fragmentManager!!, "show")
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(this.fragmentManager!!, "show")

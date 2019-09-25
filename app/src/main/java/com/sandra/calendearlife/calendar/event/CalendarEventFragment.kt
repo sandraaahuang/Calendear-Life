@@ -27,6 +27,7 @@ import android.database.Cursor
 import android.os.Handler
 import android.provider.CalendarContract
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -183,6 +184,12 @@ class CalendarEventFragment : Fragment() {
             ).show()
         }
 
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                DiscardDialog().show(this@CalendarEventFragment.fragmentManager!!, "show")
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         binding.removeIcon.setOnClickListener {
             DiscardDialog().show(fragmentManager!!, "bottom")
         }
