@@ -101,12 +101,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        if (preferences.getString("status", null) == "dark") {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
-
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.DarkTheme)
         }
@@ -115,10 +109,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         actionbar?.title = resources.getString(R.string.app_name)
         loadLocale()
 
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
 
         setupToolbar()
         sepupStatusBar()
@@ -282,6 +276,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val menuItem = binding.navView.menu.findItem(R.id.changeMode)
         val actionView = MenuItemCompat.getActionView(menuItem) as SwitchCompat
 
+        Log.d("sandraaa", "before switch check = ${binding.navView.menu.findItem(R.id.changeMode).isChecked}")
+
+        if (preferences.getString("status", null) == "dark") {
+
+            actionView.isChecked = true
+            Log.d("sandraaa", "after switch check = ${binding.navView.menu.findItem(R.id.changeMode).isChecked}")
+
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            Log.d("sandraaa", "after switch check = ${binding.navView.menu.findItem(R.id.changeMode).isChecked}")
+            actionView.isChecked = false
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+
         actionView.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
 
@@ -298,6 +307,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
         }
+
+
     }
 
     private fun requestPermission() {
@@ -536,6 +547,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.changeLanguage -> {
                 showChangeLanguageList()
+            }
+
+            R.id.changeMode -> {
+                return true
             }
         }
 
