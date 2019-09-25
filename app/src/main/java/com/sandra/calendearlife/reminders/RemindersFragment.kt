@@ -180,6 +180,11 @@ class RemindersFragment : Fragment() {
                 findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
             }
         })
+        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                binding.saveText.isClickable = false
+            }
+        })
 
         return binding.root
     }

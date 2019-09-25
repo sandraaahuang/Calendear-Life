@@ -116,6 +116,12 @@ class RemindersDetailFragment : Fragment() {
                     .actionGlobalHomeFragment())
             }
         })
+        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                binding.saveButton2.isClickable = false
+                binding.deleteButton2.isClickable = false
+            }
+        })
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

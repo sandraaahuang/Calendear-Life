@@ -30,6 +30,11 @@ class RemindersViewModel : ViewModel() {
     val updateCompleted: LiveData<Boolean>
         get() = _updateCompleted
 
+    private var _clicked = MutableLiveData<Boolean>()
+
+    val clicked: LiveData<Boolean>
+        get() = _clicked
+
     init {
         getItem()
     }
@@ -48,6 +53,7 @@ class RemindersViewModel : ViewModel() {
     }
 
     fun writeItem(calendar: Any, reminder: Any) {
+        _clicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")

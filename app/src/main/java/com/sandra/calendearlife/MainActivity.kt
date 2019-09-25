@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Color
 import android.os.Build
@@ -107,7 +108,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val actionbar = actionBar
         actionbar?.title = resources.getString(R.string.app_name)
+        val nowLanguage = Locale.getDefault().language
+
+        Log.d("sandraaa", "default language = ${Locale.getDefault().language}")
+
         loadLocale()
+        Log.d("sandraaa", "default language = ${Locale.getDefault().language}, nowlanguage = $nowLanguage")
+
+        if (Locale.getDefault().language == "" && nowLanguage == "zh") {
+            setLocale("zh-rTW")
+            Log.d("sandraaa", "default, ${Locale.getDefault().language}, $nowLanguage")
+        } else {
+            loadLocale()
+            Log.d("sandraaa", "normal, ${Locale.getDefault().language}, $nowLanguage")
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
@@ -271,7 +285,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             })
         }
-
 
         val menuItem = binding.navView.menu.findItem(R.id.changeMode)
         val actionView = MenuItemCompat.getActionView(menuItem) as SwitchCompat

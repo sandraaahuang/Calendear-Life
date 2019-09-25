@@ -23,13 +23,18 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
     val updateCompleted: LiveData<Boolean>
         get() = _updateCompleted
 
+    private var _clicked = MutableLiveData<Boolean>()
+
+    val clicked: LiveData<Boolean>
+        get() = _clicked
+
     init {
         _selectedItem.value = reminders
     }
 
     //update item
     fun updateItem(item: HashMap<String, Any>, calendarItem: HashMap<String, Any>, documentID: String) {
-
+        _clicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
@@ -78,7 +83,7 @@ class RemindersDetailViewModel(reminders: Reminders, app: Application) : Android
 
     //delete item
     fun deleteItem(documentID: String) {
-
+        _clicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")

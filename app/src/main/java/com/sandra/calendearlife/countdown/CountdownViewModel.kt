@@ -30,6 +30,11 @@ class CountdownViewModel : ViewModel() {
     val updateCompleted: LiveData<Boolean>
         get() = _updateCompleted
 
+    private var _clicked = MutableLiveData<Boolean>()
+
+    val clicked: LiveData<Boolean>
+        get() = _clicked
+
     init {
         getItem()
     }
@@ -48,6 +53,7 @@ class CountdownViewModel : ViewModel() {
     }
 
     fun writeItem(calendar: Any, countdown: Any) {
+        _clicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")

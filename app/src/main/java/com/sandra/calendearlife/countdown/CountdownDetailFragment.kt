@@ -93,6 +93,13 @@ class CountdownDetailFragment : Fragment() {
             }
         })
 
+        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                binding.saveButton.isClickable = false
+                binding.deleteButton.isClickable = false
+            }
+        })
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 DiscardDialog().show(this@CountdownDetailFragment.fragmentManager!!, "show")

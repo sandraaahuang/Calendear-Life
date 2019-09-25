@@ -144,6 +144,12 @@ class CountdownFragment : Fragment() {
             }
         })
 
+        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                binding.saveText.isClickable = false
+            }
+        })
+
         val recyclerIndicator = binding.indicator
         recyclerIndicator.attachToRecyclerView(binding.addCountdownRecyclerView)
 
