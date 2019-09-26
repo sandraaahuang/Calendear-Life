@@ -100,14 +100,14 @@ class RemindersDetailFragment : Fragment() {
             val remindDate = "${binding.remindDate.text} ${binding.remindTime.text}"
 
             val updateItem = hashMapOf(
-                "title" to "${binding.remindersTitle.text}",
-                "note" to "${binding.editTextRemindNote.text}",
+                "title" to "${binding.remindersTitle.text}".trim(),
+                "note" to "${binding.editTextRemindNote.text}".trim(),
                 "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
             )
 
             val calendarItem = hashMapOf(
-                "title" to "${binding.remindersTitle.text}",
-                "note" to "${binding.editTextRemindNote.text}",
+                "title" to "${binding.remindersTitle.text}".trim(),
+                "note" to "${binding.editTextRemindNote.text}".trim(),
                 "beginDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
                 "date" to Timestamp(dateTimeFormat.parse(remindDate).time)
             )

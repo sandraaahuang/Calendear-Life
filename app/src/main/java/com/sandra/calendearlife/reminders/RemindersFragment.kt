@@ -158,8 +158,8 @@ class RemindersFragment : Fragment() {
                 "beginDate" to Timestamp(parsedDate.time),
                 "endDate" to Timestamp(parsedDate.time),
                 "date" to Timestamp(parsed.time),
-                "title" to "${binding.remindersTitleInput.text}",
-                "note" to "${binding.remindersNoteInput.text}",
+                "title" to "${binding.remindersTitleInput.text}".trim(),
+                "note" to "${binding.remindersNoteInput.text}".trim(),
                 "hasReminders" to true,
                 "frequency" to RepeatDialog.value,
                 "fromGoogle" to false
@@ -167,11 +167,11 @@ class RemindersFragment : Fragment() {
 
             val reminders = hashMapOf(
                 "setDate" to FieldValue.serverTimestamp(),
-                "title" to "${binding.remindersTitleInput.text}",
+                "title" to "${binding.remindersTitleInput.text}".trim(),
                 "setRemindDate" to binding.setReminderswitch.isChecked,
                 "remindDate" to Timestamp(parsedDate.time),
                 "isChecked" to false,
-                "note" to "${binding.remindersNoteInput.text}",
+                "note" to "${binding.remindersNoteInput.text}".trim(),
                 "frequency" to RepeatDialog.value
             )
 

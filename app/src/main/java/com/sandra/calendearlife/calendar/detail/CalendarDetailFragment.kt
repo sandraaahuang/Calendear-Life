@@ -199,16 +199,16 @@ class CalendarDetailFragment : Fragment() {
 
 
             var updateRemind = hashMapOf(
-                "title" to "${binding.detailTitleInput.text}",
-                "note" to "${binding.noteInput.text}",
+                "title" to "${binding.detailTitleInput.text}".trim(),
+                "note" to "${binding.noteInput.text}".trim(),
                 "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
             )
 
             val updateCalendar: HashMap<String, Any>
 
             var updateCountdown = hashMapOf(
-                "title" to "${binding.detailTitleInput.text}",
-                "note" to "${binding.noteInput.text}",
+                "title" to "${binding.detailTitleInput.text}".trim(),
+                "note" to "${binding.noteInput.text}".trim(),
                 "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time)
             )
 
@@ -216,29 +216,29 @@ class CalendarDetailFragment : Fragment() {
 
                 "C02942" -> {
                     updateRemind = hashMapOf(
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
                         "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
                     updateCalendar = hashMapOf(
                         "date" to Timestamp(simpleDateFormat.parse(remindDate).time),
                         "beginDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
                         "endDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}")
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim())
 
                     viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
 
                 "100038" -> {
                     updateCountdown = hashMapOf(
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
                         "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
                     updateCalendar = hashMapOf(
                         "date" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
                         "beginDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
                         "endDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}")
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim())
 
                     viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
 
@@ -255,9 +255,9 @@ class CalendarDetailFragment : Fragment() {
                         "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
                         "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
-                        "location" to "${binding.locationInput.text}")
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
+                        "location" to "${binding.locationInput.text}".trim())
                     viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
 
                 "542437" -> {
@@ -272,12 +272,12 @@ class CalendarDetailFragment : Fragment() {
                         "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
                         "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
-                        "location" to "${binding.locationInput.text}")
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
+                        "location" to "${binding.locationInput.text}".trim())
                     updateRemind = hashMapOf(
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
                         "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
                     viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
 
@@ -293,12 +293,12 @@ class CalendarDetailFragment : Fragment() {
                         "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
                         "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
-                        "location" to "${binding.locationInput.text}")
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
+                        "location" to "${binding.locationInput.text}".trim())
                     updateCountdown = hashMapOf(
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
                         "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
                     viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)}
 
@@ -314,16 +314,16 @@ class CalendarDetailFragment : Fragment() {
                         "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
                         "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
                         "location" to "${binding.locationInput.text}")
                     updateCountdown = hashMapOf(
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
                         "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
                     updateRemind = hashMapOf(
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
                         "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
                     viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
 
@@ -339,9 +339,9 @@ class CalendarDetailFragment : Fragment() {
                         "date" to Timestamp(simpleDateFormat.parse(beginDate).time),
                         "beginDate" to Timestamp(dateTimeFormat.parse(beginDate).time),
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
-                        "title" to "${binding.detailTitleInput.text}",
-                        "note" to "${binding.noteInput.text}",
-                        "location" to "${binding.locationInput.text}")
+                        "title" to "${binding.detailTitleInput.text}".trim(),
+                        "note" to "${binding.noteInput.text}".trim(),
+                        "location" to "${binding.locationInput.text}".trim())
 
                     viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
 
