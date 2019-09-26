@@ -53,11 +53,16 @@ class CalendarMonthFragment : Fragment() {
     private var selectedDate: LocalDate? = null
     private val today = LocalDate.now()
 
-    private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMMM", Locale.getDefault())
-    private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy")
-    private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy/MM/d")
+    private val locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
 
-
+    private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMM", locale)
+    private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy", locale)
+    private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy/MMM", locale)
     private val viewModel: CalenderMonthViewModel by lazy {
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
     }
@@ -67,7 +72,6 @@ class CalendarMonthFragment : Fragment() {
     private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener {
         putType("calendar")
         viewModel.displayCalendarDetails(it)
-        Log.d("sandraaa", "click item = $it")
     })
 
     private fun putType (type: String) {
@@ -81,7 +85,7 @@ class CalendarMonthFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        Log.d("sandraaa", "time = ")
         binding = CalendarMonthFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -96,7 +100,13 @@ class CalendarMonthFragment : Fragment() {
             }
         })
 
-        Log.d("sandraaa", "locale = ${Locale.getDefault()}")
+//        titleSameYearFormatter = if (Locale.getDefault().toString() == "zh-rtw") {
+//            Log.d("sandraaa", "taiwan = ${Locale.getDefault()}")
+//            DateTimeFormatter.ofPattern("MMM", Locale.TAIWAN)
+//        } else {
+//            Log.d("sandraaa", "en = ${Locale.getDefault()}")
+//            DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH)
+//        }
 
         // floating action button
         val fabOpen = AnimationUtils.loadAnimation(this.context, R.anim.fab_open)

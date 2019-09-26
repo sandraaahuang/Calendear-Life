@@ -47,12 +47,19 @@ class CalendarEventFragment : Fragment() {
     var EVALUATE_DIALOG = "evaluate_dialog"
     var REQUEST_EVALUATE = 0X110
 
+    val locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+
     var db = FirebaseFirestore.getInstance()
-    private val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE")
-    private val timeFormat = SimpleDateFormat("hh:mm a")
-    private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-    private val dateWeekTimeFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a")
-    private val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
+    private val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE", locale)
+    private val timeFormat = SimpleDateFormat("hh:mm a", locale)
+    private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd", locale)
+    private val dateWeekTimeFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a", locale)
+    private val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a", locale)
 
     lateinit var binding: CalendarEventFragmentBinding
 
@@ -244,7 +251,8 @@ class CalendarEventFragment : Fragment() {
                     "isAllDay" to "${binding.allDaySwitch.isChecked}",
                     "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
                     "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
-                    "fromGoogle" to "${binding.switchSetAsGoogle.isChecked}".toBoolean()
+                    "fromGoogle" to "${binding.switchSetAsGoogle.isChecked}".toBoolean(),
+                    "location" to "${binding.locationInput.text}"
                 )
 
                 if (binding.switchSetAsGoogle.isChecked){

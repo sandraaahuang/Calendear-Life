@@ -15,9 +15,14 @@ import kotlin.collections.ArrayList
 
 class HomeViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
-
-    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd h:mm a")
+    val locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd", locale)
+    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd h:mm a", locale)
     val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
 
