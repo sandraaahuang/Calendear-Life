@@ -226,18 +226,18 @@ class CalendarEventFragment : Fragment() {
 
                 val countdown = hashMapOf(
                     "setDate" to FieldValue.serverTimestamp(),
-                    "title" to "${binding.eventTitleInput.text}",
-                    "note" to "${binding.noteInput.text}",
+                    "title" to "${binding.eventTitleInput.text}".trim(),
+                    "note" to "${binding.noteInput.text}".trim(),
                     "targetDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
                     "overdue" to false)
 
                 val reminders = hashMapOf(
                     "setDate" to FieldValue.serverTimestamp(),
-                    "title" to "${binding.eventTitleInput.text}",
+                    "title" to "${binding.eventTitleInput.text}".trim(),
                     "setRemindDate" to true,
                     "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
                     "isChecked" to false,
-                    "note" to "${binding.noteInput.text}",
+                    "note" to "${binding.noteInput.text}".trim(),
                     "frequency" to RepeatDialog.value)
 
                 val item = hashMapOf(
@@ -246,20 +246,20 @@ class CalendarEventFragment : Fragment() {
                     "setDate" to FieldValue.serverTimestamp(),
                     "beginDate" to Timestamp(dateWeekTimeFormat.parse(beginDate).time),
                     "endDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
-                    "title" to "${binding.eventTitleInput.text}",
-                    "note" to "${binding.noteInput.text}",
+                    "title" to "${binding.eventTitleInput.text}".trim(),
+                    "note" to "${binding.noteInput.text}".trim(),
                     "isAllDay" to "${binding.allDaySwitch.isChecked}",
                     "hasReminders" to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
                     "hasCountdown" to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
                     "fromGoogle" to "${binding.switchSetAsGoogle.isChecked}".toBoolean(),
-                    "location" to "${binding.locationInput.text}"
+                    "location" to "${binding.locationInput.text}".trim()
                 )
 
                 if (binding.switchSetAsGoogle.isChecked){
                     val gBeginDate = com.google.firebase.Timestamp(dateWeekTimeFormat.parse(beginDate))
                     val gEndDate = com.google.firebase.Timestamp(dateWeekTimeFormat.parse(endDate))
-                    val gTitle = "${binding.eventTitleInput.text}"
-                    val gNote = "${binding.noteInput.text}"
+                    val gTitle = "${binding.eventTitleInput.text}".trim()
+                    val gNote = "${binding.noteInput.text}".trim()
 
                     if (ContextCompat.checkSelfPermission(this.context!!,
                             Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED){

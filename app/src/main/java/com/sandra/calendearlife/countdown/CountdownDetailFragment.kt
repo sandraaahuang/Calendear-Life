@@ -65,14 +65,14 @@ class CountdownDetailFragment : Fragment() {
             val putInDate = Date(targetDate)
 
             val updateItem = hashMapOf(
-                "title" to "${binding.editTextCountdown.text}",
-                "note" to "${binding.editTextCountdownNote.text}",
+                "title" to "${binding.editTextCountdown.text}".trim(),
+                "note" to "${binding.editTextCountdownNote.text}".trim(),
                 "targetDate" to java.sql.Timestamp(putInDate.time)
             )
 
             val calendarItem = hashMapOf(
-                "title" to "${binding.editTextCountdown.text}",
-                "note" to "${binding.editTextCountdownNote.text}",
+                "title" to "${binding.editTextCountdown.text}".trim(),
+                "note" to "${binding.editTextCountdownNote.text}".trim(),
                 "beginDate" to java.sql.Timestamp(putInDate.time),
                 "date" to java.sql.Timestamp(putInDate.time)
             )

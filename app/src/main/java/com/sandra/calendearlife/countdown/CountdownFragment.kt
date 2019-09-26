@@ -117,8 +117,8 @@ class CountdownFragment : Fragment() {
                     "beginDate" to java.sql.Timestamp(putInDate.time),
                     "endDate" to java.sql.Timestamp(putInDate.time),
                     "date" to java.sql.Timestamp(putInDate.time),
-                    "title" to "${binding.countdownTitleInput.text}",
-                    "note" to "${binding.noteInput.text}",
+                    "title" to "${binding.countdownTitleInput.text}".trim(),
+                    "note" to "${binding.noteInput.text}".trim(),
                     "hasCountdown" to true,
                     "fromGoogle" to false
                 )
@@ -127,8 +127,8 @@ class CountdownFragment : Fragment() {
 
                 val countdown = hashMapOf(
                     "setDate" to FieldValue.serverTimestamp(),
-                    "title" to "${binding.countdownTitleInput.text}",
-                    "note" to "${binding.noteInput.text}",
+                    "title" to "${binding.countdownTitleInput.text}".trim(),
+                    "note" to "${binding.noteInput.text}".trim(),
                     "targetDate" to java.sql.Timestamp(putInDate.time),
                     "overdue" to false
                 )
