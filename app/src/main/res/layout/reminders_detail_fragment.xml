@@ -63,10 +63,10 @@
                         android:fontFamily="@font/noto_sans"
                         android:checked="@{viewModel.selectedItem.setRemindDate}"
                         app:layout_constraintStart_toStartOf="@+id/remindersTitle"
-                        app:layout_constraintEnd_toEndOf="@+id/remindersTitle"
+                        app:layout_constraintEnd_toEndOf="@+id/view_spacing_line"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintTop_toBottomOf="@+id/view_spacing_line" android:layout_marginTop="8dp"
-                />
+                        android:layout_marginEnd="8dp"/>
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintTop_toBottomOf="@+id/switchRemindDay" android:visibility="visible"
+                        app:layout_constraintTop_toBottomOf="@+id/switchRemindDay" android:visibility="gone"
                         android:layout_marginTop="4dp" android:layout_marginStart="8dp" android:layout_marginEnd="8dp">
                     <TextView
                             android:id="@+id/remindDate"

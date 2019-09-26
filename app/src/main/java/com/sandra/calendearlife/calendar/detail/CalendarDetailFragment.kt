@@ -29,9 +29,16 @@ class CalendarDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val timeFormat = SimpleDateFormat("hh:mm a")
-        val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a")
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val locale =
+            if (Locale.getDefault().toString() == "zh-rtw") {
+                Locale.TAIWAN
+            } else {
+                Locale.ENGLISH
+            }
+
+        val timeFormat = SimpleDateFormat("hh:mm a",locale)
+        val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a",locale)
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd",locale)
 
         val binding = CalendarDetailFragmentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this

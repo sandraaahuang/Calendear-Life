@@ -24,8 +24,14 @@ import kotlin.collections.ArrayList
 class CalenderMonthViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
-    private val simpleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd h:mm a")
+    val locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+    private val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
+    private val simpleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd h:mm a", locale)
     val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
     lateinit var calenderAdd: com.sandra.calendearlife.data.Calendar

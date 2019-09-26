@@ -36,6 +36,12 @@ class RemindersFragment : Fragment() {
     var EVALUATE_DIALOG = "evaluate_dialog"
     var REQUEST_EVALUATE = 0X110
 
+    val locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
 
     private val viewModel: RemindersViewModel by lazy{
         ViewModelProviders.of(this).get(RemindersViewModel::class.java)
@@ -92,8 +98,10 @@ class RemindersFragment : Fragment() {
         val monthOfYear = calendar.get(Calendar.MONTH)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
+
+
         binding.remindersDateInput.text = SimpleDateFormat("yyyy/MM/dd").format(Date(com.google.firebase.Timestamp.now().seconds*1000))
-        binding.remindersTimeInput.text = SimpleDateFormat("hh:mm a").format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.remindersTimeInput.text = SimpleDateFormat("hh:mm a", locale).format(Date(com.google.firebase.Timestamp.now().seconds*1000))
 
         binding.remindersDateInput.setOnClickListener {
 
@@ -119,7 +127,7 @@ class RemindersFragment : Fragment() {
             TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { view, hour, minute ->
                 val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
-                val stringTime = SimpleDateFormat("hh:mm a").format(date)
+                val stringTime = SimpleDateFormat("hh:mm a", locale).format(date)
                 binding.remindersTimeInput.text =
                     "$stringTime" }, hour, minute, false
             ).show()
@@ -139,7 +147,7 @@ class RemindersFragment : Fragment() {
         binding.saveText.setOnClickListener {
             val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
             val date = "${binding.remindersDateInput.text}"
-            val dateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a")
+            val dateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a", locale)
             val customFormat = SimpleDateFormat("yyyy/MM/dd")
             val parsedDate = dateFormat.parse(remindDate)
             val parsed = customFormat.parse(date)
