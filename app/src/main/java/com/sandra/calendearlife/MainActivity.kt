@@ -113,23 +113,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         actionbar?.title = resources.getString(R.string.app_name)
         val nowLanguage = Locale.getDefault().language
 
-        Log.d("sandraaa", "default language = ${Locale.getDefault().language}")
-
         loadLocale()
-        Log.d("sandraaa", "default language = ${Locale.getDefault().language}, nowlanguage = $nowLanguage")
 
         if (Locale.getDefault().language == "" && nowLanguage == "zh") {
             setLocale("zh-rTW")
-            Log.d("sandraaa", "default, ${Locale.getDefault().language}, $nowLanguage")
+
         } else {
             loadLocale()
-            Log.d("sandraaa", "normal, ${Locale.getDefault().language}, $nowLanguage")
+
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
 
         setupToolbar()
         sepupStatusBar()
@@ -146,6 +142,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
             }
         })
+
 
         val value = intent.getStringExtra("turn")
         if (!TextUtils.isEmpty(value)) {
@@ -297,11 +294,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (preferences.getString("status", null) == "dark") {
 
             actionView.isChecked = true
-            Log.d("sandraaa", "after switch check = ${binding.navView.menu.findItem(R.id.changeMode).isChecked}")
-
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
-            Log.d("sandraaa", "after switch check = ${binding.navView.menu.findItem(R.id.changeMode).isChecked}")
             actionView.isChecked = false
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
@@ -314,8 +308,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 preferences.edit().putString("status", "dark").apply()
                 restartApp()
 
-
-                Log.d("sandraa", "change mode")
             } else if ( !isChecked ) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 preferences.edit().putString("status", "light").apply()
@@ -324,7 +316,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
+        Log.d("sandraaa", "language = ${Locale.getDefault().language} en, zh-rtw")
 
+        if (Locale.getDefault().language == "en") {
+            updateEnEnum()
+        } else {
+            updateZhEnum()
+        }
     }
 
     private fun requestPermission() {
@@ -682,6 +680,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         return result
 
+    }
+
+    fun updateZhEnum() {
+        CurrentFragmentType.DETAIL.value = "詳細資訊"
+        CurrentFragmentType.NEWEVENT.value = "新增事件"
+        CurrentFragmentType.NEWREMINDER.value = "新增提醒事件"
+        CurrentFragmentType.NEWCOUNTDOWN.value = "新增倒數事件"
+        CurrentFragmentType.HISTORY.value = "歷史紀錄"
+    }
+
+    fun updateEnEnum() {
+        CurrentFragmentType.DETAIL.value = "Detail"
+        CurrentFragmentType.NEWEVENT.value = "New Event"
+        CurrentFragmentType.NEWREMINDER.value = "New Reminder"
+        CurrentFragmentType.NEWCOUNTDOWN.value = "New Countdown"
+        CurrentFragmentType.HISTORY.value = "History"
     }
 
     private fun setupNavController() {

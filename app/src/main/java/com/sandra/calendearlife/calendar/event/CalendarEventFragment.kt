@@ -270,12 +270,12 @@ class CalendarEventFragment : Fragment() {
                     Log.d("sandraaa", "fail")
                 }
 
-                Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
             }
         }
 
         viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
+                Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_SHORT).show()
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
         })
