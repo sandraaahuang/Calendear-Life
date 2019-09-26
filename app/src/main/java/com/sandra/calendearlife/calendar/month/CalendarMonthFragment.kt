@@ -53,7 +53,7 @@ class CalendarMonthFragment : Fragment() {
     private var selectedDate: LocalDate? = null
     private val today = LocalDate.now()
 
-    private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMMM")
+    private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMMM", Locale.getDefault())
     private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy")
     private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy/MM/d")
 
@@ -95,6 +95,8 @@ class CalendarMonthFragment : Fragment() {
                 viewModel.displayCalendarDetailsComplete()
             }
         })
+
+        Log.d("sandraaa", "locale = ${Locale.getDefault()}")
 
         // floating action button
         val fabOpen = AnimationUtils.loadAnimation(this.context, R.anim.fab_open)

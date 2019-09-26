@@ -60,7 +60,8 @@ class SyncDialog : AppCompatDialogFragment() {
         binding.lifecycleOwner = this
 
         binding.askMeLaterButton.setOnClickListener {
-            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+            restart()
+//            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
         binding.nextButton.setOnClickListener {
@@ -250,7 +251,15 @@ class SyncDialog : AppCompatDialogFragment() {
                     "DocumentSnapshot added with ID = $documentId"
                 )
             }
-            .addOnCompleteListener { findNavController().navigate(NavigationDirections.actionGlobalHomeFragment()) }
+            .addOnCompleteListener {
+                restart()
+            }
+    }
+
+    private fun restart(){
+        val intent = Intent(this.context, MainActivity::class.java)
+        startActivity(intent)
+
     }
 
 }

@@ -22,6 +22,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
@@ -172,7 +173,6 @@ class PreviewFragment : Fragment() {
                     Log.d("UserManager", "userPhoto = ${UserManager.userPhoto}")
 
                     viewModel.getItem()
-
                     findNavController().navigate(NavigationDirections.actionGlobalSyncDialog())
 
                 } else {
