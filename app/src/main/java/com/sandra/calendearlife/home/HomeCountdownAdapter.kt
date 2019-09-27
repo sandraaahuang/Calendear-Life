@@ -2,7 +2,6 @@ package com.sandra.calendearlife.home
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -10,13 +9,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
-import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
-import com.sandra.calendearlife.util.getString
 import com.yy.mobile.rollingtextview.CharOrder
 import com.yy.mobile.rollingtextview.strategy.Strategy
-import java.util.*
 
 
 class HomeCountdownAdapter(val onClickListener: OnClickListener, val viewModel: HomeViewModel) :
