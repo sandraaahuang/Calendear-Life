@@ -85,8 +85,10 @@
     <string name="language">Language</string>
     <string name="chinese">Chinese</string>
     <string name="english">English</string>
-    <string name="days">days</string>
+    <string name="days">↓</string>
     <string name="am">AM</string>
     <string name="pm">PM</string>
     <string name="date_b">Date</string>
+    <string name="until">Until......</string>
+    <string name="target_date__">Target Date：</string>
 </resources>

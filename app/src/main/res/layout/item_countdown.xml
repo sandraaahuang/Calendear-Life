@@ -21,48 +21,106 @@
                 android:layout_height="250dp" android:id="@+id/countDownLayout">
 
 
-            <TextView
-                    android:id="@+id/countdownDate"
-                    android:text="88"
-                    android:textSize="40sp"
-                    android:fontFamily="@font/noto_sans"
-                    android:textStyle="bold"
-                    android:textColor="?attr/textcolor"
+            <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="56dp"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/gold_border"
+                    android:id="@+id/imageView5" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp"/>
-            <TextView
-                    android:id="@+id/countdownTitle"
-                    android:text='@{"until..."+countdown.title}'
-                    tools:text="放榜"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:textColor="?attr/textcolor"
-                    android:textSize="20sp"
-                    android:fontFamily="@font/noto_sans"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/countdownDate"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginEnd="8dp"/>
-            <TextView
-                    android:id="@+id/countdownTargetDate"
-                    android:text='@{@string/target_date_ + countdown.targetDate}'
-                    tools:text="Target Date : Nov 22, 2019 ( Fri )"
-                    android:fontFamily="@font/noto_sans"
-                    android:textSize="16sp"
-                    android:textColor="?attr/textcolor"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintVertical_bias="0.0"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:id="@+id/constraintLayout4" app:layout_constraintTop_toBottomOf="@+id/constraintLayout6"
+                    android:layout_marginTop="8dp">
+
+                <com.yy.mobile.rollingtextview.RollingTextView
+                        android:id="@+id/countdownDate"
+                        android:textSize="40sp"
+                        android:fontFamily="@font/noto_sans"
+                        android:textStyle="bold"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:textColor="?attr/textcolor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/days"
+                        app:layout_constraintBottom_toBottomOf="@+id/days"/>
+                <TextView
+                        android:id="@+id/days"
+                        android:text="@string/days"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/noto_sans"
+                        android:textStyle="bold"
+                        android:textColor="?attr/textcolor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/countdownDate"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                    app:layout_constraintTop_toBottomOf="@+id/countdownTitle" android:layout_marginTop="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"/>
+                    android:id="@+id/constraintLayout6" android:layout_marginTop="48dp"
+                    app:layout_constraintTop_toTopOf="@+id/imageView5">
+
+                <TextView
+                        android:id="@+id/countdownTitle"
+                        android:text='@{countdown.title}'
+                        tools:text="放榜"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="?attr/textcolor"
+                        android:textSize="36sp"
+                        android:fontFamily="@font/noto_sans"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                    android:id="@+id/constraintLayout5"
+                    android:layout_marginBottom="48dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView5">
+
+                <TextView
+                        android:id="@+id/targetDate"
+                        android:text="@string/target_date__"
+                        tools:text="Target Date"
+                        android:fontFamily="@font/noto_sans"
+                        android:textSize="16sp"
+                        android:textColor="?attr/textcolor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/countdownTargetDate"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintVertical_bias="1.0"/>
+                <TextView
+                        android:id="@+id/countdownTargetDate"
+                        android:text='@{countdown.targetDate}'
+                        tools:text="Nov 22, 2019 ( Fri )"
+                        android:fontFamily="@font/noto_sans"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/textcolor"
+                        app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

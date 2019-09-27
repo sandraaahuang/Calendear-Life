@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
                                 alarmManager.setExact(
                                     AlarmManager.RTC_WAKEUP,
-                                    value.remindTimestamp.seconds * 1000, dnrPending
+                                    value.remindTimestamp.seconds*1000, dnrPending
                                 )
                             }
                             "Every day" -> {
@@ -682,7 +682,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    fun updateZhEnum() {
+    private fun updateZhEnum() {
         CurrentFragmentType.DETAIL.value = "詳細資訊"
         CurrentFragmentType.NEWEVENT.value = "新增事件"
         CurrentFragmentType.NEWREMINDER.value = "新增提醒事件"
@@ -722,7 +722,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
 
-        Log.d("sandraaa", "onreceive $p1")
+        Log.d("sandraaa", "onreceive ${p1?.flags}")
         Log.d("sandraaa", "onreceive ${p1?.action}")
 
         when (p1?.action) {
