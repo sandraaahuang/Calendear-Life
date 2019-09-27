@@ -34,13 +34,13 @@ class AddCountdownAdapter(val onClickListener: OnClickListener, val viewModel: C
 
         fun bind(countdown: Countdown, onClickListener: OnClickListener, viewModel: CountdownViewModel) {
             binding.countdown = countdown
-            binding.countdownDate.text =
-                "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)} ${getString(R.string.days)}"
-
-            if (countdown.targetTimestamp.seconds < Timestamp.now().seconds) {
-                viewModel.updateItem(countdown.documentID)
-
-            }
+//            binding.countdownDate.text =
+//                "${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)} ${getString(R.string.days)}"
+//
+//            if (countdown.targetTimestamp.seconds < Timestamp.now().seconds) {
+//                viewModel.updateItem(countdown.documentID)
+//
+//            }
             binding.root.setOnClickListener { onClickListener.onClick(countdown) }
             binding.executePendingBindings()
 

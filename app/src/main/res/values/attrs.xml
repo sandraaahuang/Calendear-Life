@@ -17,5 +17,6 @@
         <attr name="monthBackground" format="color"/>
         <attr name="totalWhite2Black" format="color"/>
         <attr name="totalB2W" format="color"/>
+        <attr name="homeCardColor" format="color"/>
     </declare-styleable>
 </resources>

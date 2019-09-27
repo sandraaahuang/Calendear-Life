@@ -85,8 +85,10 @@
     <string name="language">選擇要切換的語言</string>
     <string name="chinese">中文模式</string>
     <string name="english">英語模式</string>
-    <string name="days">日</string>
+    <string name="days">↓</string>
     <string name="am">上午</string>
     <string name="pm">下午</string>
     <string name="date_b">日期</string>
+    <string name="until">距離......</string>
+    <string name="target_date__">目標日：</string>
 </resources>

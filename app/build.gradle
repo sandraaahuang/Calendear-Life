@@ -115,4 +115,7 @@ dependencies {
 
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    // RollingText
+    implementation 'com.github.YvesCheung:RollingText:1.2.0'
 }
