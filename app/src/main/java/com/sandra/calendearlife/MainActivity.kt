@@ -44,6 +44,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
@@ -133,7 +134,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupNavController()
 
         intent.extras?.let {
-            viewModel.getItem(it.get("remindersItem").toString())
+            if (UserManager.id!=null) {
+                viewModel.getItem(it.get("remindersItem").toString())
+            }
+            else {
+                "don't have user"
+            }
         }
 
         viewModel.liveReminders.observe(this, Observer {
