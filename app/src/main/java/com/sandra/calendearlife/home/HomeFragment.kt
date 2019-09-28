@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -122,6 +123,15 @@ class HomeFragment : Fragment() {
             putType("home")
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
+
+        binding.swipeFreshHome.setOnRefreshListener {
+            viewModel.getItem()
+        }
+        viewModel.freshStatus.observe(this , Observer {
+            it?.let {
+                binding.swipeFreshHome.isRefreshing = false
+            }
+        })
 
         return binding.root
     }

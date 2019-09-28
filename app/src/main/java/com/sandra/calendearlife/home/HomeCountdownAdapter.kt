@@ -40,6 +40,10 @@ class HomeCountdownAdapter(val onClickListener: OnClickListener, val viewModel: 
             if (countdown.targetTimestamp.seconds < Timestamp.now().seconds){
                 viewModel.updateCountdown(countdown.documentID)
             }
+
+            if ((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400 == 0L) {
+                binding.countdownDate.setText("1")
+            }
             binding.executePendingBindings()
         }
     }
