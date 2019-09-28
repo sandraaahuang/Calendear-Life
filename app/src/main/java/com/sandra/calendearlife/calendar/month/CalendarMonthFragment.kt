@@ -62,7 +62,7 @@ class CalendarMonthFragment : Fragment() {
 
     private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMM", locale)
     private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy", locale)
-    private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy/MMM", locale)
+    private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd", locale)
     private val viewModel: CalenderMonthViewModel by lazy {
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
     }

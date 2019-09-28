@@ -187,6 +187,7 @@ class RemindersFragment : Fragment() {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
             }
+            restartApp()
         })
         viewModel.clicked.observe(this, androidx.lifecycle.Observer {
             it?.let {
@@ -195,6 +196,13 @@ class RemindersFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    private fun restartApp() {
+
+        val intent = Intent(this.context, MainActivity::class.java)
+        startActivity(intent)
+
     }
 
 
