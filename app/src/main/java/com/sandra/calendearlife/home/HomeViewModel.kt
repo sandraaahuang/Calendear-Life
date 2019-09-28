@@ -39,6 +39,10 @@ class HomeViewModel : ViewModel() {
     val liveReminders: LiveData<List<Reminders>>
         get() = _liveReminders
 
+    val _freshStatus = MutableLiveData<Boolean>()
+    val freshStatus: LiveData<Boolean>
+        get() = _freshStatus
+
     init {
         getItem()
     }
@@ -118,6 +122,9 @@ class HomeViewModel : ViewModel() {
 
                         }
                 }
+            }
+            .addOnCompleteListener {
+                _freshStatus.value = true
             }
     }
 
