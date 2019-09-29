@@ -1,16 +1,14 @@
 package com.sandra.calendearlife.home
 
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -22,10 +20,6 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.HomeFragmentBinding
 import com.sandra.calendearlife.util.FragmentType
-import com.yy.mobile.rollingtextview.CharOrder
-import com.yy.mobile.rollingtextview.RollingTextView
-import com.yy.mobile.rollingtextview.strategy.Strategy
-import kotlinx.android.synthetic.main.item_countdown.view.*
 
 
 class HomeFragment : Fragment() {
@@ -132,6 +126,13 @@ class HomeFragment : Fragment() {
                 binding.swipeFreshHome.isRefreshing = false
             }
         })
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                activity?.finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         return binding.root
     }

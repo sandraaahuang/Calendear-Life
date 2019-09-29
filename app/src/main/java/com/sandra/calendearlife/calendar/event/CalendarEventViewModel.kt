@@ -437,6 +437,9 @@ class CalendarEventViewModel : ViewModel() {
                                                 }
                                         }
                                 }
+                                .addOnCompleteListener {
+                                    _updateCompleted.value = true
+                                }
                         }
                     }
 
