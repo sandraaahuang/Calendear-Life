@@ -59,14 +59,14 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
+import java.util.Calendar.*
 import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val preferences =
-        MyApplication.instance.
-            getSharedPreferences("DarkMode", Context.MODE_PRIVATE)
+        MyApplication.instance.getSharedPreferences("DarkMode", Context.MODE_PRIVATE)
 
     lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
@@ -134,10 +134,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupNavController()
 
         intent.extras?.let {
-            if (UserManager.id!=null) {
+            if (UserManager.id != null) {
                 viewModel.getItem(it.get("remindersItem").toString())
-            }
-            else {
+            } else {
                 "don't have user"
             }
         }
@@ -167,36 +166,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (UserManager.id != null) {
             viewModel.dnrItem()
             // setup countdown notification
-            val initialDate: LocalDateTime
-            val timestampInitialDate: Timestamp
-            val zoneId = ZoneId.of("Asia/Taipei")
-            val nowHour = LocalDateTime.now(zoneId).hour
 
-            if (nowHour > 9) {
+            val customCal = getInstance()
 
-                initialDate = LocalDateTime.of(
-                    LocalDate.now().year, LocalDate.now().monthValue,
-                    LocalDateTime.now().dayOfMonth.plus(1), 9, 0
-                )
+            customCal.set(HOUR_OF_DAY, 9)
+            customCal.set(MINUTE, 0)
+            customCal.set(SECOND, 0)
 
-                val seconds = initialDate.atZone(zoneId).toEpochSecond()
-                val nanos = initialDate.nano
-                timestampInitialDate = Timestamp(seconds, nanos)
-
-                Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
-
-            } else {
-                initialDate = LocalDateTime.of(
-                    LocalDate.now().year, LocalDate.now().monthValue,
-                    LocalDateTime.now().dayOfMonth, 9, 0
-                )
-
-                val seconds = initialDate.atZone(zoneId).toEpochSecond()
-                val nanos = initialDate.nano
-                timestampInitialDate = Timestamp(seconds, nanos)
-
-                Log.d("sandraaa", "initialDate = ${timestampInitialDate.seconds}")
-            }
             val alarmManager = MyApplication.instance.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
             intent.action = "countdown"
@@ -205,13 +181,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 1234, intent, PendingIntent.FLAG_UPDATE_CURRENT
             )
 
-            alarmManager.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, timestampInitialDate.seconds * 1000,
+            alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP, customCal.timeInMillis,
                 AlarmManager.INTERVAL_DAY, pendingIntent
             )
             Log.i("sandraaa", "alarm set success")
 
-//            Log.d("sandraaa", "${alarmManager.nextAlarmClock.showIntent}")
             viewModel.livednr.observe(this, Observer {
                 it?.let {
                     for ((index, value) in it.withIndex()) {
@@ -226,7 +201,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
                                 alarmManager.setExact(
                                     AlarmManager.RTC_WAKEUP,
-                                    value.remindTimestamp.seconds*1000, dnrPending
+                                    value.remindTimestamp.seconds * 1000, dnrPending
                                 )
                             }
                             "Every day" -> {
@@ -314,7 +289,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 preferences.edit().putString("status", "dark").apply()
                 restartApp()
 
-            } else if ( !isChecked ) {
+            } else if (!isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 preferences.edit().putString("status", "light").apply()
                 restartApp()
@@ -332,8 +307,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun requestPermission() {
-        ActivityCompat.requestPermissions((this),
-            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1)
+        ActivityCompat.requestPermissions(
+            (this),
+            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1
+        )
     }
 
     private fun query_calendar() {
@@ -410,10 +387,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     Log.d("sandraaa", "accountNameList = $accountNameList,calendarIdList = $calendarIdList ")
 
                     val targetCalendar = calendarId
-                    val beginTime = Calendar.getInstance()
+                    val beginTime = getInstance()
                     beginTime.set(2019, 8, 1, 24, 0)
                     val startMillis = beginTime.timeInMillis
-                    val endTime = Calendar.getInstance()
+                    val endTime = getInstance()
                     endTime.set(2020, 8, 1, 24, 0)
                     val endMillis = endTime.timeInMillis
 
@@ -579,12 +556,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun putType (type: String) {
+    private fun putType(type: String) {
         val preferences =
-            MyApplication.instance.
-                getSharedPreferences("fragment", Context.MODE_PRIVATE)
+            MyApplication.instance.getSharedPreferences("fragment", Context.MODE_PRIVATE)
         preferences.edit().putString("type", type).apply()
-        preferences.getString("type","")
+        preferences.getString("type", "")
         FragmentType.type = type
         Log.d("sandraaa", "type = ${FragmentType.type}")
     }
@@ -600,7 +576,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (i == 0) {
                 setLocale("zh-rTW")
                 restartApp()
-            } else if (i ==1 ) {
+            } else if (i == 1) {
                 setLocale("en")
                 restartApp()
             }
@@ -611,7 +587,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialog.show()
     }
 
-    private fun setLocale (lang: String) {
+    private fun setLocale(lang: String) {
         var locale = Locale(lang)
         Locale.setDefault(locale)
         if (lang == "zh-rTW") {
