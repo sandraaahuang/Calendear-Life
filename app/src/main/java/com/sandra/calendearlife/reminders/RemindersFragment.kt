@@ -184,9 +184,6 @@ class RemindersFragment : Fragment() {
         }
 
         viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
-            it?.let {
-                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-            }
             restartApp()
         })
         viewModel.clicked.observe(this, androidx.lifecycle.Observer {
