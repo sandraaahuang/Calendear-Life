@@ -2,7 +2,6 @@ package com.sandra.calendearlife.calendar.month
 
 import android.content.Context
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +10,11 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.ColorRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColor
 import androidx.core.view.children
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
@@ -29,15 +22,14 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import com.sandra.calendearlife.*
-import com.sandra.calendearlife.data.Calendar
-import com.sandra.calendearlife.databinding.CalendarMonthFragmentBinding
-import com.sandra.calendearlife.dialog.DiscardDialog
+import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
+import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
 import com.sandra.calendearlife.util.FragmentType
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.calendar_month_day.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
-import kotlinx.android.synthetic.main.calendar_month_fragment.*
+import kotlinx.android.synthetic.main.fragment_calendar_month.*
 import kotlinx.android.synthetic.main.calendar_month_header.view.*
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.DayOfWeek
@@ -45,7 +37,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.YearMonth
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.WeekFields
-import java.text.SimpleDateFormat
 import java.util.*
 
 class CalendarMonthFragment : Fragment() {
@@ -67,7 +58,7 @@ class CalendarMonthFragment : Fragment() {
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
     }
 
-    lateinit var binding: CalendarMonthFragmentBinding
+    lateinit var binding: FragmentCalendarMonthBinding
 
     private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener {
         putType("calendar")
@@ -86,7 +77,7 @@ class CalendarMonthFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d("sandraaa", "time = ")
-        binding = CalendarMonthFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentCalendarMonthBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.recyclerView.adapter = adapter

@@ -6,38 +6,30 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.MainActivity
+import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.R
+import com.sandra.calendearlife.databinding.FragmentCalendarEventBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import com.sandra.calendearlife.databinding.CalendarEventFragmentBinding
 import com.sandra.calendearlife.dialog.RepeatDialog
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
-import android.provider.CalendarContract.Calendars
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.os.Handler
-import android.provider.CalendarContract
-import android.util.Log
-import androidx.activity.OnBackPressedCallback
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.MainActivity
-import com.sandra.calendearlife.MyApplication
-import com.sandra.calendearlife.NavigationDirections
-import com.sandra.calendearlife.R
-import com.sandra.calendearlife.util.UserManager
 
 
 class CalendarEventFragment : Fragment() {
@@ -61,7 +53,7 @@ class CalendarEventFragment : Fragment() {
     private val dateWeekTimeFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a", locale)
     private val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a", locale)
 
-    lateinit var binding: CalendarEventFragmentBinding
+    lateinit var binding: FragmentCalendarEventBinding
 
     private val viewModel: CalendarEventViewModel by lazy{
         ViewModelProviders.of(this).get(CalendarEventViewModel::class.java)
@@ -69,7 +61,7 @@ class CalendarEventFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = CalendarEventFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentCalendarEventBinding.inflate(inflater, container, false)
 
         binding.allDaySwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {

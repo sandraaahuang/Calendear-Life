@@ -1,49 +1,35 @@
 package com.sandra.calendearlife.sync
 
 import android.Manifest
-import android.app.Activity
 import android.content.ContentUris
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
-import android.os.Handler
 import android.provider.CalendarContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
-import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.databinding.DialogSyncBinding
+import com.sandra.calendearlife.databinding.FragmentSyncGoogleBinding
 import com.sandra.calendearlife.util.UserManager
-import tr.com.harunkor.gifviewplayer.GifMovieView
-import java.security.Permission
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
-class SyncDialog : AppCompatDialogFragment() {
+class SyncGoogleFragment : AppCompatDialogFragment() {
 
     var db = FirebaseFirestore.getInstance()
 
-    lateinit var binding: DialogSyncBinding
+    lateinit var binding: FragmentSyncGoogleBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +42,7 @@ class SyncDialog : AppCompatDialogFragment() {
     )
             : View? {
 
-        binding = DialogSyncBinding.inflate(inflater, container, false)
+        binding = FragmentSyncGoogleBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         binding.askMeLaterButton.setOnClickListener {

@@ -2,17 +2,12 @@ package com.sandra.calendearlife.home
 
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.home.HomeFragment
-import com.sandra.calendearlife.home.HomeRemindersAdapter
-import com.sandra.calendearlife.reminders.RemindersViewModel
 import kotlinx.android.synthetic.main.item_reminders.view.*
 
 

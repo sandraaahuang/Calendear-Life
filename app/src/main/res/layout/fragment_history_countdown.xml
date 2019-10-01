@@ -22,7 +22,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 listCountdown="@{viewModel.liveCountdown}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_history_countdowns"
+                tools:listitem="@layout/item_history_countdown"
                 android:id="@+id/historyReminderRecyclerview"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

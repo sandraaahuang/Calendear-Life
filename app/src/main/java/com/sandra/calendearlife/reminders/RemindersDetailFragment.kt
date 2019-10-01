@@ -4,8 +4,6 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.databinding.RemindersDetailFragmentBinding
+import com.sandra.calendearlife.databinding.FragmentRemindersDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -25,7 +23,7 @@ import java.util.*
 
 class RemindersDetailFragment : Fragment() {
 
-    private lateinit var binding: RemindersDetailFragmentBinding
+    private lateinit var binding: FragmentRemindersDetailBinding
     val locale =
         if (Locale.getDefault().toString() == "zh-rtw") {
             Locale.TAIWAN
@@ -41,7 +39,7 @@ class RemindersDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = RemindersDetailFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentRemindersDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         val application = requireNotNull(activity).application

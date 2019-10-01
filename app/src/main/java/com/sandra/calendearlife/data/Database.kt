@@ -4,19 +4,6 @@ import android.os.Parcelable
 import com.google.firebase.Timestamp
 import kotlinx.android.parcel.Parcelize
 
-
-@Parcelize
-data class Database(
-    val data: Data
-) : Parcelable
-
-@Parcelize
-data class Data (
-    val gmail: String? = null,
-    val hasAccount: Boolean = false,
-    val calendar: ArrayList<Calendar>? = null
-): Parcelable
-
 @Parcelize
 data class Calendar (
     val color: String? = null,

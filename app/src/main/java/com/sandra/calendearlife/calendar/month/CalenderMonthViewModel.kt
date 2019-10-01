@@ -1,21 +1,11 @@
 package com.sandra.calendearlife.calendar.month
 
-import android.Manifest
-import android.content.ContentUris
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.provider.CalendarContract
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.MyApplication
-import com.sandra.calendearlife.dialog.RepeatDialog
 import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*

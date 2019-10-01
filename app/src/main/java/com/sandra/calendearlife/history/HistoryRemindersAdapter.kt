@@ -1,18 +1,13 @@
 package com.sandra.calendearlife.history
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.Timestamp
 import com.sandra.calendearlife.data.Reminders
-import com.sandra.calendearlife.databinding.HistoryRemindersBinding
 import com.sandra.calendearlife.databinding.ItemHistoryRemindersBinding
-import com.sandra.calendearlife.databinding.ItemRemindersBinding
-import com.sandra.calendearlife.reminders.RemindersViewModel
 
 class HistoryRemindersAdapter() :
     ListAdapter<Reminders, HistoryRemindersAdapter.ItemViewHolder>(DiffCallback) {

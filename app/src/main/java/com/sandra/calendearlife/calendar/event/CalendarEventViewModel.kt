@@ -1,28 +1,20 @@
 package com.sandra.calendearlife.calendar.event
 
 import android.Manifest
-import android.content.ContentResolver
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.database.Cursor
-import android.net.Uri
 import android.provider.CalendarContract
-import android.util.Log
-import androidx.lifecycle.ViewModel
-import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.util.UserManager
 import android.provider.CalendarContract.Calendars
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.material.snackbar.Snackbar
+import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
-import java.text.SimpleDateFormat
+import com.sandra.calendearlife.util.UserManager
 import java.util.*
 
 

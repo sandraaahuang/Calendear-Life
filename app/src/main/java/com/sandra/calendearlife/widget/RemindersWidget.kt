@@ -3,28 +3,16 @@ package com.sandra.calendearlife.widget
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
-import android.widget.Adapter
 import android.widget.RemoteViews
-import android.widget.Toast
 import com.sandra.calendearlife.MainActivity
-import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.data.Reminders
-import com.sandra.calendearlife.reminders.RemindersFragment
-import kotlinx.coroutines.selects.select
 
-
-/**
- * Implementation of App Widget functionality.
- */
 class RemindersWidget : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -73,7 +61,7 @@ class RemindersWidget : AppWidgetProvider() {
             context: Context, appWidgetManager: AppWidgetManager,
             appWidgetId: Int
         ) {
-            val views = RemoteViews(context.packageName, R.layout.reminder_widget)
+            val views = RemoteViews(context.packageName, R.layout.reminders_widget)
             views.setOnClickPendingIntent(R.id.remindAdd, getPendingIntent(context))
 
             Log.d("sandraaa", "appwidgetId = $appWidgetId")
@@ -90,7 +78,7 @@ class RemindersWidget : AppWidgetProvider() {
                 )
             ) {
 
-                val serviceIntent = Intent(context, ReminderWidgetService::class.java)
+                val serviceIntent = Intent(context, RemindersWidgetService::class.java)
                 serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
 

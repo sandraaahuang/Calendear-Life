@@ -42,11 +42,11 @@
         <argument android:name="calendar" app:argType="com.sandra.calendearlife.data.Calendar"/>
     </fragment>
     <action android:id="@+id/action_global_calendarDetailFragment" app:destination="@id/calendarDetailFragment"/>
-    <fragment android:id="@+id/historyCountdown2" android:name="com.sandra.calendearlife.history.HistoryCountdown"
+    <fragment android:id="@+id/historyCountdown2" android:name="com.sandra.calendearlife.history.HistoryCountdownFragment"
               android:label="HistoryCountdown"/>
-    <fragment android:id="@+id/historyReminders" android:name="com.sandra.calendearlife.history.HistoryReminders"
+    <fragment android:id="@+id/historyReminders" android:name="com.sandra.calendearlife.history.HistoryRemindersFragment"
               android:label="HistoryReminders"/><action android:id="@+id/action_global_historyCountdown2" app:destination="@id/historyCountdown2"/><action android:id="@+id/action_global_historyReminders" app:destination="@id/historyReminders"/>
-    <fragment android:id="@+id/syncDialog" android:name="com.sandra.calendearlife.sync.SyncDialog"
+    <fragment android:id="@+id/syncDialog" android:name="com.sandra.calendearlife.sync.SyncGoogleFragment"
               android:label="SyncDialog"/>
     <action android:id="@+id/action_global_syncDialog" app:destination="@id/syncDialog"/><action android:id="@+id/action_global_previewFragment" app:destination="@id/previewFragment"/>
 </navigation>

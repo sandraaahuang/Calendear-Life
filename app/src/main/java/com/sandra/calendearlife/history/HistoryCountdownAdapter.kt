@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Countdown
-import com.sandra.calendearlife.databinding.ItemHistoryCountdownsBinding
+import com.sandra.calendearlife.databinding.ItemHistoryCountdownBinding
 
-class HistoryCountdownAdapter() :
+class HistoryCountdownAdapter :
     ListAdapter<Countdown, HistoryCountdownAdapter.ItemViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Countdown>() {
@@ -21,7 +21,7 @@ class HistoryCountdownAdapter() :
         }
     }
 
-    class ItemViewHolder(private var binding: ItemHistoryCountdownsBinding) :
+    class ItemViewHolder(private var binding: ItemHistoryCountdownBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(countdown: Countdown) {
@@ -35,7 +35,7 @@ class HistoryCountdownAdapter() :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
 
         return ItemViewHolder(
-            ItemHistoryCountdownsBinding.inflate(
+            ItemHistoryCountdownBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

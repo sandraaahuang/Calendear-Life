@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Color
 import android.os.Build
@@ -21,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -40,11 +38,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
@@ -53,11 +49,7 @@ import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.FragmentType
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.util.getString
-import kotlinx.android.synthetic.main.calendar_show_event.*
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 import java.util.Calendar.*
 import kotlin.collections.ArrayList

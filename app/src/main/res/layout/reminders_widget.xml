@@ -55,7 +55,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="40dp"
             android:background="@color/translucent_80"
-            tools:listitem="@layout/item_reminder_widget" tools:visibility="gone">
+            tools:listitem="@layout/item_reminders_widget" tools:visibility="gone">
     </ListView>
 
 </RelativeLayout>
