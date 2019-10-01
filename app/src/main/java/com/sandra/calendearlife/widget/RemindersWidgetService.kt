@@ -20,7 +20,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class ReminderWidgetService : RemoteViewsService() {
+class RemindersWidgetService : RemoteViewsService() {
 
     override fun onGetViewFactory(intent: Intent?): RemoteViewsFactory {
         return WidgetItemFactory(MyApplication.instance, intent!!)
@@ -113,7 +113,7 @@ class ReminderWidgetService : RemoteViewsService() {
 
         override fun getViewAt(position: Int): RemoteViews {
 
-            val views = RemoteViews(context.packageName, R.layout.item_reminder_widget)
+            val views = RemoteViews(context.packageName, R.layout.item_reminders_widget)
 
             views.setTextViewText(R.id.remindersTextView, remindersItem[position].title)
 

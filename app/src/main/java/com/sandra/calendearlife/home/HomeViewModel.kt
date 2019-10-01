@@ -1,14 +1,13 @@
 package com.sandra.calendearlife.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
+import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList

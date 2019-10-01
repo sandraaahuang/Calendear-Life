@@ -1,13 +1,12 @@
 package com.sandra.calendearlife.reminders
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.data.Reminders
+import com.sandra.calendearlife.util.UserManager
 
 class RemindersDetailViewModel(reminders: Reminders, app: Application) : AndroidViewModel(app) {
 

@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.databinding.HomeFragmentBinding
+import com.sandra.calendearlife.databinding.FragmentHomeBinding
 import com.sandra.calendearlife.util.FragmentType
 
 
@@ -28,7 +28,7 @@ class HomeFragment : Fragment() {
         ViewModelProviders.of(this).get(HomeViewModel::class.java)
     }
 
-    lateinit var binding: HomeFragmentBinding
+    lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
             putType("home")
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
         })
-        binding = HomeFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 

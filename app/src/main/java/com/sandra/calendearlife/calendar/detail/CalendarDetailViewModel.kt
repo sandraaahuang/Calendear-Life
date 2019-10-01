@@ -1,33 +1,20 @@
 package com.sandra.calendearlife.calendar.detail
 
-import android.Manifest
+import android.Manifest.permission.WRITE_CALENDAR
 import android.app.Application
-import android.util.Log
-import android.widget.Toast
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.pm.PackageManager
+import android.provider.CalendarContract
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
-import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.data.Calendar
-import android.provider.SyncStateContract.Helpers.update
-import android.provider.CalendarContract
-import android.content.ContentUris
-import android.content.pm.PackageManager
-import android.Manifest.permission
-import android.Manifest.permission.WRITE_CALENDAR
-import com.sandra.calendearlife.MainActivity
-import androidx.core.content.ContextCompat
-import android.content.ContentValues
-import android.os.Handler
-import android.widget.EditText
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
-import com.google.firebase.Timestamp
-import com.sandra.calendearlife.NavigationDirections
-import com.sandra.calendearlife.R
-import kotlinx.android.synthetic.main.activity_main.*
+import com.sandra.calendearlife.util.UserManager
 
 
 class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidViewModel(app) {

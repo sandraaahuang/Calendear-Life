@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.sandra.calendearlife.NavigationDirections
-import com.sandra.calendearlife.databinding.HistoryCountdownBinding
+import com.sandra.calendearlife.databinding.FragmentHistoryCountdownBinding
 
-class HistoryCountdown : Fragment() {
+class HistoryCountdownFragment : Fragment() {
 
     private val viewModel: HistoryCountdownViewModel by lazy{
         ViewModelProviders.of(this).get(HistoryCountdownViewModel::class.java)
@@ -19,7 +19,7 @@ class HistoryCountdown : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val binding = HistoryCountdownBinding.inflate(inflater, container, false)
+        val binding = FragmentHistoryCountdownBinding.inflate(inflater, container, false)
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel

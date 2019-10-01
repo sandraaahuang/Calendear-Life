@@ -4,23 +4,19 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.databinding.CalendarDetailFragmentBinding
+import com.sandra.calendearlife.databinding.FragmentCalendarDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import kotlinx.android.synthetic.main.dialog_discard.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,7 +36,7 @@ class CalendarDetailFragment : Fragment() {
         val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a",locale)
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd",locale)
 
-        val binding = CalendarDetailFragmentBinding.inflate(inflater, container, false)
+        val binding = FragmentCalendarDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         val application = requireNotNull(activity).application

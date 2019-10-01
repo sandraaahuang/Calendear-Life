@@ -22,14 +22,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.databinding.FragmentPreviewBinding
 import com.sandra.calendearlife.util.UserManager
-import com.sandra.calendearlife.databinding.PreviewFragmentBinding
 import com.sandra.calendearlife.widget.RemindersWidget
-import tr.com.harunkor.gifviewplayer.GifMovieView
 
 class PreviewFragment : Fragment() {
 
@@ -39,7 +37,7 @@ class PreviewFragment : Fragment() {
 
     val images = IntArray(4)
 
-    lateinit var binding: PreviewFragmentBinding
+    lateinit var binding: FragmentPreviewBinding
 
     private lateinit var auth: FirebaseAuth
 
@@ -51,7 +49,7 @@ class PreviewFragment : Fragment() {
     private fun updateWidget() {
 
         val thisWidget = ComponentName(context!!, RemindersWidget::class.java)
-        val views = RemoteViews(this.context!!.packageName, R.layout.reminder_widget)
+        val views = RemoteViews(this.context!!.packageName, R.layout.reminders_widget)
 
         if (PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean("login", false)) {
             views.setViewVisibility(R.id.remindersWidgetStackView, View.VISIBLE)
@@ -65,7 +63,7 @@ class PreviewFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = PreviewFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentPreviewBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         if (UserManager.id != null){

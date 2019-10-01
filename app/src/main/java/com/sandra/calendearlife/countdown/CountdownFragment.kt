@@ -3,8 +3,6 @@ package com.sandra.calendearlife.countdown
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,15 +13,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
-import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.databinding.CountdownFragmentBinding
+import com.sandra.calendearlife.databinding.FragmentCountdownBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 
 class CountdownFragment : Fragment() {
@@ -32,27 +27,12 @@ class CountdownFragment : Fragment() {
         ViewModelProviders.of(this).get(CountdownViewModel::class.java)
     }
 
-    private lateinit var binding: CountdownFragmentBinding
+    private lateinit var binding: FragmentCountdownBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = CountdownFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentCountdownBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
-        val addCountdownAdapter = AddCountdownAdapter(AddCountdownAdapter.OnClickListener {
-            viewModel.displayCountdownDetails(it)}, viewModel)
-
-        viewModel.navigateToCountdownProperty.observe(this, androidx.lifecycle.Observer {
-            if ( null != it ) {
-                // Must find the NavController from the Fragment
-                this.findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
-                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
-                viewModel.displayCountdownDetailsComplete()
-            }
-        })
-
-        binding.addCountdownRecyclerView.adapter = addCountdownAdapter
 
         val cal = Calendar.getInstance()
         val y = cal.get(Calendar.YEAR)
@@ -60,8 +40,6 @@ class CountdownFragment : Fragment() {
         val d = cal.get(Calendar.DAY_OF_MONTH)
 
         binding.countdownDateInput.text = SimpleDateFormat("yyyy/MM/dd").format(Date(Timestamp.now().seconds*1000))
-
-        addCountdownAdapter.notifyDataSetChanged()
 
         binding.editCountdownLayout.setOnClickListener {
 
@@ -149,9 +127,6 @@ class CountdownFragment : Fragment() {
                 binding.saveText.isClickable = false
             }
         })
-
-        val recyclerIndicator = binding.indicator
-        recyclerIndicator.attachToRecyclerView(binding.addCountdownRecyclerView)
 
         return binding.root
     }

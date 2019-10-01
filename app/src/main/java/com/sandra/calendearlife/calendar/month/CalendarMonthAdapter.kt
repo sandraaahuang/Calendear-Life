@@ -1,25 +1,18 @@
 package com.sandra.calendearlife.calendar.month
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Calendar
-import com.sandra.calendearlife.data.Countdown
-import com.sandra.calendearlife.databinding.CalendarShowEventBinding
-import com.sandra.calendearlife.databinding.ItemCountdownBinding
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.calendar_show_event.*
+import com.sandra.calendearlife.databinding.ItemCalendarEventBinding
 
 class CalendarMonthAdapter(val onClickListener: OnClickListener) :
     ListAdapter<Calendar, CalendarMonthAdapter.CountdownViewHolder>(DiffCallback) {
 
-    class CountdownViewHolder(private var binding: CalendarShowEventBinding):
+    class CountdownViewHolder(private var binding: ItemCalendarEventBinding):
         RecyclerView.ViewHolder(binding.root) {
         fun bind(calendar: Calendar) {
             binding.calendar = calendar
@@ -71,7 +64,7 @@ class CalendarMonthAdapter(val onClickListener: OnClickListener) :
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): CountdownViewHolder {
         return CountdownViewHolder(
-            CalendarShowEventBinding.inflate(
+            ItemCalendarEventBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )

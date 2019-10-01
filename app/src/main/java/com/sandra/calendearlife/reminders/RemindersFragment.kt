@@ -1,33 +1,27 @@
 package com.sandra.calendearlife.reminders
 
-import android.app.*
-import android.content.Context
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
-import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.databinding.RemindersFragmentBinding
+import com.sandra.calendearlife.databinding.FragmentRemindersBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.dialog.RepeatDialog
-import kotlinx.android.synthetic.main.dialog_repeat.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 
 class RemindersFragment : Fragment() {
@@ -47,36 +41,11 @@ class RemindersFragment : Fragment() {
         ViewModelProviders.of(this).get(RemindersViewModel::class.java)
     }
 
-    lateinit var binding: RemindersFragmentBinding
+    lateinit var binding: FragmentRemindersBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = RemindersFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentRemindersBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
-
-
-        val addRemindersAdapter = AddRemindersAdapter(AddRemindersAdapter.OnClickListener{
-            viewModel.displayReminderDetails(it)
-        }, viewModel)
-
-        viewModel.navigateToReminderProperty.observe(this, androidx.lifecycle.Observer {
-            if ( null != it ) {
-                // Must find the NavController from the Fragment
-                this.findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
-                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
-                viewModel.displayReminderDetailsComplete()
-            }
-        })
-
-        val itemTouchHelper= ItemTouchHelper(
-            SwipeToDeleteReminders(addRemindersAdapter, viewModel)
-        )
-        itemTouchHelper.attachToRecyclerView(binding.addRemindersRecyclerView)
-
-        binding.addRemindersRecyclerView.adapter = addRemindersAdapter
-
-        addRemindersAdapter.notifyDataSetChanged()
 
         binding.setReminderswitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
