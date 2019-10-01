@@ -24,6 +24,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
         <item name="homeCardColor">#fdf5e6</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
     </style>
 
@@ -51,6 +52,8 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
         <item name="homeCardColor">@color/black</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -81,6 +84,13 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">1dp</item>
         <item name="android:background">@color/gray</item>
+    </style>
+    
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+        
+        
     </style>
 
 </resources>
