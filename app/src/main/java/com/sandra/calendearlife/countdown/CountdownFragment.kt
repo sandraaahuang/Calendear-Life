@@ -116,13 +116,13 @@ class CountdownFragment : Fragment() {
             }
         }
 
-        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+        viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
             }
         })
 
-        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+        viewModel.isClicked.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 binding.saveText.isClickable = false
             }

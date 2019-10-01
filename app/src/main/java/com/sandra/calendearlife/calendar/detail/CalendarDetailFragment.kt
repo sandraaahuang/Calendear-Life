@@ -361,13 +361,13 @@ class CalendarDetailFragment : Fragment() {
 
         }
 
-        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+        viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
         })
 
-        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+        viewModel.isClicked.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 binding.saveButton.isClickable = false
                 binding.deleteButton.isClickable = false

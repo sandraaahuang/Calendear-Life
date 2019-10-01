@@ -21,18 +21,18 @@ import java.util.*
 class CalendarEventViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    private var _updateCompleted = MutableLiveData<Boolean>()
+    private var _isUpdateCompleted = MutableLiveData<Boolean>()
 
-    val updateCompleted: LiveData<Boolean>
-        get() = _updateCompleted
+    val isUpdateCompleted: LiveData<Boolean>
+        get() = _isUpdateCompleted
 
-    private var _clicked = MutableLiveData<Boolean>()
+    private var _isClicked = MutableLiveData<Boolean>()
 
-    val clicked: LiveData<Boolean>
-        get() = _clicked
+    val isClicked: LiveData<Boolean>
+        get() = _isClicked
 
     fun writeItem(item: Any, countdown: Any, reminder: Any) {
-        _clicked.value = true
+        _isClicked.value = true
         // get all data from user at first
         db.collection("data")
             .document(UserManager.id!!)
@@ -184,7 +184,7 @@ class CalendarEventViewModel : ViewModel() {
                     }
             }
             .addOnCompleteListener {
-                _updateCompleted.value = true
+                _isUpdateCompleted.value = true
             }
     }
 
@@ -193,7 +193,7 @@ class CalendarEventViewModel : ViewModel() {
         gBeginDate: Timestamp, gEndDate: Timestamp, gNote: String, gTitle: String,
         item: Any, countdown: Any, reminders: Any
     ) {
-        _clicked.value = true
+        _isClicked.value = true
         val EVENT_PROJECTION = arrayOf(
             Calendars._ID, // 0 calendar id
             Calendars.ACCOUNT_NAME, // 1 account name
@@ -430,7 +430,7 @@ class CalendarEventViewModel : ViewModel() {
                                         }
                                 }
                                 .addOnCompleteListener {
-                                    _updateCompleted.value = true
+                                    _isUpdateCompleted.value = true
                                 }
                         }
                     }

@@ -20,22 +20,21 @@ class RemindersViewModel : ViewModel() {
         }
 
     val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd", locale)
-    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd h:mm a", locale)
     val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
-    private var _updateCompleted = MutableLiveData<Boolean>()
+    private var _isUpdateCompleted = MutableLiveData<Boolean>()
 
-    val updateCompleted: LiveData<Boolean>
-        get() = _updateCompleted
+    val isUpdateCompleted: LiveData<Boolean>
+        get() = _isUpdateCompleted
 
-    private var _clicked = MutableLiveData<Boolean>()
+    private var _isClicked = MutableLiveData<Boolean>()
 
-    val clicked: LiveData<Boolean>
-        get() = _clicked
+    val isClicked: LiveData<Boolean>
+        get() = _isClicked
 
 
     fun writeItem(calendar: Any, reminder: Any) {
-        _clicked.value = true
+        _isClicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
@@ -72,7 +71,7 @@ class RemindersViewModel : ViewModel() {
                     }
             }
             .addOnCompleteListener {
-                _updateCompleted.value = true
+                _isUpdateCompleted.value = true
             }
     }
 }
