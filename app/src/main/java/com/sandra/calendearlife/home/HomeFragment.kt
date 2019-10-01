@@ -121,7 +121,7 @@ class HomeFragment : Fragment() {
         binding.swipeFreshHome.setOnRefreshListener {
             viewModel.getItem()
         }
-        viewModel.freshStatus.observe(this , Observer {
+        viewModel.isRefreshing.observe(this , Observer {
             it?.let {
                 binding.swipeFreshHome.isRefreshing = false
             }

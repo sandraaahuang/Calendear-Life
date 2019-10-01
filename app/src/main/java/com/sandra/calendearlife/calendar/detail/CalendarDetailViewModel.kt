@@ -25,15 +25,15 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     val selectedItem: LiveData<Calendar>
         get() = _selectedItem
 
-    private var _updateCompleted = MutableLiveData<Boolean>()
+    private var _isUpdateCompleted = MutableLiveData<Boolean>()
 
-    val updateCompleted: LiveData<Boolean>
-        get() = _updateCompleted
+    val isUpdateCompleted: LiveData<Boolean>
+        get() = _isUpdateCompleted
 
-    private var _clicked = MutableLiveData<Boolean>()
+    private var _isClicked = MutableLiveData<Boolean>()
 
-    val clicked: LiveData<Boolean>
-        get() = _clicked
+    val isClicked: LiveData<Boolean>
+        get() = _isClicked
 
     init {
         _selectedItem.value = calendar
@@ -45,7 +45,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                    countdown: HashMap<String, Any>,
                    updateRemind: HashMap<String, Any>) {
 
-        _clicked.value = true
+        _isClicked.value = true
 
         db.collection("data")
             .document(UserManager.id!!)
@@ -108,7 +108,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
 
                     if (index == documents.size() -1) {
-                        _updateCompleted.value = true
+                        _isUpdateCompleted.value = true
                     }
                 }
 
@@ -122,7 +122,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
     //delete item
     fun deleteItem(documentID: String) {
-        _clicked.value = true
+        _isClicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
@@ -183,7 +183,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                         .delete()
 
                     if (index == documents.size() -1) {
-                        _updateCompleted.value = true
+                        _isUpdateCompleted.value = true
                     }
                 }
             }
@@ -192,7 +192,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     }
 
     fun updateEvent(eventId: String, title: String, note: String, beginDate: Timestamp, endDate: Timestamp) {
-        _clicked.value = true
+        _isClicked.value = true
         val targetEventId = eventId
         val eventId = java.lang.Long.parseLong(targetEventId)
 
@@ -218,7 +218,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     }
 
     fun deleteEvent(eventId: String) {
-        _clicked.value = true
+        _isClicked.value = true
         val targetEventId = eventId
         val eventId = java.lang.Long.parseLong(targetEventId)
 

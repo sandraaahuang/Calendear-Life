@@ -17,15 +17,15 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
     val selectedItem: LiveData<Countdown>
         get() = _selectedItem
 
-    private var _updateCompleted = MutableLiveData<Boolean>()
+    private var _isUpdateCompleted = MutableLiveData<Boolean>()
 
-    val updateCompleted: LiveData<Boolean>
-        get() = _updateCompleted
+    val isUpdateCompleted: LiveData<Boolean>
+        get() = _isUpdateCompleted
 
-    private var _clicked = MutableLiveData<Boolean>()
+    private var _isClicked = MutableLiveData<Boolean>()
 
-    val clicked: LiveData<Boolean>
-        get() = _clicked
+    val isClicked: LiveData<Boolean>
+        get() = _isClicked
 
     init {
         _selectedItem.value = countdown
@@ -34,7 +34,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
 
     //update item
     fun updateItem(item: HashMap<String, Any>, calendarItem: HashMap<String, Any>, documentID: String) {
-        _clicked.value = true
+        _isClicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
@@ -73,7 +73,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                             }
                         }
                     if (index == documents.size() -1) {
-                        _updateCompleted.value = true
+                        _isUpdateCompleted.value = true
                     }
                 }
             }
@@ -82,7 +82,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
 
     //delete item
     fun deleteItem(documentID: String) {
-        _clicked.value = true
+        _isClicked.value = true
         db.collection("data")
             .document(UserManager.id!!)
             .collection("calendar")
@@ -122,7 +122,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                         }
 
                     if (index == documents.size() -1) {
-                        _updateCompleted.value = true
+                        _isUpdateCompleted.value = true
                     }
                 }
             }

@@ -80,14 +80,14 @@ class CountdownDetailFragment : Fragment() {
             viewModel.deleteItem(countdown.documentID)
             Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
         }
-        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+        viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 findNavController().navigate(NavigationDirections
                     .actionGlobalHomeFragment())
             }
         })
 
-        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+        viewModel.isClicked.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 binding.saveButton.isClickable = false
                 binding.deleteButton.isClickable = false

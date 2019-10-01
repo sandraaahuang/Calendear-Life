@@ -273,14 +273,14 @@ class CalendarEventFragment : Fragment() {
             }
         }
 
-        viewModel.updateCompleted.observe(this, androidx.lifecycle.Observer {
+        viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_SHORT).show()
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
         })
 
-        viewModel.clicked.observe(this, androidx.lifecycle.Observer {
+        viewModel.isClicked.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 binding.saveText.isClickable = false
             }
