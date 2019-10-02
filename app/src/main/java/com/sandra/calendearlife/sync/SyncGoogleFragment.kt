@@ -47,7 +47,6 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
 
         binding.askMeLaterButton.setOnClickListener {
             restart()
-//            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
         binding.nextButton.setOnClickListener {
@@ -77,7 +76,7 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
         }
     }
 
-    fun query_calendar() {
+    private fun query_calendar() {
         val EVENT_PROJECTION = arrayOf(
             CalendarContract.Calendars._ID, // 0 calendar id
             CalendarContract.Calendars.ACCOUNT_NAME, // 1 account name

@@ -46,7 +46,7 @@ class RemindersWidget : AppWidgetProvider() {
             } else if (intent.hasExtra("position")) {
 
                 val appwidgetId = intent.extras!!.getInt("refreshId")
-                selectedPostion = intent.extras!!.getInt("position")
+                selectedPosition = intent.extras!!.getInt("position")
 
                 AppWidgetManager.getInstance(context)
                     .notifyAppWidgetViewDataChanged(appwidgetId, R.id.remindersWidgetStackView)
@@ -57,69 +57,72 @@ class RemindersWidget : AppWidgetProvider() {
 
     companion object {
 
-        fun updateAppWidget(
-            context: Context, appWidgetManager: AppWidgetManager,
-            appWidgetId: Int
+    private fun updateAppWidget(
+        context: Context, appWidgetManager: AppWidgetManager,
+        appWidgetId: Int
+    ) {
+        val views = RemoteViews(context.packageName, R.layout.reminders_widget)
+        views.setOnClickPendingIntent(
+            R.id.remindAdd,
+            getPendingIntent(context)
+        )
+
+        Log.d("sandraaa", "appwidgetId = $appWidgetId")
+
+        //set first login
+        val intent = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        intent.putExtra("turn", "login")
+        views.setOnClickPendingIntent(R.id.reminderWidget, pendingIntent)
+
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+                "login",
+                false
+            )
         ) {
-            val views = RemoteViews(context.packageName, R.layout.reminders_widget)
-            views.setOnClickPendingIntent(R.id.remindAdd, getPendingIntent(context))
 
-            Log.d("sandraaa", "appwidgetId = $appWidgetId")
+            val serviceIntent = Intent(context, RemindersWidgetService::class.java)
+            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
 
-            //set first login
-            val intent = Intent(context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-            intent.putExtra("turn", "login")
-            views.setOnClickPendingIntent(R.id.reminderWidget, pendingIntent)
+            val clickIntent = Intent(context, RemindersWidget::class.java)
+            clickIntent.action = "click"
 
-            if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-                    "login",
-                    false
-                )
-            ) {
+            val clickPendingIntent = PendingIntent.getBroadcast(
+                context,
+                0, clickIntent, 0
+            )
 
-                val serviceIntent = Intent(context, RemindersWidgetService::class.java)
-                serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
+            views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
+            views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)
 
-                val clickIntent = Intent(context, RemindersWidget::class.java)
-                clickIntent.action = "click"
+            views.setViewVisibility(R.id.remindersWidgetStackView, View.VISIBLE)
+            views.setViewVisibility(R.id.empty, View.GONE)
 
-                val clickPendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    0, clickIntent, 0
-                )
-
-                views.setRemoteAdapter(R.id.remindersWidgetStackView, serviceIntent)
-                views.setPendingIntentTemplate(R.id.remindersWidgetStackView, clickPendingIntent)
-
-                views.setViewVisibility(R.id.remindersWidgetStackView, View.VISIBLE)
-                views.setViewVisibility(R.id.empty, View.GONE)
-
-            } else {
-                views.setViewVisibility(R.id.remindersWidgetStackView, View.GONE)
-                views.setViewVisibility(R.id.empty, View.VISIBLE)
-            }
-
-            // Instruct the widget manager to update the widget
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+        } else {
+            views.setViewVisibility(R.id.remindersWidgetStackView, View.GONE)
+            views.setViewVisibility(R.id.empty, View.VISIBLE)
         }
 
-        private fun executeResumeAction(context: Context, intent: Intent?) {
+        // Instruct the widget manager to update the widget
+        appWidgetManager.updateAppWidget(appWidgetId, views)
+    }
 
-            val bundle = intent?.getStringExtra("remindersItem")
-            val launchActivityIntent = MainActivity().createFlagIntent(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK)
+    private fun executeResumeAction(context: Context, intent: Intent?) {
 
-            context.startActivity(launchActivityIntent)
-        }
+        val bundle = intent?.getStringExtra("remindersItem")
+        val launchActivityIntent = MainActivity().createFlagIntent(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        private fun getPendingIntent(context: Context): PendingIntent {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.putExtra("turn", "addFragment")
-            return PendingIntent.getActivity(context, 12345, intent, 0)
-        }
+        context.startActivity(launchActivityIntent)
+    }
 
-        var selectedPostion: Int = -1
+    private fun getPendingIntent(context: Context): PendingIntent {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.putExtra("turn", "addFragment")
+        return PendingIntent.getActivity(context, 12345, intent, 0)
+    }
+
+    var selectedPosition: Int = -1
     }
 }
 

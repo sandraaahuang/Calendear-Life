@@ -17,24 +17,15 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.FragmentCalendarDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
+import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.timeFormat
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.util.*
 
 class CalendarDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val locale =
-            if (Locale.getDefault().toString() == "zh-rtw") {
-                Locale.TAIWAN
-            } else {
-                Locale.ENGLISH
-            }
-
-        val timeFormat = SimpleDateFormat("hh:mm a",locale)
-        val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a",locale)
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd",locale)
 
         val binding = FragmentCalendarDetailBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
@@ -43,24 +34,26 @@ class CalendarDetailFragment : Fragment() {
         val calendar = CalendarDetailFragmentArgs.fromBundle(arguments!!).calendar
         val viewModelFactory = CalendarDetailFactory(calendar, application)
         val viewModel = ViewModelProviders.of(
-            this, viewModelFactory).get(CalendarDetailViewModel::class.java)
+            this, viewModelFactory
+        ).get(CalendarDetailViewModel::class.java)
         binding.viewModel = viewModel
 
-        if (calendar.color == "245E2C" ||calendar.color == "8C6B8B" || calendar.color == "542437"
-            || calendar.color == "53777A" ||calendar.color == "A6292F" || calendar.color == "cb9b8c"){
+        if (calendar.color == "245E2C" || calendar.color == "8C6B8B" || calendar.color == "542437"
+            || calendar.color == "53777A" || calendar.color == "A6292F" || calendar.color == "cb9b8c"
+        ) {
             binding.allDayLayout.visibility = View.VISIBLE
             binding.beginDate.visibility = View.VISIBLE
 
 
-            if (calendar.color == "8C6B8B" || calendar.color == "542437"||calendar.color == "A6292F"
-                || calendar.color == "cb9b8c"){
-                if (calendar.isAllDay){
+            if (calendar.color == "8C6B8B" || calendar.color == "542437" || calendar.color == "A6292F"
+                || calendar.color == "cb9b8c"
+            ) {
+                if (calendar.isAllDay) {
                     binding.beginTime.visibility = View.GONE
                     binding.endDateText.visibility = View.GONE
                     binding.endDate.visibility = View.GONE
                     binding.endTime.visibility = View.GONE
-                }
-                else {
+                } else {
                     binding.endDate.visibility = View.VISIBLE
                     binding.endTime.visibility = View.VISIBLE
                 }
@@ -72,14 +65,15 @@ class CalendarDetailFragment : Fragment() {
 
 
 
-        if (calendar.color == "C02942" || calendar.color == "542437" || calendar.color == "A6292F" ||calendar.hasReminders){
+        if (calendar.color == "C02942" || calendar.color == "542437" || calendar.color == "A6292F" || calendar.hasReminders) {
             binding.remindLayout.visibility = View.VISIBLE
         } else {
             binding.remindLayout.visibility = View.GONE
         }
 
-        if (calendar.color == "100038" ||calendar.color == "53777A" ||calendar.color == "A6292F" ||calendar.hasCountdown
-            || calendar.color == "cb9b8c") {
+        if (calendar.color == "100038" || calendar.color == "53777A" || calendar.color == "A6292F" || calendar.hasCountdown
+            || calendar.color == "cb9b8c"
+        ) {
             binding.countdownLayout.visibility = View.VISIBLE
         } else {
             binding.countdownLayout.visibility = View.GONE
@@ -94,78 +88,88 @@ class CalendarDetailFragment : Fragment() {
 
         binding.beginDate.setOnClickListener {
 
-            val datePickerDialog= DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth)
                     val stringDate = simpleDateFormat.format(date)
-                    binding.beginDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
+                    binding.beginDate.text = "$stringDate"
+                }, year, monthOfYear, dayOfMonth
             )
 
             datePickerDialog.show()
         }
 
         binding.beginTime.setOnClickListener {
-            TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
-                val stringTime = timeFormat.format(date)
-                binding.beginTime.text = "$stringTime" }, hour, minute, false
+            TimePickerDialog(
+                this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+                { view, hour, minute ->
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth, hour, minute)
+                    val stringTime = timeFormat.format(date)
+                    binding.beginTime.text = "$stringTime"
+                }, hour, minute, false
             ).show()
         }
 
         binding.endDate.setOnClickListener {
 
-            val datePickerDialog= DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth)
                     val stringDate = simpleDateFormat.format(date)
-                    binding.endDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
+                    binding.endDate.text = "$stringDate"
+                }, year, monthOfYear, dayOfMonth
             )
 
             datePickerDialog.show()
         }
 
         binding.endTime.setOnClickListener {
-            TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
-                val stringTime = timeFormat.format(date)
-                binding.endTime.text = "$stringTime" }, hour, minute, false
+            TimePickerDialog(
+                this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+                { view, hour, minute ->
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth, hour, minute)
+                    val stringTime = timeFormat.format(date)
+                    binding.endTime.text = "$stringTime"
+                }, hour, minute, false
             ).show()
         }
 
         binding.remindDate.setOnClickListener {
 
-            val datePickerDialog= DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth)
                     val stringDate = simpleDateFormat.format(date)
-                    binding.remindDate.text = "$stringDate" }, year, monthOfYear, dayOfMonth
+                    binding.remindDate.text = "$stringDate"
+                }, year, monthOfYear, dayOfMonth
             )
 
             datePickerDialog.show()
         }
 
         binding.remindTime.setOnClickListener {
-            TimePickerDialog(this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year -1900, monthOfYear, dayOfMonth,hour, minute)
-                val stringTime = timeFormat.format(date)
-                binding.remindTime.text = "$stringTime" }, hour, minute, false
+            TimePickerDialog(
+                this.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+                { view, hour, minute ->
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth, hour, minute)
+                    val stringTime = timeFormat.format(date)
+                    binding.remindTime.text = "$stringTime"
+                }, hour, minute, false
             ).show()
         }
 
         binding.targetDateInput.setOnClickListener {
 
-            val datePickerDialog= DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth)
                     val stringDate = simpleDateFormat.format(date)
-                    binding.targetDateInput.text = "$stringDate" }, year, monthOfYear, dayOfMonth
+                    binding.targetDateInput.text = "$stringDate"
+                }, year, monthOfYear, dayOfMonth
             )
 
             datePickerDialog.show()
@@ -175,7 +179,7 @@ class CalendarDetailFragment : Fragment() {
             viewModel.deleteItem(calendar.documentID!!)
             Log.d("sandraaa", "delete = ${calendar.documentID}")
 
-            if (calendar.fromGoogle){
+            if (calendar.fromGoogle) {
 
                 viewModel.deleteEvent(calendar.documentID)
             } else {
@@ -214,29 +218,35 @@ class CalendarDetailFragment : Fragment() {
                     updateRemind = hashMapOf(
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
+                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
+                    )
                     updateCalendar = hashMapOf(
                         "date" to Timestamp(simpleDateFormat.parse(remindDate).time),
                         "beginDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
                         "endDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
                         "title" to "${binding.detailTitleInput.text}".trim(),
-                        "note" to "${binding.noteInput.text}".trim())
+                        "note" to "${binding.noteInput.text}".trim()
+                    )
 
-                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                }
 
                 "100038" -> {
                     updateCountdown = hashMapOf(
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
+                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time)
+                    )
                     updateCalendar = hashMapOf(
                         "date" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
                         "beginDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
                         "endDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time),
                         "title" to "${binding.detailTitleInput.text}".trim(),
-                        "note" to "${binding.noteInput.text}".trim())
+                        "note" to "${binding.noteInput.text}".trim()
+                    )
 
-                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                }
 
                 "8C6B8B" -> {
                     if (calendar.isAllDay) {
@@ -253,8 +263,10 @@ class CalendarDetailFragment : Fragment() {
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "location" to "${binding.locationInput.text}".trim())
-                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+                        "location" to "${binding.locationInput.text}".trim()
+                    )
+                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                }
 
                 "542437" -> {
                     if (calendar.isAllDay) {
@@ -270,12 +282,15 @@ class CalendarDetailFragment : Fragment() {
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "location" to "${binding.locationInput.text}".trim())
+                        "location" to "${binding.locationInput.text}".trim()
+                    )
                     updateRemind = hashMapOf(
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
-                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
+                    )
+                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                }
 
                 "cb9b8c" -> {
                     if (calendar.isAllDay) {
@@ -291,12 +306,15 @@ class CalendarDetailFragment : Fragment() {
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "location" to "${binding.locationInput.text}".trim())
+                        "location" to "${binding.locationInput.text}".trim()
+                    )
                     updateCountdown = hashMapOf(
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
-                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)}
+                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time)
+                    )
+                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                }
 
                 "A6292F" -> {
                     if (calendar.isAllDay) {
@@ -312,16 +330,20 @@ class CalendarDetailFragment : Fragment() {
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "location" to "${binding.locationInput.text}")
+                        "location" to "${binding.locationInput.text}"
+                    )
                     updateCountdown = hashMapOf(
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time))
+                        "targetDate" to Timestamp(simpleDateFormat.parse(tatgetDate).time)
+                    )
                     updateRemind = hashMapOf(
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time))
-                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
+                        "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
+                    )
+                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                }
 
                 "245E2C" -> {
                     if (calendar.isAllDay) {
@@ -337,20 +359,23 @@ class CalendarDetailFragment : Fragment() {
                         "endDate" to Timestamp(dateTimeFormat.parse(endDate).time),
                         "title" to "${binding.detailTitleInput.text}".trim(),
                         "note" to "${binding.noteInput.text}".trim(),
-                        "location" to "${binding.locationInput.text}".trim())
+                        "location" to "${binding.locationInput.text}".trim()
+                    )
 
-                    viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind) }
-
+                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                }
 
 
             }
 
-            if (calendar.fromGoogle){
-            viewModel.updateEvent(calendar.documentID!!,
-                "${binding.detailTitleInput.text}",
-                "${binding.noteInput.text}",
-                com.google.firebase.Timestamp(dateTimeFormat.parse(beginDate)),
-                com.google.firebase.Timestamp(dateTimeFormat.parse(endDate)))
+            if (calendar.fromGoogle) {
+                viewModel.updateEvent(
+                    calendar.documentID!!,
+                    "${binding.detailTitleInput.text}",
+                    "${binding.noteInput.text}",
+                    com.google.firebase.Timestamp(dateTimeFormat.parse(beginDate)),
+                    com.google.firebase.Timestamp(dateTimeFormat.parse(endDate))
+                )
             } else {
 //                viewModel.updateItem(calendar.documentID!!,updateCalendar,updateCountdown,updateRemind)
                 Log.d("sandraaa", "is not google item")

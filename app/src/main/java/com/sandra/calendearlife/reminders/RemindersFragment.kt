@@ -18,26 +18,22 @@ import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.FragmentRemindersBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import com.sandra.calendearlife.dialog.RepeatDialog
+import com.sandra.calendearlife.dialog.ChooseFrequencyDialog
+import com.sandra.calendearlife.constant.Const.Companion.EVALUATE_DIALOG
+import com.sandra.calendearlife.constant.Const.Companion.REQUEST_EVALUATE
+import com.sandra.calendearlife.constant.Const.Companion.RESPONSE
+import com.sandra.calendearlife.constant.Const.Companion.RESPONSE_EVALUATE
+import com.sandra.calendearlife.constant.Const.Companion.value
+import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.timeFormat
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.util.*
 
 
 class RemindersFragment : Fragment() {
 
-    var RESPONSE = "response"
-    var EVALUATE_DIALOG = "evaluate_dialog"
-    var REQUEST_EVALUATE = 0X110
-
-    val locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-
-    private val viewModel: RemindersViewModel by lazy{
+    private val viewModel: RemindersViewModel by lazy {
         ViewModelProviders.of(this).get(RemindersViewModel::class.java)
     }
 
@@ -50,14 +46,13 @@ class RemindersFragment : Fragment() {
         binding.setReminderswitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 binding.setRemindLayout.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 binding.setRemindLayout.visibility = View.GONE
             }
         }
 
         binding.repeatChoose.setOnClickListener {
-            val dialog = RepeatDialog()
+            val dialog = ChooseFrequencyDialog()
             dialog.setTargetFragment(this, REQUEST_EVALUATE);
             dialog.show(fragmentManager!!, EVALUATE_DIALOG)
         }
@@ -69,8 +64,9 @@ class RemindersFragment : Fragment() {
 
 
 
-        binding.remindersDateInput.text = SimpleDateFormat("yyyy/MM/dd").format(Date(com.google.firebase.Timestamp.now().seconds*1000))
-        binding.remindersTimeInput.text = SimpleDateFormat("hh:mm a", locale).format(Date(com.google.firebase.Timestamp.now().seconds*1000))
+        binding.remindersDateInput.text =
+            simpleDateFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.remindersTimeInput.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
 
         binding.remindersDateInput.setOnClickListener {
 
@@ -78,10 +74,11 @@ class RemindersFragment : Fragment() {
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     // Display Selected setDate in textbox
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringTime = SimpleDateFormat("yyyy/MM/dd").format(date)
-                    binding.remindersDateInput.text=
-                        "$stringTime" }, year, monthOfYear, dayOfMonth
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth)
+                    val stringTime = simpleDateFormat.format(date)
+                    binding.remindersDateInput.text =
+                        "$stringTime"
+                }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
         }
@@ -93,12 +90,14 @@ class RemindersFragment : Fragment() {
             val year = calendar.get(Calendar.YEAR)
             val monthOfYear = calendar.get(Calendar.MONTH)
             val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-            TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
-                val stringTime = SimpleDateFormat("hh:mm a", locale).format(date)
-                binding.remindersTimeInput.text =
-                    "$stringTime" }, hour, minute, false
+            TimePickerDialog(
+                it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+                { view, hour, minute ->
+                    val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
+                    val stringTime = timeFormat.format(date)
+                    binding.remindersTimeInput.text =
+                        "$stringTime"
+                }, hour, minute, false
             ).show()
         }
 
@@ -116,10 +115,8 @@ class RemindersFragment : Fragment() {
         binding.saveText.setOnClickListener {
             val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
             val date = "${binding.remindersDateInput.text}"
-            val dateFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a", locale)
-            val customFormat = SimpleDateFormat("yyyy/MM/dd")
-            val parsedDate = dateFormat.parse(remindDate)
-            val parsed = customFormat.parse(date)
+            val parsedDate = dateTimeFormat.parse(remindDate)
+            val parsed = simpleDateFormat.parse(date)
 
             val calendar = hashMapOf(
                 "color" to "C02942",
@@ -130,7 +127,7 @@ class RemindersFragment : Fragment() {
                 "title" to "${binding.remindersTitleInput.text}".trim(),
                 "note" to "${binding.remindersNoteInput.text}".trim(),
                 "hasReminders" to true,
-                "frequency" to RepeatDialog.value,
+                "frequency" to value,
                 "fromGoogle" to false
             )
 
@@ -141,13 +138,13 @@ class RemindersFragment : Fragment() {
                 "remindDate" to Timestamp(parsedDate.time),
                 "isChecked" to false,
                 "note" to "${binding.remindersNoteInput.text}".trim(),
-                "frequency" to RepeatDialog.value
+                "frequency" to value
             )
 
-            if ("${binding.remindersTitleInput.text}" == ""){
+            if ("${binding.remindersTitleInput.text}" == "") {
                 binding.remindersTitleInput.setHintTextColor(resources.getColor(R.color.delete_red))
             } else {
-                viewModel.writeItem(calendar,reminders)
+                viewModel.writeItem(calendar, reminders)
                 Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
             }
         }
@@ -175,9 +172,8 @@ class RemindersFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_EVALUATE)
-        {
-            val evaluate = data?.getStringExtra(RepeatDialog().RESPONSE_EVALUATE)
+        if (requestCode == REQUEST_EVALUATE) {
+            val evaluate = data?.getStringExtra(RESPONSE_EVALUATE)
 
             binding.repeatChoose.text = evaluate
             val intent = Intent()

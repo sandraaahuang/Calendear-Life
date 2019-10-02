@@ -22,11 +22,12 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
 import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
-import com.sandra.calendearlife.util.FragmentType
+import com.sandra.calendearlife.constant.Const.Companion.locale
+import com.sandra.calendearlife.constant.Const.Companion.putType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
 import kotlinx.android.synthetic.main.fragment_calendar_month.*
@@ -41,19 +42,18 @@ import java.util.*
 
 class CalendarMonthFragment : Fragment() {
 
+    companion object {
+        const val month = "MMM"
+        const val monthYear = "MMM yyyy"
+        const val date = "yyyy-MMM-dd"
+    }
+
     private var selectedDate: LocalDate? = null
     private val today = LocalDate.now()
 
-    private val locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-
-    private val titleSameYearFormatter = DateTimeFormatter.ofPattern("MMM", locale)
-    private val titleFormatter = DateTimeFormatter.ofPattern("MMM yyyy", locale)
-    private val selectionFormatter = DateTimeFormatter.ofPattern("yyyy-MMM-dd", locale)
+    private val titleSameYearFormatter = DateTimeFormatter.ofPattern(month, locale)
+    private val titleFormatter = DateTimeFormatter.ofPattern(monthYear, locale)
+    private val selectionFormatter = DateTimeFormatter.ofPattern(date, locale)
     private val viewModel: CalenderMonthViewModel by lazy {
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
     }
@@ -61,22 +61,12 @@ class CalendarMonthFragment : Fragment() {
     lateinit var binding: FragmentCalendarMonthBinding
 
     private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener {
-        putType("calendar")
+        putType(TYPECALENDAR)
         viewModel.displayCalendarDetails(it)
     })
 
-    private fun putType (type: String) {
-        val preferences =
-            MyApplication.instance.
-                getSharedPreferences("fragment", Context.MODE_PRIVATE)
-        preferences.edit().putString("type", type).apply()
-        preferences.getString("type","")
-        FragmentType.type = type
-        Log.d("sandraaa", "type = ${FragmentType.type}")
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("sandraaa", "time = ")
+
         binding = FragmentCalendarMonthBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -84,20 +74,11 @@ class CalendarMonthFragment : Fragment() {
 
         viewModel.navigateToCalendarProperty.observe(this, androidx.lifecycle.Observer {
             if (null != it) {
-                // Must find the NavController from the Fragment
+
                 this.findNavController().navigate(NavigationDirections.actionGlobalCalendarDetailFragment(it))
-                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
                 viewModel.displayCalendarDetailsComplete()
             }
         })
-
-//        titleSameYearFormatter = if (Locale.getDefault().toString() == "zh-rtw") {
-//            Log.d("sandraaa", "taiwan = ${Locale.getDefault()}")
-//            DateTimeFormatter.ofPattern("MMM", Locale.TAIWAN)
-//        } else {
-//            Log.d("sandraaa", "en = ${Locale.getDefault()}")
-//            DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH)
-//        }
 
         // floating action button
         val fabOpen = AnimationUtils.loadAnimation(this.context, R.anim.fab_open)
@@ -132,16 +113,16 @@ class CalendarMonthFragment : Fragment() {
         }
 
         binding.remindersFab.setOnClickListener {
-            putType("calendar")
+            putType(TYPECALENDAR)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
         binding.countdownsFab.setOnClickListener {
-            putType("calendar")
+            putType(TYPECALENDAR)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
         binding.calendarFab.setOnClickListener {
-            putType("calendar")
+            putType(TYPECALENDAR)
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
@@ -200,32 +181,32 @@ class CalendarMonthFragment : Fragment() {
                     it?.let {
                         for ((index, value) in it.withIndex() ){
                             if (value.date == day.date.toString() && day.owner == DayOwner.THIS_MONTH) {
-                                dotView.makeVisible()
+                                dotView.visibility = View.VISIBLE
                             }
                         }
                     }
                 })
 
                 if (day.owner == DayOwner.THIS_MONTH) {
-                    textView.makeVisible()
+                    textView.visibility = View.VISIBLE
                     when (day.date) {
                         today -> {
                             textView.setTextColorRes(R.color.white)
                             textView.setBackgroundResource(R.drawable.today_bg)
-                            dotView.makeInVisible()
+                            dotView.visibility = View.INVISIBLE
                         }
                         selectedDate -> {
 
                             textView.setBackgroundResource(R.drawable.selected_bg)
-                            dotView.makeInVisible()
+                            dotView.visibility = View.INVISIBLE
                         }
 
                         else -> {
                             textView.setBackgroundResource(R.color.translucent_80)
                              } }
                 } else {
-                    textView.makeInVisible()
-                    dotView.makeInVisible()
+                    textView.visibility = View.INVISIBLE
+                    dotView.visibility = View.INVISIBLE
                 }
             }
         }
@@ -298,10 +279,3 @@ class CalendarMonthFragment : Fragment() {
     private fun TextView.setTextColorRes(@ColorRes color: Int) = setTextColor(context.getColorCompat(color))
 }
 
-fun View.makeVisible() {
-    visibility = View.VISIBLE
-}
-
-fun View.makeInVisible() {
-    visibility = View.INVISIBLE
-}

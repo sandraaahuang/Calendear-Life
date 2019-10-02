@@ -5,40 +5,29 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.UserManager
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class HomeViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
-    val locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd", locale)
-    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd h:mm a", locale)
-    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
-
 
     lateinit var countdownAdd: Countdown
     lateinit var remindAdd: Reminders
 
-    val countdownItem = ArrayList<Countdown>()
-    val _liveCountdown = MutableLiveData<List<Countdown>>()
+    private val countdownItem = ArrayList<Countdown>()
+    private val _liveCountdown = MutableLiveData<List<Countdown>>()
     val liveCountdown: LiveData<List<Countdown>>
         get() = _liveCountdown
 
     val remindersItem = ArrayList<Reminders>()
-    val _liveReminders = MutableLiveData<List<Reminders>>()
+    private val _liveReminders = MutableLiveData<List<Reminders>>()
     val liveReminders: LiveData<List<Reminders>>
         get() = _liveReminders
 
-    val _isRefreshing = MutableLiveData<Boolean>()
+    private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean>
         get() = _isRefreshing
 

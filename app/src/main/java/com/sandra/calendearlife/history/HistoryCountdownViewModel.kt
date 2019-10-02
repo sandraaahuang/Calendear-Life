@@ -7,21 +7,17 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.data.Countdown
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.util.UserManager
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HistoryCountdownViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
-
     lateinit var countdownAdd: Countdown
 
-    val countdownItem = ArrayList<Countdown>()
-    val _liveCountdown = MutableLiveData<List<Countdown>>()
+    private val countdownItem = ArrayList<Countdown>()
+    private val _liveCountdown = MutableLiveData<List<Countdown>>()
     val liveCountdown: LiveData<List<Countdown>>
         get() = _liveCountdown
 

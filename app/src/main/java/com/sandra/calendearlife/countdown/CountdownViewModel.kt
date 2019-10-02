@@ -12,9 +12,6 @@ import java.util.*
 class CountdownViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
-
     private var _isUpdateCompleted = MutableLiveData<Boolean>()
 
     val isUpdateCompleted: LiveData<Boolean>

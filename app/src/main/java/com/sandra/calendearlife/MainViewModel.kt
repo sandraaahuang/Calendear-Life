@@ -6,18 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel : ViewModel() {
 
     var db = FirebaseFirestore.getInstance()
-    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-    val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd h:mm a")
-    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
 
     // Record current fragment to support data binding
     val currentFragmentType = MutableLiveData<CurrentFragmentType>()
@@ -26,12 +24,12 @@ class MainViewModel : ViewModel() {
     val userPhoto = UserManager.userPhoto
 
     lateinit var remindAdd: Reminders
-    val _liveReminders = MutableLiveData<Reminders>()
+    private val _liveReminders = MutableLiveData<Reminders>()
     val liveReminders: LiveData<Reminders>
         get() = _liveReminders
 
-    val dnrItem = ArrayList<Reminders>()
-    val _livednr = MutableLiveData<List<Reminders>>()
+    private val dnrItem = ArrayList<Reminders>()
+    private val _livednr = MutableLiveData<List<Reminders>>()
     val livednr: LiveData<List<Reminders>>
         get() = _livednr
 

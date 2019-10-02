@@ -14,28 +14,18 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.timeFormat
 import com.sandra.calendearlife.databinding.FragmentRemindersDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.util.*
 
 
 class RemindersDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentRemindersDetailBinding
-    val locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-
-    private val timeFormat = SimpleDateFormat("hh:mm a", locale)
-    private val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd", locale)
-    private val dateTimeFormat = SimpleDateFormat("yyyy/MM/dd hh:mm a", locale)
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 

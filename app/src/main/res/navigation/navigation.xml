@@ -32,7 +32,7 @@
     <fragment android:id="@+id/calendarEventFragment"
               android:name="com.sandra.calendearlife.calendar.event.CalendarEventFragment"
               android:label="CalendarEventFragment"/><action android:id="@+id/action_global_calendarEventFragment" app:destination="@id/calendarEventFragment"/>
-    <dialog android:id="@+id/repeatDialog" android:name="com.sandra.calendearlife.dialog.RepeatDialog"
+    <dialog android:id="@+id/repeatDialog" android:name="com.sandra.calendearlife.dialog.ChooseFrequencyDialog"
             android:label="RepeatDialog"/>
     <fragment android:id="@+id/previewFragment" android:name="com.sandra.calendearlife.preview.PreviewFragment"
               android:label="PreviewFragment"/>
