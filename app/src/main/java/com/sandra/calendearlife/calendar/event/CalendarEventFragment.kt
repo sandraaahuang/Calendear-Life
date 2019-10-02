@@ -34,8 +34,13 @@ import com.sandra.calendearlife.constant.Const.Companion.value
 import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
 import com.sandra.calendearlife.constant.DateFormat.Companion.dateWeekFormat
 import com.sandra.calendearlife.constant.DateFormat.Companion.dateWeekTimeFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
+import com.sandra.calendearlife.constant.DateFormat.Companion.hour
+import com.sandra.calendearlife.constant.DateFormat.Companion.minute
+import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.constant.DateFormat.Companion.timeFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.year
 import java.sql.Timestamp
 import java.util.*
 
@@ -79,20 +84,7 @@ class CalendarEventFragment : Fragment() {
             dialog.show(fragmentManager!!, EVALUATE_DIALOG)
         }
 
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val monthOfYear = calendar.get(Calendar.MONTH)
-        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        binding.beginDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.endDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.remindersDateInput.text =
-            simpleDateFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.beginTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.endTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.remindersTimeInput.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        setDefaultDate()
 
         binding.beginDate.setOnClickListener {
 
@@ -233,7 +225,7 @@ class CalendarEventFragment : Fragment() {
 
                 val item = hashMapOf(
                     "frequency" to value,
-                    "date" to Timestamp(simpleDateFormat.parse(date).time),
+                    "date" to Timestamp(dateWeekFormat.parse(date).time),
                     "setDate" to FieldValue.serverTimestamp(),
                     "beginDate" to Timestamp(dateWeekTimeFormat.parse(beginDate).time),
                     "endDate" to Timestamp(dateWeekTimeFormat.parse(endDate).time),
@@ -271,7 +263,6 @@ class CalendarEventFragment : Fragment() {
 
                 } else {
                     viewModel.writeItem(item, countdown, reminders)
-                    Log.d("sandraaa", "fail")
                 }
 
             }
@@ -304,6 +295,16 @@ class CalendarEventFragment : Fragment() {
             intent.putExtra(RESPONSE, evaluate);
             activity?.setResult(Activity.RESULT_OK, intent)
         }
+    }
+
+    private fun setDefaultDate() {
+        binding.beginDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.endDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.remindersDateInput.text =
+            simpleDateFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.beginTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.endTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.remindersTimeInput.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
     }
 
 
