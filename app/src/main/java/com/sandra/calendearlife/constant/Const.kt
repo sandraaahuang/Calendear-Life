@@ -19,6 +19,9 @@ class Const {
         const val REQUEST_EVALUATE = 0X110
 
         // Determine each fragment type
+        const val TYPECALENDAR = "calendar"
+        const val TYPEHOME = "home"
+
         fun putType (type: String) {
             val preferences =
                 MyApplication.instance.
@@ -28,13 +31,17 @@ class Const {
             FragmentType.type = type
             Log.d("sandraaa", "type = ${FragmentType.type}")
         }
-        const val TYPECALENDAR = "calendar"
-        const val TYPEHOME = "home"
 
         // frequency value
         var value: String = "Does not repeat"
         var frequency = listOf("Does not repeat"
             , "Every day", "Every week", "Every month", "Every year")
+
+        const val DOESNOTREPEAT = "Does not repeat"
+        const val EVERYDAY = "Every day"
+        const val EVERYWEEK = "Every week"
+        const val EVERYMONTH = "Every month"
+        const val EVERYYEAR = "Every year"
 
     }
 }

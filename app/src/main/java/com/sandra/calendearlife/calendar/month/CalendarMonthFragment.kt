@@ -23,8 +23,10 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
 import com.sandra.calendearlife.constant.Const.Companion.putType
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
@@ -47,7 +49,7 @@ class CalendarMonthFragment : Fragment() {
     }
 
     private val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

@@ -28,6 +28,12 @@ import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.FragmentPreviewBinding
 import com.sandra.calendearlife.constant.Const.Companion.RC_SIGN_IN
 import com.sandra.calendearlife.constant.Const.Companion.REQUEST_CODE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.GOOGLEINFO
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ID
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.LOGIN
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.USEREMAIL
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.USERNAME
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.USERPHOTO
 import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.widget.RemindersWidget
@@ -38,14 +44,15 @@ class PreviewFragment : Fragment() {
         ViewModelProviders.of(this).get(PreviewViewModel::class.java)
     }
 
-    private val images = IntArray(4)
+    private val images = intArrayOf(R.drawable.preview_photo_widget, R.drawable.preview_photo_notify,
+        R.drawable.preview_photo_home, R.drawable.preview_photo_mode)
 
     lateinit var binding: FragmentPreviewBinding
 
     private lateinit var auth: FirebaseAuth
 
     private fun setLogin(login: Boolean) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("login", login)
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(LOGIN, login)
             .apply()
     }
 
@@ -54,7 +61,7 @@ class PreviewFragment : Fragment() {
         val thisWidget = ComponentName(context!!, RemindersWidget::class.java)
         val views = RemoteViews(this.context!!.packageName, R.layout.reminders_widget)
 
-        if (PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean("login", false)) {
+        if (PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(LOGIN, false)) {
             views.setViewVisibility(R.id.remindersWidgetStackView, View.VISIBLE)
             views.setViewVisibility(R.id.empty, View.GONE)
         } else {
@@ -81,11 +88,6 @@ class PreviewFragment : Fragment() {
             setLogin(true)
             updateWidget()
         }
-
-        images[0] = R.drawable.preview_photo_widget
-        images[1] = R.drawable.preview_photo_notify
-        images[2] = R.drawable.preview_photo_home
-        images[3] = R.drawable.preview_photo_mode
 
         binding.recyclerView.adapter = PreviewImageAdapter(images)
 
@@ -140,41 +142,35 @@ class PreviewFragment : Fragment() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d("sandraaa", "signInWithCredential:success")
                     val id = auth.uid
                     val userName = auth.currentUser?.displayName
                     val userEmail = auth.currentUser?.email
                     val userPhoto = auth.currentUser?.photoUrl.toString()
-                    Log.d("sandraaa", "id = $id, user = $userName, email = $userEmail, photo = $userPhoto")
 
                     val preferences =
-                        MyApplication.instance.getSharedPreferences("GoogleLoginInfo", Context.MODE_PRIVATE)
-                    preferences.edit().putString("id", id).apply()
-                    preferences.getString("id", "")
+                        MyApplication.instance.getSharedPreferences(GOOGLEINFO, Context.MODE_PRIVATE)
+                    preferences.edit().putString(ID, id).apply()
+                    preferences.getString(ID, id)
                     UserManager.id = id
-                    Log.d("UserManager", "id = ${UserManager.id}")
 
-                    preferences.edit().putString("userName", userName).apply()
-                    preferences.getString("userName", userName)
+                    preferences.edit().putString(USERNAME, userName).apply()
+                    preferences.getString(USERNAME, userName)
                     UserManager.userName = userName
-                    Log.d("UserManager", "name = ${UserManager.userName}")
 
-                    preferences.edit().putString("userEmail", userEmail).apply()
-                    preferences.getString("userEmail", userEmail)
+                    preferences.edit().putString(USEREMAIL, userEmail).apply()
+                    preferences.getString(USEREMAIL, userEmail)
                     UserManager.userEmail = userEmail
-                    Log.d("UserManager", "userEmail = ${UserManager.userEmail}")
 
-                    preferences.edit().putString("userPhoto", userPhoto).apply()
-                    preferences.getString("userPhoto", userPhoto)
+                    preferences.edit().putString(USERPHOTO, userPhoto).apply()
+                    preferences.getString(USERPHOTO, userPhoto)
                     UserManager.userPhoto = userPhoto
-                    Log.d("UserManager", "userPhoto = ${UserManager.userPhoto}")
 
                     viewModel.getItem()
                     findNavController().navigate(NavigationDirections.actionGlobalSyncDialog())
 
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w("sandraaa", "signInWithCredential:failure", task.exception)
+                    Logger.w("signInWithCredential:failure = ${task.exception}")
                 }
             }
     }

@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.Const.Companion.EVALUATE_DIALOG
 import com.sandra.calendearlife.constant.Const.Companion.REQUEST_EVALUATE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE
@@ -52,6 +53,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCalendarEventBinding
 import com.sandra.calendearlife.dialog.ChooseFrequencyDialog
 import com.sandra.calendearlife.dialog.DiscardDialog
@@ -63,7 +65,7 @@ import java.util.*
 class CalendarEventFragment : Fragment() {
 
     private val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

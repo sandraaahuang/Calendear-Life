@@ -1,6 +1,5 @@
 package com.sandra.calendearlife
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +16,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
@@ -26,7 +26,7 @@ import java.util.*
 class MainViewModel : ViewModel() {
 
     val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

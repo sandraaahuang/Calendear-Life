@@ -7,11 +7,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.SharedPreferenceKey
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ADDFRAGMENT
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CLICK
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.LOGIN
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.POSITION
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.REMINDERSITEM
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.TURN
 
 class RemindersWidget : AppWidgetProvider() {
 
@@ -33,21 +39,16 @@ class RemindersWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
 
-        if (intent?.action == "click") {
+        if (intent?.action == CLICK) {
 
-            Log.d("sandraaa", "extra = ${intent.extras}")
-
-            if (intent.hasExtra("remindersItem")) {
-
-                val remindersItem = intent.extras?.getString("remindersItem")
-                Log.d("sandraaa", "remindersItem = $remindersItem")
+            if (intent.hasExtra(REMINDERSITEM)) {
+                intent.extras?.getString(REMINDERSITEM)
                 executeResumeAction(context, intent)
 
-            } else if (intent.hasExtra("position")) {
+            } else if (intent.hasExtra(POSITION)) {
 
-                val appwidgetId = intent.extras!!.getInt("refreshId")
-                selectedPosition = intent.extras!!.getInt("position")
-
+                val appwidgetId = intent.extras!!.getInt(SharedPreferenceKey.REFRESHID)
+                selectedPosition = intent.extras!!.getInt(POSITION)
                 AppWidgetManager.getInstance(context)
                     .notifyAppWidgetViewDataChanged(appwidgetId, R.id.remindersWidgetStackView)
 
@@ -67,16 +68,14 @@ class RemindersWidget : AppWidgetProvider() {
             getPendingIntent(context)
         )
 
-        Log.d("sandraaa", "appwidgetId = $appWidgetId")
-
         //set first login
         val intent = Intent(context, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-        intent.putExtra("turn", "login")
+        intent.putExtra(TURN, LOGIN)
         views.setOnClickPendingIntent(R.id.reminderWidget, pendingIntent)
 
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-                "login",
+                LOGIN,
                 false
             )
         ) {
@@ -86,7 +85,7 @@ class RemindersWidget : AppWidgetProvider() {
             serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
 
             val clickIntent = Intent(context, RemindersWidget::class.java)
-            clickIntent.action = "click"
+            clickIntent.action = CLICK
 
             val clickPendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -102,6 +101,7 @@ class RemindersWidget : AppWidgetProvider() {
         } else {
             views.setViewVisibility(R.id.remindersWidgetStackView, View.GONE)
             views.setViewVisibility(R.id.empty, View.VISIBLE)
+            views.setViewVisibility(R.id.remindAdd, View.INVISIBLE)
         }
 
         // Instruct the widget manager to update the widget
@@ -110,7 +110,7 @@ class RemindersWidget : AppWidgetProvider() {
 
     private fun executeResumeAction(context: Context, intent: Intent?) {
 
-        val bundle = intent?.getStringExtra("remindersItem")
+        val bundle = intent?.getStringExtra(REMINDERSITEM)
         val launchActivityIntent = MainActivity().createFlagIntent(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK)
 
         context.startActivity(launchActivityIntent)
@@ -118,7 +118,7 @@ class RemindersWidget : AppWidgetProvider() {
 
     private fun getPendingIntent(context: Context): PendingIntent {
         val intent = Intent(context, MainActivity::class.java)
-        intent.putExtra("turn", "addFragment")
+        intent.putExtra(TURN, ADDFRAGMENT)
         return PendingIntent.getActivity(context, 12345, intent, 0)
     }
 

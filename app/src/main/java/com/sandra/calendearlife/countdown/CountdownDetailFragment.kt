@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
@@ -22,6 +23,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCountdownDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.text.SimpleDateFormat
@@ -32,7 +34,7 @@ class CountdownDetailFragment : Fragment() {
     private lateinit var binding: FragmentCountdownDetailBinding
 
     private val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

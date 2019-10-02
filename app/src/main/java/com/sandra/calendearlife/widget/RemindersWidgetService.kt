@@ -3,8 +3,6 @@ package com.sandra.calendearlife.widget
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
@@ -12,7 +10,24 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISCHECKED
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.POSITION
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.REFRESHID
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.REMINDERSITEM
 import com.sandra.calendearlife.data.Reminders
+import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.widget.RemindersWidget.Companion.selectedPosition
 import java.text.SimpleDateFormat
@@ -30,7 +45,7 @@ class RemindersWidgetService : RemoteViewsService() {
         var db = FirebaseFirestore.getInstance()
 
         val locale: Locale =
-            if (Locale.getDefault().toString() == "zh-rtw") {
+            if (Locale.getDefault().toString() == CHINESE) {
                 Locale.TAIWAN
             } else {
                 Locale.ENGLISH
@@ -47,45 +62,42 @@ class RemindersWidgetService : RemoteViewsService() {
 
             val appWidgetManager = AppWidgetManager.getInstance(context)
 
-            db.collection("data")
+            db.collection(DATA)
                 .document(UserManager.id!!)
-                .collection("calendar")
+                .collection(CALENDAR)
                 .get()
                 .addOnSuccessListener { documents ->
 
                     for (calendar in documents) {
-                        Log.d("widgetCalendar", "${calendar.id} => ${calendar.data}")
 
                         //get reminders ( only ischecked is false )
-                        db.collection("data")
+                        db.collection(DATA)
                             .document(UserManager.id!!)
-                            .collection("calendar")
+                            .collection(CALENDAR)
                             .document(calendar.id)
-                            .collection("reminders")
-                            .whereEqualTo("isChecked", false)
+                            .collection(REMINDERS)
+                            .whereEqualTo(ISCHECKED, false)
                             .get()
                             .addOnSuccessListener { documents ->
 
                                 for (reminder in documents) {
-                                    Log.d("widgetReminder", "${reminder.id} => ${reminder.data}")
 
-                                    val setDate = (reminder.data["setDate"] as Timestamp)
-                                    val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                    val setDate = (reminder.data[SETDATE] as Timestamp)
+                                    val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                     remindAdd = Reminders(
                                         simpleDateFormat.format(setDate.seconds * 1000),
-                                        reminder.data["title"].toString(),
-                                        reminder.data["setRemindDate"].toString().toBoolean(),
+                                        reminder.data[TITLE].toString(),
+                                        reminder.data[SETREMINDATE].toString().toBoolean(),
                                         simpleDateFormat.format(remindDate.seconds * 1000),
-                                        reminder.data["remindDate"] as Timestamp,
-                                        reminder.data["isChecked"].toString().toBoolean(),
-                                        reminder.data["note"].toString(),
-                                        reminder.data["frequency"].toString(),
-                                        reminder.data["documentID"].toString()
+                                        reminder.data[REMINDDATE] as Timestamp,
+                                        reminder.data[ISCHECKED].toString().toBoolean(),
+                                        reminder.data[NOTE].toString(),
+                                        reminder.data[FREQUENCY].toString(),
+                                        reminder.data[DOCUMENTID].toString()
                                     )
                                     remindersItem.add(remindAdd)
                                 }
-//                                Log.d("sandraaa", "remindersItem=  $remindersItem")
 
                                 appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
                             }
@@ -103,7 +115,7 @@ class RemindersWidgetService : RemoteViewsService() {
         }
 
         override fun onDataSetChanged() {
-            Log.d("sandraaa", "data change")
+            Logger.d("data change")
         }
 
         override fun hasStableIds(): Boolean {
@@ -123,16 +135,16 @@ class RemindersWidgetService : RemoteViewsService() {
             }
 
             if (remindersItem[position].remindTimestamp.seconds < Timestamp.now().seconds){
-                views.setTextColor(R.id.remindersTime,Color.parseColor("#f44336"))
+                views.setTextColor(R.id.remindersTime, MyApplication.instance.getColor(R.color.delete_red))
             }
 
             val positionIntent = Intent().apply {
-                putExtra("position", position)
-                putExtra("refreshId", appWidgetId)
+                putExtra(POSITION, position)
+                putExtra(REFRESHID, appWidgetId)
             }
 
             val reminderIntent = Intent().apply {
-                putExtra("remindersItem", remindersItem[position].documentID)
+                putExtra(REMINDERSITEM, remindersItem[position].documentID)
             }
 
             views.setOnClickFillInIntent(R.id.remindersCheckedButton, positionIntent)
@@ -142,14 +154,14 @@ class RemindersWidgetService : RemoteViewsService() {
 
             if (position == selectedPosition) {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.VISIBLE)
-                views.setTextColor(R.id.remindersTextView, Color.parseColor("#D8D8D8"))
+                views.setTextColor(R.id.remindersTextView, MyApplication.instance.getColor(R.color.delete_red))
                 
                 updateItem(remindersItem[position].documentID)
 
 
             } else {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.GONE)
-                views.setTextColor(R.id.remindersTextView, Color.parseColor("#000000"))
+                views.setTextColor(R.id.remindersTextView, MyApplication.instance.getColor(R.color.black))
 
             }
 
@@ -170,44 +182,39 @@ class RemindersWidgetService : RemoteViewsService() {
         private // update isChecked to true when user click the button
         fun updateItem(documentID: String) {
 
-            db.collection("data")
+            db.collection(DATA)
                 .document(UserManager.id!!)
-                .collection("calendar")
+                .collection(CALENDAR)
                 .get()
                 .addOnSuccessListener { documents ->
 
                     for (calendar in documents) {
-                        Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                         // add countdowns
-                        db.collection("data")
+                        db.collection(DATA)
                             .document(UserManager.id!!)
-                            .collection("calendar")
+                            .collection(CALENDAR)
                             .document(calendar.id)
-                            .collection("reminders")
-                            .whereEqualTo("documentID", documentID)
+                            .collection(REMINDERS)
+                            .whereEqualTo(DOCUMENTID, documentID)
                             .get()
                             .addOnSuccessListener { documents ->
 
                                 for (reminders in documents) {
-                                    Log.d("getAllCalendar", "${reminders.id} => ${reminders.data}")
 
                                     // add countdowns
-                                    db.collection("data")
+                                    db.collection(DATA)
                                         .document(UserManager.id!!)
-                                        .collection("calendar")
+                                        .collection(CALENDAR)
                                         .document(calendar.id)
-                                        .collection("reminders")
+                                        .collection(REMINDERS)
                                         .document(documentID)
-                                        .update("isChecked", true)
+                                        .update(ISCHECKED, true)
                                         .addOnSuccessListener {
 
                                             // update success
                                             refreshData()
-                                            Log.d(
-                                                "RenewCountdown",
-                                                "successfully updated my status!"
-                                            )
+
                                         }
                                 }
                             }
@@ -216,52 +223,46 @@ class RemindersWidgetService : RemoteViewsService() {
         }
 
         private fun refreshData() {
-            db.collection("data")
+            db.collection(DATA)
                 .document(UserManager.id!!)
-                .collection("calendar")
+                .collection(CALENDAR)
                 .get()
                 .addOnSuccessListener { totalDocuments ->
-
-                    Log.i("Sandraaaa", "before refresh remindersItem.size = ${remindersItem.size}")
 
                     remindersItem.clear()
 
                     for ((index, calendar) in totalDocuments.withIndex()) {
-                        Log.d("widgetCalendar", "${calendar.id} => ${calendar.data}")
 
                         //get reminders ( only ischecked is false )
-                        db.collection("data")
+                        db.collection(DATA)
                             .document(UserManager.id!!)
-                            .collection("calendar")
+                            .collection(CALENDAR)
                             .document(calendar.id)
-                            .collection("reminders")
-                            .whereEqualTo("isChecked", false)
+                            .collection(REMINDERS)
+                            .whereEqualTo(ISCHECKED, false)
                             .get()
                             .addOnSuccessListener { documents ->
 
                                 for (reminder in documents) {
-                                    Log.d("widgetReminder", "${reminder.id} => ${reminder.data}")
 
-                                    val setDate = (reminder.data["setDate"] as Timestamp)
-                                    val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                    val setDate = (reminder.data[SETDATE] as Timestamp)
+                                    val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                     remindAdd = Reminders(
                                         simpleDateFormat.format(setDate.seconds * 1000),
-                                        reminder.data["title"].toString(),
-                                        reminder.data["setRemindDate"].toString().toBoolean(),
+                                        reminder.data[TITLE].toString(),
+                                        reminder.data[SETREMINDATE].toString().toBoolean(),
                                         simpleDateFormat.format(remindDate.seconds * 1000),
-                                        reminder.data["remindDate"] as Timestamp,
-                                        reminder.data["isChecked"].toString().toBoolean(),
-                                        reminder.data["note"].toString(),
-                                        reminder.data["frequency"].toString(),
-                                        reminder.data["documentID"].toString()
+                                        reminder.data[REMINDDATE] as Timestamp,
+                                        reminder.data[ISCHECKED].toString().toBoolean(),
+                                        reminder.data[NOTE].toString(),
+                                        reminder.data[FREQUENCY].toString(),
+                                        reminder.data[DOCUMENTID].toString()
                                     )
                                     remindersItem.add(remindAdd)
                                 }
 
                                 if (index == totalDocuments.size() -1 ) {
-                                    Log.i("Sandraaaa", "after refresh remindersItem.size = ${remindersItem.size}")
-
                                     selectedPosition = -1
                                     AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
 

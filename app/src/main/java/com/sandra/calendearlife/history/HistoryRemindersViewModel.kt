@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
@@ -17,6 +18,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
@@ -27,7 +29,7 @@ class HistoryRemindersViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
     val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

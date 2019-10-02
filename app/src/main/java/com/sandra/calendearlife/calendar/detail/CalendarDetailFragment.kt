@@ -38,6 +38,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCalendarDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.util.Logger
@@ -48,7 +49,7 @@ import java.util.*
 class CalendarDetailFragment : Fragment() {
 
     private val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

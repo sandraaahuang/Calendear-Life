@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.Const.Companion.EVALUATE_DIALOG
 import com.sandra.calendearlife.constant.Const.Companion.REQUEST_EVALUATE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE
@@ -37,6 +38,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentRemindersBinding
 import com.sandra.calendearlife.dialog.ChooseFrequencyDialog
 import com.sandra.calendearlife.dialog.DiscardDialog
@@ -52,7 +54,7 @@ class RemindersFragment : Fragment() {
     }
 
     val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

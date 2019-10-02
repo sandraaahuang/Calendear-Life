@@ -41,9 +41,54 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.Const
+import com.sandra.calendearlife.constant.Const.Companion.DOESNOTREPEAT
+import com.sandra.calendearlife.constant.Const.Companion.EVERYDAY
+import com.sandra.calendearlife.constant.Const.Companion.EVERYMONTH
+import com.sandra.calendearlife.constant.Const.Companion.EVERYWEEK
+import com.sandra.calendearlife.constant.Const.Companion.EVERYYEAR
 import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
 import com.sandra.calendearlife.constant.Const.Companion.TYPEHOME
 import com.sandra.calendearlife.constant.Const.Companion.putType
+import com.sandra.calendearlife.constant.FirebaseKey
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CONJUNCTION
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISCHECKED
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.MAILFORMAT
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.PARENTHESES
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.QUESTIONMARK
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ADDFRAGMENT
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.COUNTDOWN
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DARK
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DARKMODE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DNR
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ED
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.EM
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ENGLISH
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.EW
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.EY
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.LANG
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.LIGHT
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.LOGIN
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.REMINDERSITEM
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.SETTINGS
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.STATUS
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.TURN
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ZH
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
@@ -61,7 +106,7 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val preferences =
-        MyApplication.instance.getSharedPreferences("DarkMode", Context.MODE_PRIVATE)
+        MyApplication.instance.getSharedPreferences(DARKMODE, Context.MODE_PRIVATE)
 
     lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
@@ -75,10 +120,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun createIntent(context: Context, documentId: String?): Intent {
 
         val intent = Intent(context, MainActivity::class.java)
-        intent.putExtra("remindersItem", documentId)
-
-        Log.d("sandraaa", "intent = ${intent.extras?.get("remindersItem")}")
-
+        intent.putExtra(REMINDERSITEM, documentId)
         return intent
 
     }
@@ -111,8 +153,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         loadLocale()
 
-        if (Locale.getDefault().language == "" && nowLanguage == "zh") {
-            setLocale("zh-rTW")
+        if (Locale.getDefault().language == "" && nowLanguage == ZH) {
+            setLocale(CHINESE)
 
         } else {
             loadLocale()
@@ -130,9 +172,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         intent.extras?.let {
             if (UserManager.id != null) {
-                viewModel.getItem(it.get("remindersItem").toString())
+                viewModel.getItem(it.get(REMINDERSITEM).toString())
             } else {
-                Logger.d( "don't have user")
+                Logger.d("don't have user")
             }
         }
 
@@ -144,14 +186,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
 
 
-        val value = intent.getStringExtra("turn")
+        val value = intent.getStringExtra(TURN)
+
         if (!TextUtils.isEmpty(value)) {
             when (value) {
-                "addFragment" -> {
+                ADDFRAGMENT -> {
                     findNavController(R.id.myNavHostFragment)
                         .navigate(NavigationDirections.actionGlobalRemindersFragment())
                 }
-                "login" -> {
+                LOGIN -> {
                     findNavController(R.id.myNavHostFragment)
                         .navigate(NavigationDirections.actionGlobalPreviewFragment())
                 }
@@ -170,7 +213,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             val alarmManager = MyApplication.instance.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(MyApplication.instance, AlarmReceiver::class.java)
-            intent.action = "countdown"
+            intent.action = SharedPreferenceKey.COUNTDOWN
             val pendingIntent = PendingIntent.getBroadcast(
                 MyApplication.instance,
                 1234, intent, PendingIntent.FLAG_UPDATE_CURRENT
@@ -180,31 +223,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 AlarmManager.RTC_WAKEUP, customCal.timeInMillis,
                 AlarmManager.INTERVAL_DAY, pendingIntent
             )
-            Log.i("sandraaa", "alarm set success")
+            Logger.i("alarm set success")
 
             viewModel.livednr.observe(this, Observer {
                 it?.let {
-                    for ((index, value) in it.withIndex()) {
+                    for (value in it) {
 
                         when (value.frequency) {
-                            "Does not repeat" -> {
-                                Log.d("sandraaa", "DNR = ${value.remindTimestamp.seconds}")
+                            Const.DOESNOTREPEAT -> {
+
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val dnrPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction("dnr"), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, dnrIntent.setAction(DNR), PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setExact(
                                     AlarmManager.RTC_WAKEUP,
                                     value.remindTimestamp.seconds * 1000, dnrPending
                                 )
                             }
-                            "Every day" -> {
-                                Log.d("sandraaa", "ED = ${value.remindTimestamp.seconds}")
+                            EVERYDAY -> {
+
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction("ED"), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, dnrIntent.setAction(ED), PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -212,12 +255,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     AlarmManager.INTERVAL_DAY, edPending
                                 )
                             }
-                            "Every week" -> {
-                                Log.d("sandraaa", "EW = ${value.remindTimestamp.seconds}")
+                            EVERYWEEK -> {
+
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction("EW"), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, dnrIntent.setAction(EW), PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -226,12 +269,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
 
                             }
-                            "Every month" -> {
-                                Log.d("sandraaa", "EM = ${value.remindTimestamp.seconds}")
+                            EVERYMONTH -> {
+
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction("EM"), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, dnrIntent.setAction(EM), PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -240,12 +283,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
 
                             }
-                            "Every year" -> {
-                                Log.d("sandraaa", "EY = ${value.remindTimestamp.seconds}")
+                            EVERYYEAR -> {
+
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction("EY"), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, dnrIntent.setAction(EY), PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -265,9 +308,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val menuItem = binding.navView.menu.findItem(R.id.changeMode)
         val actionView = MenuItemCompat.getActionView(menuItem) as SwitchCompat
 
-        Log.d("sandraaa", "before switch check = ${binding.navView.menu.findItem(R.id.changeMode).isChecked}")
-
-        if (preferences.getString("status", null) == "dark") {
+        if (preferences.getString(STATUS, null) == DARK) {
 
             actionView.isChecked = true
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -281,20 +322,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (isChecked) {
 
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                preferences.edit().putString("status", "dark").apply()
+                preferences.edit().putString(STATUS, DARK).apply()
                 restartApp()
 
             } else if (!isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                preferences.edit().putString("status", "light").apply()
+                preferences.edit().putString(STATUS, LIGHT).apply()
                 restartApp()
 
             }
         }
 
-        Log.d("sandraaa", "language = ${Locale.getDefault().language} en, zh-rtw")
-
-        if (Locale.getDefault().language == "en") {
+        if (Locale.getDefault().language == ENGLISH) {
             updateEnEnum()
         } else {
             updateZhEnum()
@@ -344,11 +383,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val cr = MyApplication.instance.contentResolver
         val uri = CalendarContract.Calendars.CONTENT_URI
         // find
-        val selection = ("((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))")
+        val selection = (PARENTHESES + CalendarContract.Calendars.ACCOUNT_NAME + CONJUNCTION
+                + CalendarContract.Calendars.ACCOUNT_TYPE + CONJUNCTION
+                + CalendarContract.Calendars.OWNER_ACCOUNT + QUESTIONMARK)
         val selectionArgs =
-            arrayOf(targetAccount, "com.google", UserManager.userEmail)
+            arrayOf(targetAccount, MAILFORMAT, UserManager.userEmail)
 
         //check permission
         val permissionCheck = ContextCompat.checkSelfPermission(
@@ -378,8 +417,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // store calendar data
                     accountNameList.add(displayName)
                     calendarIdList.add(calendarId)
-
-                    Log.d("sandraaa", "accountNameList = $accountNameList,calendarIdList = $calendarIdList ")
 
                     val targetCalendar = calendarId
                     val beginTime = getInstance()
@@ -560,10 +597,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         builder.setTitle(getString(R.string.language))
         builder.setSingleChoiceItems(listItem, -1) { dialogInterface, i ->
             if (i == 0) {
-                setLocale("zh-rTW")
+                setLocale(CHINESE)
                 restartApp()
             } else if (i == 1) {
-                setLocale("en")
+                setLocale(ENGLISH)
                 restartApp()
             }
             dialogInterface.dismiss()
@@ -576,20 +613,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setLocale(lang: String) {
         var locale = Locale(lang)
         Locale.setDefault(locale)
-        if (lang == "zh-rTW") {
+        if (lang == CHINESE) {
             locale = Locale.TAIWAN
         }
         val config = android.content.res.Configuration()
         config.locale = locale
         baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-        val editor = getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
-        editor.putString("Lang", lang)
+        val editor = getSharedPreferences(SETTINGS, Context.MODE_PRIVATE).edit()
+        editor.putString(LANG, lang)
         editor.apply()
     }
 
     private fun loadLocale() {
-        val prefs = getSharedPreferences("Settings", Context.MODE_PRIVATE)
-        val language = prefs.getString("Lang", "")
+        val prefs = getSharedPreferences(SETTINGS, Context.MODE_PRIVATE)
+        val language = prefs.getString(LANG, "")
         setLocale(language!!)
     }
 
@@ -602,20 +639,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun sepupStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = window
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.decorView.systemUiVisibility =
-                (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = Color.TRANSPARENT
-        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        val window = window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.decorView.systemUiVisibility =
+            (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = Color.TRANSPARENT
+
     }
 
     private fun setDrawer() {
@@ -688,52 +723,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    override fun onReceive(p0: Context?, p1: Intent?) {
+    override fun onReceive(context: Context?, intent: Intent?) {
 
-        Log.d("sandraaa", "onreceive ${p1?.flags}")
-        Log.d("sandraaa", "onreceive ${p1?.action}")
-
-        when (p1?.action) {
-            "countdown" -> {
+        when (intent?.action) {
+            SharedPreferenceKey.COUNTDOWN -> {
                 val db = FirebaseFirestore.getInstance()
                 val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
+                Logger.d("countdown trigger time = ${Timestamp.now().seconds * 1000}")
 
-                Log.d("alarmManager", "countdown trigger time = ${Timestamp.now().seconds * 1000}")
-
-                lateinit
-                var countdownAdd: Countdown
+                lateinit var countdownAdd: Countdown
                 val countdownItem = ArrayList<Countdown>()
 
-                db.collection("data")
+                db.collection(DATA)
                     .document(UserManager.id!!)
-                    .collection("calendar")
+                    .collection(CALENDAR)
                     .get()
                     .addOnSuccessListener { documents ->
 
                         for (calendar in documents) {
 
                             // get countdowns
-                            db.collection("data")
+                            db.collection(DATA)
                                 .document(UserManager.id!!)
-                                .collection("calendar")
+                                .collection(CALENDAR)
                                 .document(calendar.id)
-                                .collection("countdowns")
-                                .whereEqualTo("overdue", false)
+                                .collection(FirebaseKey.COUNTDOWN)
+                                .whereEqualTo(OVERDUE, false)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
                                     for (countdown in documents) {
-                                        val setDate = (countdown.data["setDate"] as Timestamp)
-                                        val targetDate = (countdown.data["targetDate"] as Timestamp)
+                                        val setDate = (countdown.data[SETDATE] as Timestamp)
+                                        val targetDate = (countdown.data[TARGETDATE] as Timestamp)
 
                                         countdownAdd = Countdown(
                                             simpleDateFormat.format(setDate.seconds * 1000),
-                                            countdown.data["title"].toString(),
-                                            countdown.data["note"].toString(),
+                                            countdown.data[TITLE].toString(),
+                                            countdown.data[NOTE].toString(),
                                             simpleDateFormat.format(targetDate.seconds * 1000),
-                                            countdown.data["targetDate"] as Timestamp,
-                                            countdown.data["overdue"].toString().toBoolean(),
-                                            countdown.data["documentID"].toString()
+                                            countdown.data[TARGETDATE] as Timestamp,
+                                            countdown.data[OVERDUE].toString().toBoolean(),
+                                            countdown.data[DOCUMENTID].toString()
                                         )
 
                                         countdownItem.add(countdownAdd)
@@ -782,49 +812,50 @@ class AlarmReceiver : BroadcastReceiver() {
                         }
                     }
             }
-            "dnr" -> {
+            DNR -> {
                 val db = FirebaseFirestore.getInstance()
                 val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
-                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
+
                 lateinit var remindAdd: Reminders
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection("data")
+                db.collection(DATA)
                     .document(UserManager.id!!)
-                    .collection("calendar")
+                    .collection(CALENDAR)
                     .get()
                     .addOnSuccessListener { documents ->
 
                         for (calendar in documents) {
 
                             //get reminders ( only ischecked is false )
-                            db.collection("data")
+                            db.collection(DATA)
                                 .document(UserManager.id!!)
-                                .collection("calendar")
+                                .collection(CALENDAR)
                                 .document(calendar.id)
-                                .collection("reminders")
-                                .whereEqualTo("isChecked", false)
-                                .whereEqualTo("setRemindDate", true)
-                                .whereEqualTo("frequency", "Does not repeat")
+                                .collection(REMINDERS)
+                                .whereEqualTo(ISCHECKED, false)
+                                .whereEqualTo(SETREMINDATE, true)
+                                .whereEqualTo(FREQUENCY, DOESNOTREPEAT)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
                                     for (reminder in documents) {
 
-                                        val setDate = (reminder.data["setDate"] as Timestamp)
-                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                        val setDate = (reminder.data[SETDATE] as Timestamp)
+                                        val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                         remindAdd = Reminders(
                                             simpleDateFormat.format(setDate.seconds * 1000),
-                                            reminder.data["title"].toString(),
-                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            reminder.data[TITLE].toString(),
+                                            reminder.data[SETREMINDATE].toString().toBoolean(),
                                             simpleDateFormat.format(remindDate.seconds * 1000),
-                                            reminder.data["remindDate"] as Timestamp,
-                                            reminder.data["isChecked"].toString().toBoolean(),
-                                            reminder.data["note"].toString(),
-                                            reminder.data["frequency"].toString(),
-                                            reminder.data["documentID"].toString()
+                                            reminder.data[REMINDDATE] as Timestamp,
+                                            reminder.data[ISCHECKED].toString().toBoolean(),
+                                            reminder.data[NOTE].toString(),
+                                            reminder.data[FREQUENCY].toString(),
+                                            reminder.data[DOCUMENTID].toString()
                                         )
 
                                         remindersItem.add(remindAdd)
@@ -874,49 +905,50 @@ class AlarmReceiver : BroadcastReceiver() {
                     }
 
             }
-            "ED" -> {
+            ED -> {
                 val db = FirebaseFirestore.getInstance()
                 val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
-                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
+
                 lateinit var remindAdd: Reminders
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection("data")
+                db.collection(DATA)
                     .document(UserManager.id!!)
-                    .collection("calendar")
+                    .collection(CALENDAR)
                     .get()
                     .addOnSuccessListener { documents ->
 
                         for (calendar in documents) {
 
                             //get reminders ( only ischecked is false )
-                            db.collection("data")
+                            db.collection(DATA)
                                 .document(UserManager.id!!)
-                                .collection("calendar")
+                                .collection(CALENDAR)
                                 .document(calendar.id)
-                                .collection("reminders")
-                                .whereEqualTo("isChecked", false)
-                                .whereEqualTo("setRemindDate", true)
-                                .whereEqualTo("frequency", "Every day")
+                                .collection(REMINDERS)
+                                .whereEqualTo(ISCHECKED, false)
+                                .whereEqualTo(SETREMINDATE, true)
+                                .whereEqualTo(FREQUENCY, EVERYDAY)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
                                     for (reminder in documents) {
 
-                                        val setDate = (reminder.data["setDate"] as Timestamp)
-                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                        val setDate = (reminder.data[SETDATE] as Timestamp)
+                                        val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                         remindAdd = Reminders(
                                             simpleDateFormat.format(setDate.seconds * 1000),
-                                            reminder.data["title"].toString(),
-                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            reminder.data[TITLE].toString(),
+                                            reminder.data[SETREMINDATE].toString().toBoolean(),
                                             simpleDateFormat.format(remindDate.seconds * 1000),
-                                            reminder.data["remindDate"] as Timestamp,
-                                            reminder.data["isChecked"].toString().toBoolean(),
-                                            reminder.data["note"].toString(),
-                                            reminder.data["frequency"].toString(),
-                                            reminder.data["documentID"].toString()
+                                            reminder.data[REMINDDATE] as Timestamp,
+                                            reminder.data[ISCHECKED].toString().toBoolean(),
+                                            reminder.data[NOTE].toString(),
+                                            reminder.data[FREQUENCY].toString(),
+                                            reminder.data[DOCUMENTID].toString()
                                         )
 
                                         remindersItem.add(remindAdd)
@@ -966,49 +998,49 @@ class AlarmReceiver : BroadcastReceiver() {
                     }
 
             }
-            "EW" -> {
+            EW -> {
                 val db = FirebaseFirestore.getInstance()
                 val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
-                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
                 lateinit var remindAdd: Reminders
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection("data")
+                db.collection(DATA)
                     .document(UserManager.id!!)
-                    .collection("calendar")
+                    .collection(CALENDAR)
                     .get()
                     .addOnSuccessListener { documents ->
 
                         for (calendar in documents) {
 
                             //get reminders ( only ischecked is false )
-                            db.collection("data")
+                            db.collection(DATA)
                                 .document(UserManager.id!!)
-                                .collection("calendar")
+                                .collection(CALENDAR)
                                 .document(calendar.id)
-                                .collection("reminders")
-                                .whereEqualTo("isChecked", false)
-                                .whereEqualTo("setRemindDate", true)
-                                .whereEqualTo("frequency", "Every week")
+                                .collection(REMINDERS)
+                                .whereEqualTo(ISCHECKED, false)
+                                .whereEqualTo(SETREMINDATE, true)
+                                .whereEqualTo(FREQUENCY, EVERYWEEK)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
                                     for (reminder in documents) {
 
-                                        val setDate = (reminder.data["setDate"] as Timestamp)
-                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                        val setDate = (reminder.data[SETDATE] as Timestamp)
+                                        val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                         remindAdd = Reminders(
                                             simpleDateFormat.format(setDate.seconds * 1000),
-                                            reminder.data["title"].toString(),
-                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            reminder.data[TITLE].toString(),
+                                            reminder.data[SETREMINDATE].toString().toBoolean(),
                                             simpleDateFormat.format(remindDate.seconds * 1000),
-                                            reminder.data["remindDate"] as Timestamp,
-                                            reminder.data["isChecked"].toString().toBoolean(),
-                                            reminder.data["note"].toString(),
-                                            reminder.data["frequency"].toString(),
-                                            reminder.data["documentID"].toString()
+                                            reminder.data[REMINDDATE] as Timestamp,
+                                            reminder.data[ISCHECKED].toString().toBoolean(),
+                                            reminder.data[NOTE].toString(),
+                                            reminder.data[FREQUENCY].toString(),
+                                            reminder.data[DOCUMENTID].toString()
                                         )
 
                                         remindersItem.add(remindAdd)
@@ -1058,49 +1090,49 @@ class AlarmReceiver : BroadcastReceiver() {
                     }
 
             }
-            "EM" -> {
+            EM -> {
                 val db = FirebaseFirestore.getInstance()
                 val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
-                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
                 lateinit var remindAdd: Reminders
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection("data")
+                db.collection(DATA)
                     .document(UserManager.id!!)
-                    .collection("calendar")
+                    .collection(CALENDAR)
                     .get()
                     .addOnSuccessListener { documents ->
 
                         for (calendar in documents) {
 
                             //get reminders ( only ischecked is false )
-                            db.collection("data")
+                            db.collection(DATA)
                                 .document(UserManager.id!!)
-                                .collection("calendar")
+                                .collection(CALENDAR)
                                 .document(calendar.id)
-                                .collection("reminders")
-                                .whereEqualTo("isChecked", false)
-                                .whereEqualTo("setRemindDate", true)
-                                .whereEqualTo("frequency", "Every month")
+                                .collection(REMINDERS)
+                                .whereEqualTo(ISCHECKED, false)
+                                .whereEqualTo(SETREMINDATE, true)
+                                .whereEqualTo(FREQUENCY, EVERYMONTH)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
                                     for (reminder in documents) {
 
-                                        val setDate = (reminder.data["setDate"] as Timestamp)
-                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                        val setDate = (reminder.data[SETDATE] as Timestamp)
+                                        val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                         remindAdd = Reminders(
                                             simpleDateFormat.format(setDate.seconds * 1000),
-                                            reminder.data["title"].toString(),
-                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            reminder.data[TITLE].toString(),
+                                            reminder.data[SETREMINDATE].toString().toBoolean(),
                                             simpleDateFormat.format(remindDate.seconds * 1000),
-                                            reminder.data["remindDate"] as Timestamp,
-                                            reminder.data["isChecked"].toString().toBoolean(),
-                                            reminder.data["note"].toString(),
-                                            reminder.data["frequency"].toString(),
-                                            reminder.data["documentID"].toString()
+                                            reminder.data[REMINDDATE] as Timestamp,
+                                            reminder.data[ISCHECKED].toString().toBoolean(),
+                                            reminder.data[NOTE].toString(),
+                                            reminder.data[FREQUENCY].toString(),
+                                            reminder.data[DOCUMENTID].toString()
                                         )
 
                                         remindersItem.add(remindAdd)
@@ -1150,49 +1182,49 @@ class AlarmReceiver : BroadcastReceiver() {
                     }
 
             }
-            "EY" -> {
+            EY -> {
                 val db = FirebaseFirestore.getInstance()
                 val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
-                Log.d("alarmManager", "reminder trigger time = ${Timestamp.now().seconds * 1000}")
+                Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
                 lateinit var remindAdd: Reminders
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection("data")
+                db.collection(DATA)
                     .document(UserManager.id!!)
-                    .collection("calendar")
+                    .collection(CALENDAR)
                     .get()
                     .addOnSuccessListener { documents ->
 
                         for (calendar in documents) {
 
                             //get reminders ( only ischecked is false )
-                            db.collection("data")
+                            db.collection(DATA)
                                 .document(UserManager.id!!)
-                                .collection("calendar")
+                                .collection(CALENDAR)
                                 .document(calendar.id)
-                                .collection("reminders")
-                                .whereEqualTo("isChecked", false)
-                                .whereEqualTo("setRemindDate", true)
-                                .whereEqualTo("frequency", "Every year")
+                                .collection(REMINDERS)
+                                .whereEqualTo(ISCHECKED, false)
+                                .whereEqualTo(SETREMINDATE, true)
+                                .whereEqualTo(FREQUENCY, EVERYYEAR)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
                                     for (reminder in documents) {
 
-                                        val setDate = (reminder.data["setDate"] as Timestamp)
-                                        val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                        val setDate = (reminder.data[SETDATE] as Timestamp)
+                                        val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                         remindAdd = Reminders(
                                             simpleDateFormat.format(setDate.seconds * 1000),
-                                            reminder.data["title"].toString(),
-                                            reminder.data["setRemindDate"].toString().toBoolean(),
+                                            reminder.data[TITLE].toString(),
+                                            reminder.data[SETREMINDATE].toString().toBoolean(),
                                             simpleDateFormat.format(remindDate.seconds * 1000),
-                                            reminder.data["remindDate"] as Timestamp,
-                                            reminder.data["isChecked"].toString().toBoolean(),
-                                            reminder.data["note"].toString(),
-                                            reminder.data["frequency"].toString(),
-                                            reminder.data["documentID"].toString()
+                                            reminder.data[REMINDDATE] as Timestamp,
+                                            reminder.data[ISCHECKED].toString().toBoolean(),
+                                            reminder.data[NOTE].toString(),
+                                            reminder.data[FREQUENCY].toString(),
+                                            reminder.data[DOCUMENTID].toString()
                                         )
 
                                         remindersItem.add(remindAdd)
