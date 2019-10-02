@@ -11,7 +11,7 @@ import com.sandra.calendearlife.R
 import kotlinx.android.synthetic.main.item_reminders.view.*
 
 
-class SwipeToDeleteCallback(val adapter: HomeRemindersAdapter, val viewModel: HomeViewModel) :
+class SwipeToDeleteCallback(private val adapter: HomeRemindersAdapter, val viewModel: HomeViewModel) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private lateinit var icon: Drawable

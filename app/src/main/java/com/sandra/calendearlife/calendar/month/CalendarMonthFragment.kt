@@ -2,7 +2,6 @@ package com.sandra.calendearlife.calendar.month
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,13 +24,12 @@ import com.kizitonwose.calendarview.ui.ViewContainer
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
-import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
-import com.sandra.calendearlife.constant.Const.Companion.locale
 import com.sandra.calendearlife.constant.Const.Companion.putType
+import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
-import kotlinx.android.synthetic.main.fragment_calendar_month.*
 import kotlinx.android.synthetic.main.calendar_month_header.view.*
+import kotlinx.android.synthetic.main.fragment_calendar_month.*
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
@@ -47,6 +45,13 @@ class CalendarMonthFragment : Fragment() {
         const val monthYear = "MMM yyyy"
         const val date = "yyyy-MMM-dd"
     }
+
+    private val locale: Locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
 
     private var selectedDate: LocalDate? = null
     private val today = LocalDate.now()
@@ -73,8 +78,7 @@ class CalendarMonthFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         viewModel.navigateToCalendarProperty.observe(this, androidx.lifecycle.Observer {
-            if (null != it) {
-
+            it?.let {
                 this.findNavController().navigate(NavigationDirections.actionGlobalCalendarDetailFragment(it))
                 viewModel.displayCalendarDetailsComplete()
             }
@@ -144,7 +148,8 @@ class CalendarMonthFragment : Fragment() {
 
         val daysOfWeek = daysOfWeekFromLocale()
         val currentMonth = YearMonth.now()
-        calendar.setup(currentMonth.minusMonths(10), currentMonth.plusMonths(10), daysOfWeek.first())
+        calendar.setup(currentMonth.minusMonths(10),
+            currentMonth.plusMonths(10), daysOfWeek.first())
         calendar.scrollToMonth(currentMonth)
 
         if (savedInstanceState == null) {
@@ -156,9 +161,6 @@ class CalendarMonthFragment : Fragment() {
 
         class DayViewContainer(view: View) : ViewContainer(view) {
             lateinit var day: CalendarDay // Will be set when this container is bound.
-
-            val textView = view.dayText
-            val dotView = view.dotView
 
             init {
                 view.setOnClickListener {
@@ -172,14 +174,14 @@ class CalendarMonthFragment : Fragment() {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.day = day
-                val textView = container.textView
-                val dotView = container.dotView
+                val textView = container.view.dayText
+                val dotView = container.view.dotView
 
                 textView.text = day.date.dayOfMonth.toString()
 
                 viewModel.liveAllCalendar.observe(this@CalendarMonthFragment, androidx.lifecycle.Observer {
                     it?.let {
-                        for ((index, value) in it.withIndex() ){
+                        for (value in it){
                             if (value.date == day.date.toString() && day.owner == DayOwner.THIS_MONTH) {
                                 dotView.visibility = View.VISIBLE
                             }
@@ -191,6 +193,7 @@ class CalendarMonthFragment : Fragment() {
                     textView.visibility = View.VISIBLE
                     when (day.date) {
                         today -> {
+
                             textView.setTextColorRes(R.color.white)
                             textView.setBackgroundResource(R.drawable.today_bg)
                             dotView.visibility = View.INVISIBLE
@@ -202,8 +205,10 @@ class CalendarMonthFragment : Fragment() {
                         }
 
                         else -> {
+
                             textView.setBackgroundResource(R.color.translucent_80)
-                             } }
+                             }
+                    }
                 } else {
                     textView.visibility = View.INVISIBLE
                     dotView.visibility = View.INVISIBLE
@@ -233,9 +238,9 @@ class CalendarMonthFragment : Fragment() {
                 // Setup each header day text if we have not done that already.
                 if (container.legendLayout.tag == null) {
                     container.legendLayout.tag = month.yearMonth
-                    container.legendLayout.children.map { it as TextView }.forEachIndexed { index, tv ->
-                        tv.text = daysOfWeek[index].name.first().toString()
-//                        tv.setTextColorRes(R.color.black)
+                    container.legendLayout.children.map { it as TextView }
+                        .forEachIndexed { index, textView ->
+                        textView.text = daysOfWeek[index].name.first().toString()
                     }
                 }
             }
@@ -247,16 +252,13 @@ class CalendarMonthFragment : Fragment() {
             val oldDate = selectedDate
             selectedDate = date
 
-            val localDate = DateTimeUtils.toSqlDate(date)
-
-            viewModel.queryToday(Timestamp(localDate))
+            viewModel.queryToday(Timestamp(DateTimeUtils.toSqlDate(date)))
             adapter.notifyDataSetChanged()
 
             oldDate?.let { calendar.notifyDateChanged(it) }
             calendar.notifyDateChanged(date)
             updateAdapterForDate(date)
         }
-        Log.d("sandraaa", "select date = $date")
     }
 
     private fun updateAdapterForDate(date: LocalDate) {

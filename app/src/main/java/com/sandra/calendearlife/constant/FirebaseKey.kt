@@ -46,7 +46,13 @@ class FirebaseKey {
         const val COLOR_COUNTDOWN_CAL = "cb9b8c"
         const val COLOR_ALL = "A6292F"
         const val COLOR_GOOGLE = "245E2C"
-        const val COLOR_REMIND_GOOGLE = "542437"
+
+        // Google Calendar Constant
+        const val PARENTHESES = "(("
+        const val CONJUNCTION = " = ?) AND ("
+        const val QUESTIONMARK = " = ?))"
+        const val MAILFORMAT = "com.google"
+
 
     }
 }

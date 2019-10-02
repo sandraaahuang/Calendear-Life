@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -14,18 +15,32 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
-import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
-import com.sandra.calendearlife.constant.DateFormat.Companion.timeFormat
+import com.sandra.calendearlife.constant.DateFormat
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.databinding.FragmentRemindersDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 class RemindersDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentRemindersDetailBinding
+
+    val locale: Locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+    private val timeFormat = SimpleDateFormat("hh:mm a", locale)
+    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -48,56 +63,20 @@ class RemindersDetailFragment : Fragment() {
             }
         }
 
-        binding.remindDate.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val monthOfYear = calendar.get(Calendar.MONTH)
-            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePickerDialog = DatePickerDialog(
-                it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-                { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringDate = simpleDateFormat.format(date)
-                    // Display Selected setDate in textbox
-                    binding.remindDate.text=
-                        "$stringDate" }, year, monthOfYear, dayOfMonth
-            )
-            datePickerDialog.show()
-        }
-
-        binding.remindTime.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val monthOfYear = calendar.get(Calendar.MONTH)
-            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-            val hour = calendar.get(Calendar.HOUR_OF_DAY)
-            val minute = calendar.get(Calendar.MINUTE)
-
-
-            TimePickerDialog(it.context, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { view, hour, minute ->
-                val date = Date(year, monthOfYear, dayOfMonth, hour, minute)
-                val stringTime = timeFormat.format(date)
-                binding.remindTime.text =
-                    "$stringTime" }, hour, minute, false
-            ).show()
-        }
-
         binding.saveButton2.setOnClickListener {
             val remindDate = "${binding.remindDate.text} ${binding.remindTime.text}"
 
             val updateItem = hashMapOf(
-                "title" to "${binding.remindersTitle.text}".trim(),
-                "note" to "${binding.editTextRemindNote.text}".trim(),
-                "remindDate" to Timestamp(dateTimeFormat.parse(remindDate).time)
+                TITLE to "${binding.remindersTitle.text}".trim(),
+                NOTE to "${binding.editTextRemindNote.text}".trim(),
+                REMINDDATE to Timestamp(dateTimeFormat.parse(remindDate).time)
             )
 
             val calendarItem = hashMapOf(
-                "title" to "${binding.remindersTitle.text}".trim(),
-                "note" to "${binding.editTextRemindNote.text}".trim(),
-                "beginDate" to Timestamp(dateTimeFormat.parse(remindDate).time),
-                "date" to Timestamp(dateTimeFormat.parse(remindDate).time)
+                TITLE to "${binding.remindersTitle.text}".trim(),
+                NOTE to "${binding.editTextRemindNote.text}".trim(),
+                BEGINDATE to Timestamp(dateTimeFormat.parse(remindDate).time),
+                DATE to Timestamp(dateTimeFormat.parse(remindDate).time)
             )
 
             viewModel.updateItem(updateItem, calendarItem, reminders.documentID)
@@ -116,10 +95,23 @@ class RemindersDetailFragment : Fragment() {
                     .actionGlobalHomeFragment())
             }
         })
+
         viewModel.isClicked.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 binding.saveButton2.isClickable = false
                 binding.deleteButton2.isClickable = false
+            }
+        })
+
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                showDatePicker(it)
+            }
+        })
+
+        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                showTimePicker(it)
             }
         })
 
@@ -135,6 +127,31 @@ class RemindersDetailFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun showDatePicker(inputDate: TextView) {
+        val datePickerDialog = DatePickerDialog(
+            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+            { _, year, monthOfYear, dayOfMonth ->
+                inputDate.text =
+                    simpleDateFormat.format(Date(year - 1900, monthOfYear, dayOfMonth))
+            }, DateFormat.year, DateFormat.monthOfYear, DateFormat.dayOfMonth
+        )
+        datePickerDialog.show()
+    }
+
+    private fun showTimePicker(inputTime: TextView) {
+        val timePickerDialog = TimePickerDialog(
+            this.context!!, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+            { _, hour, minute ->
+                inputTime.text =
+                    timeFormat.format(Date(
+                        DateFormat.year - 1900,
+                        DateFormat.monthOfYear,
+                        DateFormat.dayOfMonth, hour, minute))
+            }, DateFormat.hour, DateFormat.minute, false
+        )
+        timePickerDialog.show()
     }
 }
 

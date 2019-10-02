@@ -5,23 +5,47 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
-import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISCHECKED
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.UserManager
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    lateinit var countdownAdd: Countdown
-    lateinit var remindAdd: Reminders
+    val locale: Locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
 
+    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
+
+    lateinit var countdownAdd: Countdown
     private val countdownItem = ArrayList<Countdown>()
     private val _liveCountdown = MutableLiveData<List<Countdown>>()
     val liveCountdown: LiveData<List<Countdown>>
         get() = _liveCountdown
 
+    lateinit var remindAdd: Reminders
     val remindersItem = ArrayList<Reminders>()
     private val _liveReminders = MutableLiveData<List<Reminders>>()
     val liveReminders: LiveData<List<Reminders>>
@@ -37,37 +61,37 @@ class HomeViewModel : ViewModel() {
 
     fun getItem() {
         //connect to countdown data ( only the item that overdue is false )
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
 
                     // get countdowns
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("countdowns")
-                        .whereEqualTo("overdue", false)
+                        .collection(COUNTDOWN)
+                        .whereEqualTo(OVERDUE, false)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
 
-                                val setDate = (countdown.data["setDate"] as Timestamp)
-                                val targetDate = (countdown.data["targetDate"] as Timestamp)
+                                val setDate = (countdown.data[SETDATE] as Timestamp)
+                                val targetDate = (countdown.data[TARGETDATE] as Timestamp)
 
                                 countdownAdd = Countdown(
                                     simpleDateFormat.format(setDate.seconds * 1000),
-                                    countdown.data["title"].toString(),
-                                    countdown.data["note"].toString(),
+                                    countdown.data[TITLE].toString(),
+                                    countdown.data[NOTE].toString(),
                                     simpleDateFormat.format(targetDate.seconds * 1000),
-                                    countdown.data["targetDate"] as Timestamp,
-                                    countdown.data["overdue"].toString().toBoolean(),
-                                    countdown.data["documentID"].toString()
+                                    countdown.data[TARGETDATE] as Timestamp,
+                                    countdown.data[OVERDUE].toString().toBoolean(),
+                                    countdown.data[DOCUMENTID].toString()
                                 )
 
                                 countdownItem.add(countdownAdd)
@@ -78,30 +102,30 @@ class HomeViewModel : ViewModel() {
                         }
 
                     //get reminders ( only ischecked is false )
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("reminders")
-                        .whereEqualTo("isChecked", false)
+                        .collection(REMINDERS)
+                        .whereEqualTo(ISCHECKED, false)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (reminder in documents) {
 
-                                val setDate = (reminder.data["setDate"] as Timestamp)
-                                val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                val setDate = (reminder.data[SETDATE] as Timestamp)
+                                val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                 remindAdd = Reminders(
                                     simpleDateFormat.format(setDate.seconds * 1000),
-                                    reminder.data["title"].toString(),
-                                    reminder.data["setRemindDate"].toString().toBoolean(),
+                                    reminder.data[TITLE].toString(),
+                                    reminder.data[SETREMINDATE].toString().toBoolean(),
                                     dateTimeFormat.format(remindDate.seconds * 1000),
-                                    reminder.data["remindDate"] as Timestamp,
-                                    reminder.data["isChecked"].toString().toBoolean(),
-                                    reminder.data["note"].toString(),
-                                    reminder.data["frequency"].toString(),
-                                    reminder.data["documentID"].toString()
+                                    reminder.data[REMINDDATE] as Timestamp,
+                                    reminder.data[ISCHECKED].toString().toBoolean(),
+                                    reminder.data[NOTE].toString(),
+                                    reminder.data[FREQUENCY].toString(),
+                                    reminder.data[DOCUMENTID].toString()
                                 )
 
                                 remindersItem.add(remindAdd)
@@ -120,34 +144,34 @@ class HomeViewModel : ViewModel() {
     // update isChecked to true when user click the button
     fun updateItem(documentID: String) {
 
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
 
                     // get click item
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("reminders")
-                        .whereEqualTo("documentID", documentID)
+                        .collection(REMINDERS)
+                        .whereEqualTo(DOCUMENTID, documentID)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
 
                                 // update item to check status
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
-                                    .collection("reminders")
+                                    .collection(REMINDERS)
                                     .document(documentID)
-                                    .update("isChecked", true)
+                                    .update(ISCHECKED, true)
                             }
                         }
                 }
@@ -156,33 +180,33 @@ class HomeViewModel : ViewModel() {
 
     //update countdown item to overdue depends on time
     fun updateCountdown(documentId: String) {
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
 
                     // get overdue countdowns
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("countdowns")
+                        .collection(COUNTDOWN)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
 
                                 // update countdowns to overdue status
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
-                                    .collection("countdowns")
+                                    .collection(COUNTDOWN)
                                     .document(documentId)
-                                    .update("overdue", true)
+                                    .update(OVERDUE, true)
                             }
                         }
                 }
@@ -192,38 +216,38 @@ class HomeViewModel : ViewModel() {
     // delete item due to swipe specific item
     fun deleteItem(title: String) {
 
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
 
                     // delete reminders
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("reminders")
-                        .whereEqualTo("title", title)
+                        .collection(REMINDERS)
+                        .whereEqualTo(TITLE, title)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (reminders in documents) {
 
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
-                                    .collection("reminders")
+                                    .collection(REMINDERS)
                                     .document(reminders.id)
                                     .delete()
 
                                 // delete calendar
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
                                     .delete()
                             }

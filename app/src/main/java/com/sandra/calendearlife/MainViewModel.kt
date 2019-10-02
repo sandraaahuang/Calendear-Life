@@ -6,14 +6,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
-import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISCHECKED
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel : ViewModel() {
+
+    val locale: Locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
 
     var db = FirebaseFirestore.getInstance()
 
@@ -35,47 +54,42 @@ class MainViewModel : ViewModel() {
 
     fun getItem(documentId: String) {
         //connect to countdown data ( only the item that overdue is false )
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-//                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     //get reminders ( only ischecked is false )
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("reminders")
-                        .whereEqualTo("documentID", documentId)
+                        .collection(REMINDERS)
+                        .whereEqualTo(DOCUMENTID, documentId)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (reminder in documents) {
-                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
-                                val setDate = (reminder.data["setDate"] as Timestamp)
-                                val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                val setDate = (reminder.data[SETDATE] as Timestamp)
+                                val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                 remindAdd = Reminders(
                                     simpleDateFormat.format(setDate.seconds * 1000),
-                                    reminder.data["title"].toString(),
-                                    reminder.data["setRemindDate"].toString().toBoolean(),
+                                    reminder.data[TITLE].toString(),
+                                    reminder.data[SETREMINDATE].toString().toBoolean(),
                                     dateTimeFormat.format(remindDate.seconds * 1000),
-                                    reminder.data["remindDate"] as Timestamp,
-                                    reminder.data["isChecked"].toString().toBoolean(),
-                                    reminder.data["note"].toString(),
-                                    reminder.data["frequency"].toString(),
-                                    reminder.data["documentID"].toString()
+                                    reminder.data[REMINDDATE] as Timestamp,
+                                    reminder.data[ISCHECKED].toString().toBoolean(),
+                                    reminder.data[NOTE].toString(),
+                                    reminder.data[FREQUENCY].toString(),
+                                    reminder.data[DOCUMENTID].toString()
                                 )
                                 _liveReminders.value = remindAdd
                             }
-
-                            Log.d("sandraaa", "reminder = ${liveReminders.value}")
-
                         }
                 }
             }
@@ -83,47 +97,44 @@ class MainViewModel : ViewModel() {
 
     fun dnrItem() {
         //connect to countdown data ( only the item that overdue is false )
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     //get reminders ( only ischecked is false )
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("reminders")
-                        .whereEqualTo("isChecked", false)
+                        .collection(REMINDERS)
+                        .whereEqualTo(ISCHECKED, false)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (reminder in documents) {
-                                Log.d("getAllreminders", "${reminder.id} => ${reminder.data}")
 
-                                val setDate = (reminder.data["setDate"] as Timestamp)
-                                val remindDate = (reminder.data["remindDate"] as Timestamp)
+                                val setDate = (reminder.data[SETDATE] as Timestamp)
+                                val remindDate = (reminder.data[REMINDDATE] as Timestamp)
 
                                 remindAdd = Reminders(
                                     simpleDateFormat.format(setDate.seconds * 1000),
-                                    reminder.data["title"].toString(),
-                                    reminder.data["setRemindDate"].toString().toBoolean(),
+                                    reminder.data[TITLE].toString(),
+                                    reminder.data[SETREMINDATE].toString().toBoolean(),
                                     dateTimeFormat.format(remindDate.seconds * 1000),
-                                    reminder.data["remindDate"] as Timestamp,
-                                    reminder.data["isChecked"].toString().toBoolean(),
-                                    reminder.data["note"].toString(),
-                                    reminder.data["frequency"].toString(),
-                                    reminder.data["documentID"].toString()
+                                    reminder.data[REMINDDATE] as Timestamp,
+                                    reminder.data[ISCHECKED].toString().toBoolean(),
+                                    reminder.data[NOTE].toString(),
+                                    reminder.data[FREQUENCY].toString(),
+                                    reminder.data[DOCUMENTID].toString()
                                 )
 
                                 dnrItem.add(remindAdd)
                             }
                             _livednr.value = dnrItem
-                            Log.d("sandraaa", "liveDate=  ${livednr.value}")
                         }
                 }
             }
@@ -134,16 +145,10 @@ class MainViewModel : ViewModel() {
     fun writeGoogleItem(item: Any, documentId: String) {
 
         // get all data from user at first
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .document(documentId)
             .set(item)
-            .addOnSuccessListener { CdocumentReference ->
-                Log.d(
-                    "AddCountdownsIntoDB",
-                    "DocumentSnapshot added with ID = $documentId"
-                )
-            }
     }
 }

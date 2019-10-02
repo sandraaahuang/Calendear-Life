@@ -49,6 +49,7 @@ import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 import com.sandra.calendearlife.util.CurrentFragmentType
+import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.util.getString
 import java.text.SimpleDateFormat
@@ -131,7 +132,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (UserManager.id != null) {
                 viewModel.getItem(it.get("remindersItem").toString())
             } else {
-                "don't have user"
+                Logger.d( "don't have user")
             }
         }
 
@@ -657,7 +658,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         CurrentFragmentType.HISTORY.value = "歷史紀錄"
     }
 
-    fun updateEnEnum() {
+    private fun updateEnEnum() {
         CurrentFragmentType.DETAIL.value = "Detail"
         CurrentFragmentType.NEWEVENT.value = "New Event"
         CurrentFragmentType.NEWREMINDERS.value = "New Reminder"

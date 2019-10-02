@@ -21,6 +21,9 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.util.UserManager
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidViewModel(app) {

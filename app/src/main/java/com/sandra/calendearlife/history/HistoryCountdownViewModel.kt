@@ -1,18 +1,36 @@
 package com.sandra.calendearlife.history
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.data.Countdown
-import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.util.UserManager
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 class HistoryCountdownViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
+
+    val locale: Locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
 
     lateinit var countdownAdd: Countdown
 
@@ -27,38 +45,37 @@ class HistoryCountdownViewModel : ViewModel() {
 
     fun getItem() {
         //connect to countdown data ( only the item that overdue is true )
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for (calendar in documents) {
-                    Log.d("getAllCalendar", "${calendar.id} => ${calendar.data}")
 
                     // get countdowns
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("countdowns")
-                        .whereEqualTo("overdue", true)
+                        .collection(COUNTDOWN)
+                        .whereEqualTo(OVERDUE, true)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
-                                Log.d("getAllcountdown", "${countdown.id} => ${countdown.data}")
-                                val setDate = (countdown.data["setDate"] as Timestamp)
-                                val targetDate = (countdown.data["targetDate"] as Timestamp)
+
+                                val setDate = (countdown.data[SETDATE] as Timestamp)
+                                val targetDate = (countdown.data[TARGETDATE] as Timestamp)
 
                                 countdownAdd = Countdown(
                                     simpleDateFormat.format(setDate.seconds * 1000),
-                                    countdown.data["title"].toString(),
-                                    countdown.data["note"].toString(),
+                                    countdown.data[TITLE].toString(),
+                                    countdown.data[NOTE].toString(),
                                     simpleDateFormat.format(targetDate.seconds * 1000),
-                                    countdown.data["targetDate"] as Timestamp,
-                                    countdown.data["overdue"].toString().toBoolean(),
-                                    countdown.data["documentID"].toString()
+                                    countdown.data[TARGETDATE] as Timestamp,
+                                    countdown.data[OVERDUE].toString().toBoolean(),
+                                    countdown.data[DOCUMENTID].toString()
                                 )
 
                                 countdownItem.add(countdownAdd)

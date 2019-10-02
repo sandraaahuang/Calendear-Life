@@ -1,7 +1,5 @@
 package com.sandra.calendearlife.home
 
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +13,7 @@ import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemRemindersBinding
 
 
-class HomeRemindersAdapter(val viewModel: HomeViewModel, val onClickListener: OnClickListener) :
+class HomeRemindersAdapter(val viewModel: HomeViewModel, private val onClickListener: OnClickListener) :
     ListAdapter<Reminders, HomeRemindersAdapter.RemindersViewHolder>(DiffCallback) {
 
     class RemindersViewHolder(private var binding: ItemRemindersBinding):
@@ -24,14 +22,12 @@ class HomeRemindersAdapter(val viewModel: HomeViewModel, val onClickListener: On
             binding.reminders = reminders
             binding.remindersChecked.setOnClickListener {
                 viewModel.updateItem(reminders.documentID)
-                binding.remindersTitle.setTextColor(Color.parseColor("#D8D8D8"))
+                binding.remindersTitle.setTextColor(MyApplication.instance.getColor(R.color.delete_red))
                 binding.checkStatus.visibility = View.VISIBLE
 
             }
             if (reminders.remindTimestamp.seconds < Timestamp.now().seconds){
                 binding.remindersTime.setTextColor(MyApplication.instance.getColor(R.color.delete_red))
-                Log.d("sandraaa", "reminders.remindTimestamp.seconds = ${reminders.remindTimestamp.seconds}," +
-                        "Timestamp.now().seconds = ${Timestamp.now().seconds}")
             }
 
             if (!reminders.setRemindDate){

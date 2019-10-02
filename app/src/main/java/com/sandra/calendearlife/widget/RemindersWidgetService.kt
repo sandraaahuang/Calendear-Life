@@ -12,10 +12,12 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.widget.RemindersWidget.Companion.selectedPosition
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class RemindersWidgetService : RemoteViewsService() {
@@ -27,6 +29,14 @@ class RemindersWidgetService : RemoteViewsService() {
     class WidgetItemFactory(private val context: Context, intent: Intent) : RemoteViewsFactory {
         var db = FirebaseFirestore.getInstance()
 
+        val locale: Locale =
+            if (Locale.getDefault().toString() == "zh-rtw") {
+                Locale.TAIWAN
+            } else {
+                Locale.ENGLISH
+            }
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
+
         lateinit var remindAdd: Reminders
         private val remindersItem = ArrayList<Reminders>()
 
@@ -36,7 +46,6 @@ class RemindersWidgetService : RemoteViewsService() {
         override fun onCreate() {
 
             val appWidgetManager = AppWidgetManager.getInstance(context)
-
 
             db.collection("data")
                 .document(UserManager.id!!)

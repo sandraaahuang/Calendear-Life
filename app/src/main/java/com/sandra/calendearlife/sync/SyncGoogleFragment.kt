@@ -222,7 +222,7 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
 
     }
 
-    fun writeGoogleItem(item: Any, documentId: String) {
+    private fun writeGoogleItem(item: Any, documentId: String) {
 
         // get all data from user at first
         db.collection("data")

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ItemHistoryRemindersBinding
 
-class HistoryRemindersAdapter() :
+class HistoryRemindersAdapter :
     ListAdapter<Reminders, HistoryRemindersAdapter.ItemViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Reminders>() {
@@ -33,7 +33,7 @@ class HistoryRemindersAdapter() :
             }
             else {
                 binding.remindersTime.visibility = View.GONE
-                binding.textView4.visibility = View.GONE
+                binding.remindDateTextView.visibility = View.GONE
             }
 
             binding.executePendingBindings()

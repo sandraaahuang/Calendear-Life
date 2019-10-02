@@ -18,13 +18,10 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.DateFormat.Companion.BEGINTIME
 import com.sandra.calendearlife.constant.DateFormat.Companion.ENDTIME
-import com.sandra.calendearlife.constant.DateFormat.Companion.dateTimeFormat
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.hour
 import com.sandra.calendearlife.constant.DateFormat.Companion.minute
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
-import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
-import com.sandra.calendearlife.constant.DateFormat.Companion.timeFormat
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_ALL
@@ -45,9 +42,20 @@ import com.sandra.calendearlife.databinding.FragmentCalendarDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.util.Logger
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.util.*
 
 class CalendarDetailFragment : Fragment() {
+
+    private val locale: Locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+    private val timeFormat = SimpleDateFormat("hh:mm a", locale)
+    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
 
     lateinit var binding: FragmentCalendarDetailBinding
 
@@ -338,7 +346,7 @@ class CalendarDetailFragment : Fragment() {
                 binding.deleteButton.isClickable = false
             }
         })
-        
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 DiscardDialog().show(this@CalendarDetailFragment.fragmentManager!!, "show")

@@ -20,14 +20,12 @@ class ChooseFrequencyDialog: AppCompatDialogFragment() {
 
     private fun setResult(){
         if (targetFragment == null){
-            Log.d("sandraaa", "fail")
             return
         }
         else {
             val intent = Intent()
             intent.putExtra(RESPONSE_EVALUATE, value)
             targetFragment?.onActivityResult(REQUEST_EVALUATE, Activity.RESULT_OK,intent)
-            Log.d("sandraaa", "value = $value")
         }
     }
 
