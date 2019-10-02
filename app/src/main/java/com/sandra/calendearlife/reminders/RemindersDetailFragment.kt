@@ -15,12 +15,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.DateFormat
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentRemindersDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.sql.Timestamp
@@ -33,7 +35,7 @@ class RemindersDetailFragment : Fragment() {
     private lateinit var binding: FragmentRemindersDetailBinding
 
     val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

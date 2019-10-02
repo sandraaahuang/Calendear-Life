@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR
@@ -22,6 +23,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.LOCATION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,7 +33,7 @@ class CalenderMonthViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
     private val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

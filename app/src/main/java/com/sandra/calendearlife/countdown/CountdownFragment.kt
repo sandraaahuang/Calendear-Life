@@ -16,6 +16,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
@@ -32,6 +33,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCountdownBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.text.SimpleDateFormat
@@ -41,7 +43,7 @@ import java.util.*
 class CountdownFragment : Fragment() {
 
     val locale: Locale =
-        if (Locale.getDefault().toString() == "zh-rtw") {
+        if (Locale.getDefault().toString() == CHINESE) {
             Locale.TAIWAN
         } else {
             Locale.ENGLISH

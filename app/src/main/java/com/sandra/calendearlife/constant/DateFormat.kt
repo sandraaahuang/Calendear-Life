@@ -15,5 +15,6 @@ class DateFormat {
 
         const val BEGINTIME = "00:01"
         const val ENDTIME = "11:59"
+
     }
 }
