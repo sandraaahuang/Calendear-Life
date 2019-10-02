@@ -10,7 +10,7 @@ class PreviewViewModel : ViewModel() {
 
     var db = FirebaseFirestore.getInstance()
 
-    val userDate = hashMapOf(
+    private val userDate = hashMapOf(
         "setDate" to FieldValue.serverTimestamp(),
         "userId" to UserManager.id,
         "userName" to UserManager.userName,

@@ -15,6 +15,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.databinding.FragmentCountdownBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.text.SimpleDateFormat
@@ -39,7 +40,7 @@ class CountdownFragment : Fragment() {
         val m = cal.get(Calendar.MONTH)
         val d = cal.get(Calendar.DAY_OF_MONTH)
 
-        binding.countdownDateInput.text = SimpleDateFormat("yyyy/MM/dd").format(Date(Timestamp.now().seconds*1000))
+        binding.countdownDateInput.text = simpleDateFormat.format(Date(Timestamp.now().seconds*1000))
 
         binding.editCountdownLayout.setOnClickListener {
 
@@ -47,7 +48,7 @@ class CountdownFragment : Fragment() {
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
                     val date = Date(year -1900, monthOfYear, dayOfMonth)
-                    val stringDate = SimpleDateFormat("yyyy/MM/dd").format(date)
+                    val stringDate = simpleDateFormat.format(date)
                     // Display Selected setDate in textbox
                     binding.countdownDateInput.text = "$stringDate" }, y, m, d
             )

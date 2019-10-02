@@ -12,12 +12,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.UserManager
-import com.sandra.calendearlife.widget.RemindersWidget.Companion.selectedPostion
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import com.sandra.calendearlife.widget.RemindersWidget.Companion.selectedPosition
 
 
 class RemindersWidgetService : RemoteViewsService() {
@@ -26,22 +24,14 @@ class RemindersWidgetService : RemoteViewsService() {
         return WidgetItemFactory(MyApplication.instance, intent!!)
     }
 
-    class WidgetItemFactory(context: Context, intent: Intent) : RemoteViewsFactory {
+    class WidgetItemFactory(private val context: Context, intent: Intent) : RemoteViewsFactory {
         var db = FirebaseFirestore.getInstance()
-        val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-        val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
-
-        private var context = context
 
         lateinit var remindAdd: Reminders
-        val remindersItem = ArrayList<Reminders>()
+        private val remindersItem = ArrayList<Reminders>()
 
         private var appWidgetId: Int = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID
             , AppWidgetManager.INVALID_APPWIDGET_ID)
-
-
-
-
 
         override fun onCreate() {
 
@@ -141,7 +131,7 @@ class RemindersWidgetService : RemoteViewsService() {
             views.setOnClickFillInIntent(R.id.remindersTextView, reminderIntent)
 
 
-            if (position == selectedPostion) {
+            if (position == selectedPosition) {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.VISIBLE)
                 views.setTextColor(R.id.remindersTextView, Color.parseColor("#D8D8D8"))
                 
@@ -204,19 +194,7 @@ class RemindersWidgetService : RemoteViewsService() {
                                         .addOnSuccessListener {
 
                                             // update success
-
                                             refreshData()
-
-//                                            Log.i("Sandraaaa", "before remove remindersItem.size = ${remindersItem.size}")
-//                                            remindersItem.removeAt(selectedPostion)
-//                                            Log.d("Sandraaaa", "remove position = $selectedPostion")
-//                                            Log.d("Sandraaaa", "remindersItem = $remindersItem")
-//                                            Log.i("Sandraaaa", "before remove remindersItem.size = ${remindersItem.size}")
-//
-//                                            selectedPostion = -1
-//                                            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
-
-
                                             Log.d(
                                                 "RenewCountdown",
                                                 "successfully updated my status!"
@@ -228,55 +206,7 @@ class RemindersWidgetService : RemoteViewsService() {
                 }
         }
 
-
-//        fun refreshData() {
-//            db.collection("data")
-//                .document(UserManager.id!!)
-//                .collection("calendar")
-//                .document()
-//                .collection("reminders")
-//                .whereEqualTo("isChecked", false)
-//                .get()
-//                .addOnSuccessListener { documents ->
-//
-//                    Log.i("Sandraaaa", "before refresh remindersItem.size = ${remindersItem.size}")
-//                    Log.d("Sandraaaa", "documents = ${documents}")
-//
-//                    remindersItem.clear()
-//
-//                    Log.d("Sandraaaa", "documents = ${documents.size()}, query = ${documents}")
-//                    for ((index, reminder) in documents.withIndex()) {
-//                        Log.d("widgetReminder", "${reminder.id} => ${reminder.data}")
-//
-//                        val setDate = (reminder.data["setDate"] as Timestamp)
-//                        val remindDate = (reminder.data["remindDate"] as Timestamp)
-//
-//                        remindAdd = Reminders(
-//                            simpleDateFormat.format(setDate.seconds * 1000),
-//                            reminder.data["title"].toString(),
-//                            reminder.data["setRemindDate"].toString().toBoolean(),
-//                            simpleDateFormat.format(remindDate.seconds * 1000),
-//                            reminder.data["remindDate"] as Timestamp,
-//                            reminder.data["isChecked"].toString().toBoolean(),
-//                            reminder.data["note"].toString(),
-//                            reminder.data["frequency"].toString(),
-//                            reminder.data["documentID"].toString()
-//                        )
-//                        remindersItem.add(remindAdd)
-//                        if (index == documents.size() -1 ) {
-//                            Log.i("Sandraaaa", "after refresh remindersItem.size = ${remindersItem.size}")
-//
-//                            selectedPostion = -1
-//                            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
-//
-//                        }
-//                    }
-//
-//
-//                    }
-//        }
-
-        fun refreshData() {
+        private fun refreshData() {
             db.collection("data")
                 .document(UserManager.id!!)
                 .collection("calendar")
@@ -323,7 +253,7 @@ class RemindersWidgetService : RemoteViewsService() {
                                 if (index == totalDocuments.size() -1 ) {
                                     Log.i("Sandraaaa", "after refresh remindersItem.size = ${remindersItem.size}")
 
-                                    selectedPostion = -1
+                                    selectedPosition = -1
                                     AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
 
                                 }

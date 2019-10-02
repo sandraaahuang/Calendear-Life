@@ -9,17 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.calendar.event.CalendarEventFragment
-import com.sandra.calendearlife.databinding.DialogRepeatBinding
-import com.sandra.calendearlife.reminders.RemindersFragment
+import com.sandra.calendearlife.databinding.DialogChooseFrequencyBinding
+import com.sandra.calendearlife.constant.Const.Companion.REQUEST_EVALUATE
+import com.sandra.calendearlife.constant.Const.Companion.RESPONSE_EVALUATE
+import com.sandra.calendearlife.constant.Const.Companion.frequency
+import com.sandra.calendearlife.constant.Const.Companion.value
 
 
-class RepeatDialog: AppCompatDialogFragment() {
+class ChooseFrequencyDialog: AppCompatDialogFragment() {
 
-    var RESPONSE_EVALUATE = "response_evaluate"
-    var RESPONSE_EVALUATE2 = "response_evaluate"
-
-    fun setResult(){
+    private fun setResult(){
         if (targetFragment == null){
             Log.d("sandraaa", "fail")
             return
@@ -27,25 +26,12 @@ class RepeatDialog: AppCompatDialogFragment() {
         else {
             val intent = Intent()
             intent.putExtra(RESPONSE_EVALUATE, value)
-            targetFragment?.onActivityResult(RemindersFragment().REQUEST_EVALUATE, Activity.RESULT_OK,intent)
+            targetFragment?.onActivityResult(REQUEST_EVALUATE, Activity.RESULT_OK,intent)
             Log.d("sandraaa", "value = $value")
         }
     }
 
-    fun setResult2(){
-        if (targetFragment == null){
-            Log.d("sandraaa", "fail")
-            return
-        }
-        else {
-            val intent = Intent()
-            intent.putExtra(RESPONSE_EVALUATE2, value)
-            targetFragment?.onActivityResult(CalendarEventFragment().REQUEST_EVALUATE, Activity.RESULT_OK,intent)
-            Log.d("sandraaa", "value = $value")
-        }
-    }
-
-    lateinit var binding: DialogRepeatBinding
+    lateinit var binding: DialogChooseFrequencyBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,52 +42,39 @@ class RepeatDialog: AppCompatDialogFragment() {
                               , savedInstanceState: Bundle?)
             : View? {
 
-        binding = DialogRepeatBinding.inflate(inflater, container, false)
+        binding = DialogChooseFrequencyBinding.inflate(inflater, container, false)
 
         binding.buttonBack.setOnClickListener {
             value = frequency[0]
             setResult()
-            setResult2()
             this.dismiss()
         }
 
         binding.buttonDoesNotRepeat.setOnClickListener {
             value = frequency[0]
             setResult()
-            setResult2()
             this.dismiss()
         }
         binding.buttonEveryDay.setOnClickListener {
             value = frequency[1]
             setResult()
-            setResult2()
             this.dismiss()
         }
         binding.buttonEveryWeek.setOnClickListener {
             value = frequency[2]
             setResult()
-            setResult2()
             this.dismiss()
         }
         binding.buttonEveryMonth.setOnClickListener {
             value = frequency[3]
             setResult()
-            setResult2()
             this.dismiss()
         }
         binding.buttonEveryYear.setOnClickListener {
             value = frequency[4]
             setResult()
-            setResult2()
             this.dismiss()
         }
         return binding.root
     }
-
-    companion object {
-        var value: String = "Does not repeat"
-        var frequency = listOf("Does not repeat"
-            , "Every day", "Every week", "Every month", "Every year")
-    }
-
 }

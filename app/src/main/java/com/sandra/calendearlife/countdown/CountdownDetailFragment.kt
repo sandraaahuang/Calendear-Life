@@ -13,9 +13,9 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.databinding.FragmentCountdownDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import java.text.SimpleDateFormat
 import java.util.*
 
 class CountdownDetailFragment : Fragment() {
@@ -32,11 +32,11 @@ class CountdownDetailFragment : Fragment() {
         val countdown = CountdownDetailFragmentArgs.fromBundle(arguments!!).countdownProperty
         val viewModelFactory = CountdownDetailFactory(countdown, application)
         val viewModel = ViewModelProviders.of(
-            this, viewModelFactory).get(CountdownDetailViewModel::class.java)
+            this, viewModelFactory
+        ).get(CountdownDetailViewModel::class.java)
         binding.viewModel = viewModel
 
         binding.remindLayout.setOnClickListener {
-            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
 
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -46,10 +46,11 @@ class CountdownDetailFragment : Fragment() {
             val datePickerDialog = DatePickerDialog(
                 it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
                 { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year -1900, monthOfYear, dayOfMonth)
+                    val date = Date(year - 1900, monthOfYear, dayOfMonth)
                     val stringDate = simpleDateFormat.format(date)
-                    binding.targetDateInput.text=
-                        "$stringDate" }, year, monthOfYear, dayOfMonth
+                    binding.targetDateInput.text =
+                        "$stringDate"
+                }, year, monthOfYear, dayOfMonth
             )
             datePickerDialog.show()
         }
@@ -71,7 +72,7 @@ class CountdownDetailFragment : Fragment() {
                 "date" to java.sql.Timestamp(putInDate.time)
             )
 
-            viewModel.updateItem(updateItem,calendarItem, countdown.documentID)
+            viewModel.updateItem(updateItem, calendarItem, countdown.documentID)
             Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
         }
 
@@ -82,8 +83,10 @@ class CountdownDetailFragment : Fragment() {
         }
         viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
-                findNavController().navigate(NavigationDirections
-                    .actionGlobalHomeFragment())
+                findNavController().navigate(
+                    NavigationDirections
+                        .actionGlobalHomeFragment()
+                )
             }
         })
 

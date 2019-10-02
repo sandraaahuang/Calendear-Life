@@ -26,16 +26,18 @@ import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.FragmentPreviewBinding
+import com.sandra.calendearlife.constant.Const.Companion.RC_SIGN_IN
+import com.sandra.calendearlife.constant.Const.Companion.REQUEST_CODE
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.widget.RemindersWidget
 
 class PreviewFragment : Fragment() {
 
-    private val viewModel: PreviewViewModel by lazy{
+    private val viewModel: PreviewViewModel by lazy {
         ViewModelProviders.of(this).get(PreviewViewModel::class.java)
     }
 
-    val images = IntArray(4)
+    private val images = IntArray(4)
 
     lateinit var binding: FragmentPreviewBinding
 
@@ -66,7 +68,7 @@ class PreviewFragment : Fragment() {
         binding = FragmentPreviewBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
-        if (UserManager.id != null){
+        if (UserManager.id != null) {
             findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
@@ -74,7 +76,7 @@ class PreviewFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
 
         binding.connect.setOnClickListener {
-            signin()
+            signIn()
             setLogin(true)
             updateWidget()
         }
@@ -97,37 +99,34 @@ class PreviewFragment : Fragment() {
     }
 
     // Configure Google Sign In
-    private val singinOption: GoogleSignInOptions =
+    private val singInOption: GoogleSignInOptions =
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(MyApplication.instance.getString(R.string.default_web_client_id))
-        .requestEmail()
-        .build()
+            .requestIdToken(MyApplication.instance.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
 
     // Build a GoogleSignInClient with the options specified by gso.
-    private val googleSigninClint = GoogleSignIn.getClient(MyApplication.instance, singinOption)
+    private val googleSignInClint = GoogleSignIn.getClient(MyApplication.instance, singInOption)
 
-    private fun signin (){
-        val signinIntent = googleSigninClint.signInIntent
-        startActivityForResult(signinIntent, RC_SIGN_IN)
+    private fun signIn() {
+        val signInIntent = googleSignInClint.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         System.out.println(REQUEST_CODE)
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...)
-        if (REQUEST_CODE == RC_SIGN_IN){
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
-        }
+        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+        handleSignInResult(task)
     }
 
-    private fun handleSignInResult (completeTask: Task<GoogleSignInAccount>){
+    private fun handleSignInResult(completeTask: Task<GoogleSignInAccount>) {
         try {
             val account = completeTask.getResult(ApiException::class.java)
-                    firebaseAuthWithGoogle(account!!)
+            firebaseAuthWithGoogle(account!!)
 
-        }
-        catch (e : ApiException){
+        } catch (e: ApiException) {
             Log.w("sandraaa", "signInResult:failed code=" + e.statusCode)
         }
     }
@@ -145,28 +144,27 @@ class PreviewFragment : Fragment() {
                     val userName = auth.currentUser?.displayName
                     val userEmail = auth.currentUser?.email
                     val userPhoto = auth.currentUser?.photoUrl.toString()
-                    Log.d("sandraaa","id = $id, user = $userName, email = $userEmail, photo = $userPhoto")
+                    Log.d("sandraaa", "id = $id, user = $userName, email = $userEmail, photo = $userPhoto")
 
                     val preferences =
-                        MyApplication.instance.
-                            getSharedPreferences("GoogleMessage", Context.MODE_PRIVATE)
+                        MyApplication.instance.getSharedPreferences("GoogleLoginInfo", Context.MODE_PRIVATE)
                     preferences.edit().putString("id", id).apply()
-                    preferences.getString("id","")
+                    preferences.getString("id", "")
                     UserManager.id = id
                     Log.d("UserManager", "id = ${UserManager.id}")
 
                     preferences.edit().putString("userName", userName).apply()
-                    preferences.getString("userName",userName)
+                    preferences.getString("userName", userName)
                     UserManager.userName = userName
                     Log.d("UserManager", "name = ${UserManager.userName}")
 
                     preferences.edit().putString("userEmail", userEmail).apply()
-                    preferences.getString("userEmail",userEmail)
+                    preferences.getString("userEmail", userEmail)
                     UserManager.userEmail = userEmail
                     Log.d("UserManager", "userEmail = ${UserManager.userEmail}")
 
                     preferences.edit().putString("userPhoto", userPhoto).apply()
-                    preferences.getString("userPhoto",userPhoto)
+                    preferences.getString("userPhoto", userPhoto)
                     UserManager.userPhoto = userPhoto
                     Log.d("UserManager", "userPhoto = ${UserManager.userPhoto}")
 
@@ -179,10 +177,4 @@ class PreviewFragment : Fragment() {
                 }
             }
     }
-
-    companion object {
-        const val REQUEST_CODE = 12345
-        const val RC_SIGN_IN = 12345
-    }
-
 }

@@ -1,9 +1,7 @@
 package com.sandra.calendearlife.home
 
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +13,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearSnapHelper
-import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const.Companion.TYPEHOME
 import com.sandra.calendearlife.databinding.FragmentHomeBinding
-import com.sandra.calendearlife.util.FragmentType
+import com.sandra.calendearlife.constant.Const.Companion.putType
 
 
 class HomeFragment : Fragment() {
@@ -33,12 +31,12 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val countdownAdapter = HomeCountdownAdapter(HomeCountdownAdapter.OnClickListener{
-            putType("home")
+            putType(TYPEHOME)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
         },viewModel)
 
         val remindersAdapter = HomeRemindersAdapter(viewModel, HomeRemindersAdapter.OnClickListener{
-            putType("home")
+            putType(TYPEHOME)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
         })
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -95,26 +93,26 @@ class HomeFragment : Fragment() {
             }
         }
         binding.remindersFab.setOnClickListener {
-            putType("home")
+            putType(TYPEHOME)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
         binding.countdownsFab.setOnClickListener {
-            putType("home")
+            putType(TYPEHOME)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
         binding.calendarFab.setOnClickListener {
-            putType("home")
+            putType(TYPEHOME)
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
         binding.noCountdown.setOnClickListener {
-            putType("home")
+            putType(TYPEHOME)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
         binding.noReminder.setOnClickListener {
-            putType("home")
+            putType(TYPEHOME)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
 
@@ -135,16 +133,6 @@ class HomeFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         return binding.root
-    }
-
-    private fun putType (type: String) {
-        val preferences =
-            MyApplication.instance.
-                getSharedPreferences("fragment", Context.MODE_PRIVATE)
-        preferences.edit().putString("type", type).apply()
-        preferences.getString("type","")
-        FragmentType.type = type
-        Log.d("sandraaa", "type = ${FragmentType.type}")
     }
 }
 

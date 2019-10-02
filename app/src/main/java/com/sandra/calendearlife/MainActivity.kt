@@ -41,12 +41,14 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
+import com.sandra.calendearlife.constant.Const.Companion.TYPEHOME
+import com.sandra.calendearlife.constant.Const.Companion.putType
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
 import com.sandra.calendearlife.databinding.NavHeaderMainBinding
 import com.sandra.calendearlife.util.CurrentFragmentType
-import com.sandra.calendearlife.util.FragmentType
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.util.getString
 import java.text.SimpleDateFormat
@@ -494,38 +496,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
 
             R.id.month -> {
-                putType("calendar")
+                putType(TYPECALENDAR)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
             R.id.home -> {
-                putType("home")
+                putType(TYPEHOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHomeFragment())
             }
             R.id.addCalendar -> {
-                putType("calendar")
+                putType(TYPECALENDAR)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarEventFragment())
             }
             R.id.addCountdown -> {
-                putType("home")
+                putType(TYPEHOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCountdownFragment())
             }
             R.id.addReminder -> {
-                putType("home")
+                putType(TYPEHOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalRemindersFragment())
             }
             R.id.historyReminder -> {
-                putType("home")
+                putType(TYPEHOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryReminders())
             }
 
             R.id.historyCountdown -> {
-                putType("home")
+                putType(TYPEHOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryCountdown2())
             }
@@ -546,15 +548,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    private fun putType(type: String) {
-        val preferences =
-            MyApplication.instance.getSharedPreferences("fragment", Context.MODE_PRIVATE)
-        preferences.edit().putString("type", type).apply()
-        preferences.getString("type", "")
-        FragmentType.type = type
-        Log.d("sandraaa", "type = ${FragmentType.type}")
     }
 
     private fun showChangeLanguageList() {
@@ -659,7 +652,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun updateZhEnum() {
         CurrentFragmentType.DETAIL.value = "詳細資訊"
         CurrentFragmentType.NEWEVENT.value = "新增事件"
-        CurrentFragmentType.NEWREMINDER.value = "新增提醒事件"
+        CurrentFragmentType.NEWREMINDERS.value = "新增提醒事件"
         CurrentFragmentType.NEWCOUNTDOWN.value = "新增倒數事件"
         CurrentFragmentType.HISTORY.value = "歷史紀錄"
     }
@@ -667,7 +660,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun updateEnEnum() {
         CurrentFragmentType.DETAIL.value = "Detail"
         CurrentFragmentType.NEWEVENT.value = "New Event"
-        CurrentFragmentType.NEWREMINDER.value = "New Reminder"
+        CurrentFragmentType.NEWREMINDERS.value = "New Reminder"
         CurrentFragmentType.NEWCOUNTDOWN.value = "New Countdown"
         CurrentFragmentType.HISTORY.value = "History"
     }
@@ -682,7 +675,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 R.id.countdownDetailFragment -> CurrentFragmentType.DETAIL
                 R.id.calendarEventFragment -> CurrentFragmentType.NEWEVENT
                 R.id.countdownFragment -> CurrentFragmentType.NEWCOUNTDOWN
-                R.id.remindersFragment -> CurrentFragmentType.NEWREMINDER
+                R.id.remindersFragment -> CurrentFragmentType.NEWREMINDERS
                 R.id.historyReminders -> CurrentFragmentType.HISTORY
                 R.id.historyCountdown2 -> CurrentFragmentType.HISTORY
                 else -> viewModel.currentFragmentType.value

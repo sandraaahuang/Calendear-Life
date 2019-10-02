@@ -6,22 +6,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.UserManager
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 class HistoryRemindersViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-    val date = Date(Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH)
-
     lateinit var remindAdd: Reminders
 
-    val remindersItem = ArrayList<Reminders>()
-    val _liveReminders = MutableLiveData<List<Reminders>>()
+    private val remindersItem = ArrayList<Reminders>()
+    private val _liveReminders = MutableLiveData<List<Reminders>>()
     val liveReminders: LiveData<List<Reminders>>
         get() = _liveReminders
 
