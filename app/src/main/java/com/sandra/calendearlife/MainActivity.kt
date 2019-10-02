@@ -333,10 +333,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        if (Locale.getDefault().language == ENGLISH) {
-            updateEnEnum()
-        } else {
-            updateZhEnum()
+        Logger.d("default language = ${Locale.getDefault()}")
+        when (Locale.getDefault().language) {
+            CHINESE -> updateZhEnum()
+            else -> updateEnEnum()
         }
     }
 
