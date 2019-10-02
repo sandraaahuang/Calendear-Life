@@ -1,10 +1,15 @@
 package com.sandra.calendearlife.countdown
 
 import android.app.Application
+import android.widget.TextView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.util.UserManager
 
@@ -13,19 +18,20 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
     var db = FirebaseFirestore.getInstance()
 
     private val _selectedItem = MutableLiveData<Countdown>()
-
     val selectedItem: LiveData<Countdown>
         get() = _selectedItem
 
     private var _isUpdateCompleted = MutableLiveData<Boolean>()
-
     val isUpdateCompleted: LiveData<Boolean>
         get() = _isUpdateCompleted
 
     private var _isClicked = MutableLiveData<Boolean>()
-
     val isClicked: LiveData<Boolean>
         get() = _isClicked
+
+    private var _showDatePicker = MutableLiveData<TextView>()
+    val showDatePicker: LiveData<TextView>
+        get() = _showDatePicker
 
     init {
         _selectedItem.value = countdown
@@ -35,39 +41,39 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
     //update item
     fun updateItem(item: HashMap<String, Any>, calendarItem: HashMap<String, Any>, documentID: String) {
         _isClicked.value = true
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for ((index, calendar) in documents.withIndex()) {
 
                     // get update item
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("countdowns")
-                        .whereEqualTo("documentID", documentID)
+                        .collection(COUNTDOWN)
+                        .whereEqualTo(DOCUMENTID, documentID)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
 
                                 // update countdowns
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
-                                    .collection("countdowns")
+                                    .collection(COUNTDOWN)
                                     .document(countdown.id)
                                     .update(item)
 
                                 // update calendar
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
                                     .update(calendarItem)
                             }
@@ -83,39 +89,39 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
     //delete item
     fun deleteItem(documentID: String) {
         _isClicked.value = true
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .get()
             .addOnSuccessListener { documents ->
 
                 for ((index, calendar) in documents.withIndex()) {
 
                     // get delete item
-                    db.collection("data")
+                    db.collection(DATA)
                         .document(UserManager.id!!)
-                        .collection("calendar")
+                        .collection(CALENDAR)
                         .document(calendar.id)
-                        .collection("countdowns")
-                        .whereEqualTo("documentID", documentID)
+                        .collection(COUNTDOWN)
+                        .whereEqualTo(DOCUMENTID, documentID)
                         .get()
                         .addOnSuccessListener { documents ->
 
                             for (countdown in documents) {
 
                                 // delete countdown
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
-                                    .collection("countdowns")
+                                    .collection(COUNTDOWN)
                                     .document(countdown.id)
                                     .delete()
 
                                 // delete calendar
-                                db.collection("data")
+                                db.collection(DATA)
                                     .document(UserManager.id!!)
-                                    .collection("calendar")
+                                    .collection(CALENDAR)
                                     .document(calendar.id)
                                     .delete()
                             }
@@ -126,6 +132,10 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                     }
                 }
             }
+    }
+
+    fun showDatePicker(clickText: TextView) {
+        _showDatePicker.value = clickText
     }
 }
 

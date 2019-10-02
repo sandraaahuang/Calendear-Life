@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -13,14 +14,30 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.DateFormat.Companion.simpleDateFormat
+import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
+import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
+import com.sandra.calendearlife.constant.DateFormat.Companion.year
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.databinding.FragmentCountdownDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
+import java.text.SimpleDateFormat
 import java.util.*
 
 class CountdownDetailFragment : Fragment() {
 
     private lateinit var binding: FragmentCountdownDetailBinding
+
+    private val locale: Locale =
+        if (Locale.getDefault().toString() == "zh-rtw") {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -36,40 +53,20 @@ class CountdownDetailFragment : Fragment() {
         ).get(CountdownDetailViewModel::class.java)
         binding.viewModel = viewModel
 
-        binding.remindLayout.setOnClickListener {
-
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val monthOfYear = calendar.get(Calendar.MONTH)
-            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePickerDialog = DatePickerDialog(
-                it.context, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-                { _, year, monthOfYear, dayOfMonth ->
-                    val date = Date(year - 1900, monthOfYear, dayOfMonth)
-                    val stringDate = simpleDateFormat.format(date)
-                    binding.targetDateInput.text =
-                        "$stringDate"
-                }, year, monthOfYear, dayOfMonth
-            )
-            datePickerDialog.show()
-        }
-
         binding.saveButton.setOnClickListener {
             val targetDate = binding.targetDateInput.text.toString()
-            val putInDate = Date(targetDate)
 
             val updateItem = hashMapOf(
-                "title" to "${binding.editTextCountdown.text}".trim(),
-                "note" to "${binding.editTextCountdownNote.text}".trim(),
-                "targetDate" to java.sql.Timestamp(putInDate.time)
+                TITLE to "${binding.editTextCountdown.text}".trim(),
+                NOTE to "${binding.editTextCountdownNote.text}".trim(),
+                TARGETDATE to java.sql.Timestamp(simpleDateFormat.parse(targetDate).time)
             )
 
             val calendarItem = hashMapOf(
-                "title" to "${binding.editTextCountdown.text}".trim(),
-                "note" to "${binding.editTextCountdownNote.text}".trim(),
-                "beginDate" to java.sql.Timestamp(putInDate.time),
-                "date" to java.sql.Timestamp(putInDate.time)
+                TITLE to "${binding.editTextCountdown.text}".trim(),
+                NOTE to "${binding.editTextCountdownNote.text}".trim(),
+                BEGINDATE to java.sql.Timestamp(simpleDateFormat.parse(targetDate).time),
+                DATE to java.sql.Timestamp(simpleDateFormat.parse(targetDate).time)
             )
 
             viewModel.updateItem(updateItem, calendarItem, countdown.documentID)
@@ -97,6 +94,12 @@ class CountdownDetailFragment : Fragment() {
             }
         })
 
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                showDatePicker(it)
+            }
+        })
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 DiscardDialog().show(this@CountdownDetailFragment.fragmentManager!!, "show")
@@ -109,6 +112,17 @@ class CountdownDetailFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun showDatePicker(inputDate: TextView) {
+        val datePickerDialog = DatePickerDialog(
+            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+            { _, year, monthOfYear, dayOfMonth ->
+                inputDate.text =
+                    simpleDateFormat.format(Date(year - 1900, monthOfYear, dayOfMonth))
+            }, year, monthOfYear, dayOfMonth
+        )
+        datePickerDialog.show()
     }
 }
 

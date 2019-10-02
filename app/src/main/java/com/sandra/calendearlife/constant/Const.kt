@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.util.FragmentType
-import java.util.*
 
 class Const {
     companion object {
@@ -18,14 +17,6 @@ class Const {
         const val RESPONSE = "response"
         const val EVALUATE_DIALOG = "evaluate_dialog"
         const val REQUEST_EVALUATE = 0X110
-
-        // Judge the language
-        val locale: Locale =
-            if (Locale.getDefault().toString() == "zh-rtw") {
-                Locale.TAIWAN
-            } else {
-                Locale.ENGLISH
-            }
 
         // Determine each fragment type
         fun putType (type: String) {

@@ -6,30 +6,33 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_REMIND
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.databinding.ItemCalendarEventBinding
 
-class CalendarMonthAdapter(val onClickListener: OnClickListener) :
+class CalendarMonthAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Calendar, CalendarMonthAdapter.CountdownViewHolder>(DiffCallback) {
 
-    class CountdownViewHolder(private var binding: ItemCalendarEventBinding):
+    class CountdownViewHolder(private var binding: ItemCalendarEventBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(calendar: Calendar) {
             binding.calendar = calendar
 
             binding.typeText.text =
-                when (calendar.color){
-                "C02942" -> "Reminder"
-                "100038" -> "Countdown"
-                else -> "Event"
-            }
+                when (calendar.color) {
+                    COLOR_REMIND -> MyApplication.instance.getString(R.string.new_reminder)
+                    COLOR_COUNTDOWN -> MyApplication.instance.getString(R.string.new_countdown)
+                    else -> MyApplication.instance.getString(R.string.new_event)
+                }
 
             // set countdown icon
             binding.hasCountdown.visibility =
                 when {
                     calendar.hasCountdown -> View.VISIBLE
                     else -> View.GONE
-
                 }
 
             // set reminder icon
@@ -37,13 +40,12 @@ class CalendarMonthAdapter(val onClickListener: OnClickListener) :
                 when {
                     calendar.hasReminders -> View.VISIBLE
                     else -> View.GONE
-
                 }
 
             binding.hasGoogle.visibility =
                 when {
                     calendar.fromGoogle -> View.VISIBLE
-                    else ->View.GONE
+                    else -> View.GONE
                 }
 
 
@@ -61,8 +63,10 @@ class CalendarMonthAdapter(val onClickListener: OnClickListener) :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): CountdownViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): CountdownViewHolder {
         return CountdownViewHolder(
             ItemCalendarEventBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false

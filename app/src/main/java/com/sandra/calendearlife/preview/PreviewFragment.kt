@@ -28,6 +28,7 @@ import com.sandra.calendearlife.R
 import com.sandra.calendearlife.databinding.FragmentPreviewBinding
 import com.sandra.calendearlife.constant.Const.Companion.RC_SIGN_IN
 import com.sandra.calendearlife.constant.Const.Companion.REQUEST_CODE
+import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.widget.RemindersWidget
 
@@ -127,12 +128,12 @@ class PreviewFragment : Fragment() {
             firebaseAuthWithGoogle(account!!)
 
         } catch (e: ApiException) {
-            Log.w("sandraaa", "signInResult:failed code=" + e.statusCode)
+            Logger.w("signInResult:failed code=" + e.statusCode)
         }
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        Log.d("sandraaa", "firebaseAuthWithGoogle:" + acct.id!!)
+        Logger.d("firebaseAuthWithGoogle:" + acct.id!!)
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         auth.signInWithCredential(credential)

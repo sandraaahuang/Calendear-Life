@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable name="viewModel" type="com.sandra.calendearlife.countdown.CountdownViewModel"/>
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/background_stone2"
             android:backgroundTintMode="src_atop"
@@ -89,6 +93,7 @@
                     android:fontFamily="@font/noto_sans"
                     android:textSize="@dimen/normal_text_size"
                     android:text=""
+                    android:onClick="@{() -> viewModel.showDatePicker(countdownDateInput)}"
                     android:textColor="?attr/textcolor"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="16dp"
