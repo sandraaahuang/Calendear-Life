@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
@@ -21,8 +22,6 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.util.UserManager
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.HashMap
 
 
@@ -63,142 +62,192 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
         _isClicked.value = true
 
-        db.collection(DATA)
-            .document(UserManager.id!!)
-            .collection(CALENDAR)
-            .whereEqualTo(DOCUMENTID, documentID)
-            .get()
-            .addOnSuccessListener { documents ->
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .whereEqualTo(DOCUMENTID, documentID)
+                .get()
+                .addOnSuccessListener { documents ->
 
-                for ((index, calendar) in documents.withIndex()) {
+                    for ((index, calendar) in documents.withIndex()) {
 
-                    // update countdowns
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .collection(COUNTDOWN)
-                        .get()
-                        .addOnSuccessListener { countdownQuerySnapshot ->
+                        updateCountdownItem(calendar, countdown)
+                        updateRemindersItem(calendar, updateRemind)
+                        updateCalendarItem(calendar, calendarItem)
 
-                            for (countdowns in countdownQuerySnapshot) {
-
-                                // update countdowns
-                                db.collection(DATA)
-                                    .document(UserManager.id!!)
-                                    .collection(CALENDAR)
-                                    .document(calendar.id)
-                                    .collection(COUNTDOWN)
-                                    .document(countdowns.id)
-                                    .update(countdown)
-                            }
+                        if (index == documents.size() - 1) {
+                            _isUpdateCompleted.value = true
                         }
-
-                    // update reminders
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .collection(REMINDERS)
-                        .get()
-                        .addOnSuccessListener { remindersQuerySnapshot ->
-
-                            for (reminders in remindersQuerySnapshot) {
-
-                                // update reminders
-                                db.collection(DATA)
-                                    .document(UserManager.id!!)
-                                    .collection(CALENDAR)
-                                    .document(calendar.id)
-                                    .collection(REMINDERS)
-                                    .document(reminders.id)
-                                    .update(updateRemind)
-                            }
-                        }
-                    // update calendar
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .update(calendarItem)
-
-                    if (index == documents.size() - 1) {
-                        _isUpdateCompleted.value = true
                     }
-                }
 
-            }
+                }
+        }
+
     }
 
+    private fun updateCountdownItem(
+        queryDocumentSnapshot: QueryDocumentSnapshot,
+        countdown: HashMap<String, Any>
+    ) {
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .document(queryDocumentSnapshot.id)
+                .collection(COUNTDOWN)
+                .get()
+                .addOnSuccessListener { countdownQuerySnapshot ->
+
+                    for (countdowns in countdownQuerySnapshot) {
+
+                        // update countdowns
+                        db.collection(DATA)
+                            .document(userManagerId)
+                            .collection(CALENDAR)
+                            .document(queryDocumentSnapshot.id)
+                            .collection(COUNTDOWN)
+                            .document(countdowns.id)
+                            .update(countdown)
+                    }
+                }
+        }
+
+    }
+
+    private fun updateRemindersItem(
+        queryDocumentSnapshot: QueryDocumentSnapshot,
+        updateRemind: HashMap<String, Any>
+    ) {
+        // update reminders
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .document(queryDocumentSnapshot.id)
+                .collection(REMINDERS)
+                .get()
+                .addOnSuccessListener { remindersQuerySnapshot ->
+
+                    for (reminders in remindersQuerySnapshot) {
+
+                        // update reminders
+                        db.collection(DATA)
+                            .document(userManagerId)
+                            .collection(CALENDAR)
+                            .document(queryDocumentSnapshot.id)
+                            .collection(REMINDERS)
+                            .document(reminders.id)
+                            .update(updateRemind)
+                    }
+                }
+        }
+
+    }
+
+    private fun updateCalendarItem(
+        queryDocumentSnapshot: QueryDocumentSnapshot,
+        calendarItem: HashMap<String, Any>
+    ) {
+        // update calendar
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .document(queryDocumentSnapshot.id)
+                .update(calendarItem)
+        }
+
+    }
 
     //delete item
     fun deleteItem(documentID: String) {
         _isClicked.value = true
-        db.collection(DATA)
-            .document(UserManager.id!!)
-            .collection(CALENDAR)
-            .whereEqualTo(DOCUMENTID, documentID)
-            .get()
-            .addOnSuccessListener { calendarQuerySnapshot ->
 
-                for ((index, calendar) in calendarQuerySnapshot.withIndex()) {
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .whereEqualTo(DOCUMENTID, documentID)
+                .get()
+                .addOnSuccessListener { calendarQuerySnapshot ->
 
-                    // delete countdowns
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .collection(COUNTDOWN)
-                        .get()
-                        .addOnSuccessListener { documents ->
+                    for ((index, calendar) in calendarQuerySnapshot.withIndex()) {
 
-                            for (countdowns in documents) {
+                        deleteCountdownItem(calendar)
+                        deleteRemindersItem(calendar)
+                        deleteCalendarItem(calendar)
 
-                                db.collection(DATA)
-                                    .document(UserManager.id!!)
-                                    .collection(CALENDAR)
-                                    .document(calendar.id)
-                                    .collection(COUNTDOWN)
-                                    .document(countdowns.id)
-                                    .delete()
-                            }
+                        if (index == calendarQuerySnapshot.size() - 1) {
+                            _isUpdateCompleted.value = true
                         }
-
-                    // delete reminders
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .collection(REMINDERS)
-                        .get()
-                        .addOnSuccessListener { remindersQuerySnapshot ->
-
-                            for (reminders in remindersQuerySnapshot) {
-
-                                db.collection(DATA)
-                                    .document(UserManager.id!!)
-                                    .collection(CALENDAR)
-                                    .document(calendar.id)
-                                    .collection(REMINDERS)
-                                    .document(reminders.id)
-                                    .delete()
-                            }
-                        }
-
-
-                    // delete calendar
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .delete()
-
-                    if (index == calendarQuerySnapshot.size() - 1) {
-                        _isUpdateCompleted.value = true
                     }
                 }
-            }
+        }
 
+    }
+
+    private fun deleteCountdownItem(queryDocumentSnapshot: QueryDocumentSnapshot) {
+        // delete countdowns
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .document(queryDocumentSnapshot.id)
+                .collection(COUNTDOWN)
+                .get()
+                .addOnSuccessListener { documents ->
+
+                    for (countdowns in documents) {
+
+                        db.collection(DATA)
+                            .document(userManagerId)
+                            .collection(CALENDAR)
+                            .document(queryDocumentSnapshot.id)
+                            .collection(COUNTDOWN)
+                            .document(countdowns.id)
+                            .delete()
+                    }
+                }
+        }
+
+    }
+
+    private fun deleteRemindersItem(queryDocumentSnapshot: QueryDocumentSnapshot) {
+        // delete reminders
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .document(queryDocumentSnapshot.id)
+                .collection(REMINDERS)
+                .get()
+                .addOnSuccessListener { remindersQuerySnapshot ->
+
+                    for (reminders in remindersQuerySnapshot) {
+
+                        db.collection(DATA)
+                            .document(userManagerId)
+                            .collection(CALENDAR)
+                            .document(queryDocumentSnapshot.id)
+                            .collection(REMINDERS)
+                            .document(reminders.id)
+                            .delete()
+                    }
+                }
+        }
+
+    }
+
+    private fun deleteCalendarItem(queryDocumentSnapshot: QueryDocumentSnapshot) {
+        // delete calendar
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .document(queryDocumentSnapshot.id)
+                .delete()
+        }
 
     }
 
@@ -208,7 +257,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
         val longEventId = java.lang.Long.parseLong(eventId)
 
         // update event
-        val cr = MyApplication.instance.contentResolver
+        val contentResolver = MyApplication.instance.contentResolver
         val values = ContentValues()
         values.put(CalendarContract.Events.TITLE, title)
         values.put(CalendarContract.Events.DESCRIPTION, note)
@@ -221,7 +270,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, longEventId)
-            cr.update(uri, values, null, null)
+            contentResolver.update(uri, values, null, null)
         }
     }
 
@@ -230,14 +279,14 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
         val longEventId = java.lang.Long.parseLong(eventId)
 
-        val cr = MyApplication.instance.contentResolver
+        val contentResolver = MyApplication.instance.contentResolver
 
         val permissionCheck = ContextCompat.checkSelfPermission(
             MyApplication.instance, WRITE_CALENDAR
         )
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, longEventId)
-            cr.delete(uri, null, null)
+            contentResolver.delete(uri, null, null)
         }
     }
 
