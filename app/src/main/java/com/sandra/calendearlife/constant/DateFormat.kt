@@ -85,6 +85,16 @@ fun setDefaultTime(formatType: String): String {
    return SimpleDateFormat(formatType, locale).format(Date(Timestamp.now().seconds * 1000))
 }
 
+fun transferTimestamp2String(formatType: String, dateSource: Timestamp): String {
+    val locale: Locale =
+        if (Locale.getDefault().toString() == SharedPreferenceKey.CHINESE) {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+    return SimpleDateFormat(formatType, locale).format(dateSource.seconds * 1000)
+}
+
 const val TIME_FORMAT = "hh:mm a"
 const val DATE_TIME_FORMAT = "yyyy-MM-dd hh:mm a"
 const val SIMPLE_DATE_FORMAT = "yyyy-MM-dd"

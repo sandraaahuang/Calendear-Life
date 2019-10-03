@@ -11,29 +11,27 @@ class FirebaseKey {
         // Calendar column
         const val COLOR = "color"
         const val DATE = "date"
-        const val SETDATE = "setDate"
-        const val BEGINDATE = "beginDate"
-        const val ENDDATE = "endDate"
+        const val SET_DATE = "setDate"
+        const val BEGIN_DATE = "beginDate"
+        const val END_DATE = "endDate"
         const val TITLE = "title"
         const val NOTE = "note"
-        const val ISALLDAY = "isAllDay"
-        const val HASLOCATION = "hasLocation"
+        const val IS_ALL_DAY = "isAllDay"
+        const val HAS_LOCATION = "hasLocation"
         const val LOCATION = "location"
-        const val HASREMINDERS = "hasReminders"
-        const val HASCOUNTDOWN = "hasCountdown"
-        const val DOCUMENTID = "documentID"
+        const val HAS_REMINDERS = "hasReminders"
+        const val HAS_COUNTDOWN = "hasCountdown"
+        const val DOCUMENT_ID = "documentID"
         const val FREQUENCY = "frequency"
-        const val FROMGOOGLE = "fromGoogle"
+        const val FROM_GOOGLE = "fromGoogle"
 
         // Reminders column
-        const val SETREMINDATE = "setRemindDate"
-        const val REMINDDATE = "remindDate"
-        const val REMINDTIMESTAMP = "remindTimestamp"
-        const val ISCHECKED = "isChecked"
+        const val SET_REMIND_DATE = "setRemindDate"
+        const val REMIND_DATE = "remindDate"
+        const val IS_CHECKED = "isChecked"
 
         // Countdown column
-        const val TARGETDATE = "targetDate"
-        const val TARGETTIMESTAMP = "targetTimestamp"
+        const val TARGET_DATE = "targetDate"
         const val OVERDUE = "overdue"
 
         // Color
@@ -48,9 +46,14 @@ class FirebaseKey {
         // Google Calendar Constant
         const val PARENTHESES = "(("
         const val CONJUNCTION = " = ?) AND ("
-        const val QUESTIONMARK = " = ?))"
-        const val MAILFORMAT = "com.google"
+        const val QUESTION_MARK = " = ?))"
+        const val MAIL_FORMAT = "com.google"
 
+        // User information
+        const val USER_ID = "userId"
+        const val USER_NAME = "userName"
+        const val GMAIL = "gmail"
+        const val HAS_ACCOUNT = "hasAccount"
 
     }
 }

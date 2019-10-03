@@ -27,13 +27,13 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_REMIND_CAL
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CONJUNCTION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROMGOOGLE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HASCOUNTDOWN
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HASREMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.MAILFORMAT
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.MAIL_FORMAT
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.PARENTHESES
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.QUESTIONMARK
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.QUESTION_MARK
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
@@ -78,7 +78,7 @@ class CalendarEventViewModel : ViewModel() {
                         .document(userManagerId)
                         .collection(CALENDAR)
                         .document(calendarDocumentReference.id)
-                        .update(DOCUMENTID, calendarDocumentReference.id, COLOR, COLOR_CAL)
+                        .update(DOCUMENT_ID, calendarDocumentReference.id, COLOR, COLOR_CAL)
                         .addOnSuccessListener {
 
                             writeHasRemindersItem(calendarDocumentReference, reminder)
@@ -99,8 +99,8 @@ class CalendarEventViewModel : ViewModel() {
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(HASREMINDERS, true)
-                .whereEqualTo(DOCUMENTID, documentReference.id)
+                .whereEqualTo(HAS_REMINDERS, true)
+                .whereEqualTo(DOCUMENT_ID, documentReference.id)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -122,7 +122,7 @@ class CalendarEventViewModel : ViewModel() {
                                             .document(document.id)
                                             .collection(REMINDERS)
                                             .document(documentReference.id)
-                                            .update(DOCUMENTID, documentReference.id)
+                                            .update(DOCUMENT_ID, documentReference.id)
 
                                         db.collection(DATA)
                                             .document(userManagerId)
@@ -144,8 +144,8 @@ class CalendarEventViewModel : ViewModel() {
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(HASCOUNTDOWN, true)
-                .whereEqualTo(DOCUMENTID, documentReference.id)
+                .whereEqualTo(HAS_COUNTDOWN, true)
+                .whereEqualTo(DOCUMENT_ID, documentReference.id)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -167,7 +167,7 @@ class CalendarEventViewModel : ViewModel() {
                                             .document(document.id)
                                             .collection(COUNTDOWN)
                                             .document(documentReference.id)
-                                            .update(DOCUMENTID, documentReference.id)
+                                            .update(DOCUMENT_ID, documentReference.id)
 
 
                                         db.collection(DATA)
@@ -192,9 +192,9 @@ class CalendarEventViewModel : ViewModel() {
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(HASCOUNTDOWN, true)
-                .whereEqualTo(HASREMINDERS, true)
-                .whereEqualTo(DOCUMENTID, documentReference.id)
+                .whereEqualTo(HAS_COUNTDOWN, true)
+                .whereEqualTo(HAS_REMINDERS, true)
+                .whereEqualTo(DOCUMENT_ID, documentReference.id)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -221,8 +221,8 @@ class CalendarEventViewModel : ViewModel() {
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(FROMGOOGLE, true)
-                .whereEqualTo(DOCUMENTID, documentReference.id)
+                .whereEqualTo(FROM_GOOGLE, true)
+                .whereEqualTo(DOCUMENT_ID, documentReference.id)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -272,9 +272,9 @@ class CalendarEventViewModel : ViewModel() {
         // find
         val selection = (PARENTHESES + Calendars.ACCOUNT_NAME + CONJUNCTION
                 + Calendars.ACCOUNT_TYPE + CONJUNCTION
-                + Calendars.OWNER_ACCOUNT + QUESTIONMARK)
+                + Calendars.OWNER_ACCOUNT + QUESTION_MARK)
         val selectionArgs =
-            arrayOf(targetAccount, MAILFORMAT, UserManager.userEmail)
+            arrayOf(targetAccount, MAIL_FORMAT, UserManager.userEmail)
 
         //check permission
         val permissionCheck = ContextCompat.checkSelfPermission(
@@ -341,7 +341,7 @@ class CalendarEventViewModel : ViewModel() {
                                                     .document(userManagerId)
                                                     .collection(CALENDAR)
                                                     .document(eventID)
-                                                    .update(DOCUMENTID, eventID, COLOR, COLOR_CAL)
+                                                    .update(DOCUMENT_ID, eventID, COLOR, COLOR_CAL)
                                                     .addOnSuccessListener {
 
                                                         writeGoogleHasReminders(eventID, reminders)
@@ -374,8 +374,8 @@ class CalendarEventViewModel : ViewModel() {
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(HASREMINDERS, true)
-                .whereEqualTo(DOCUMENTID, eventID)
+                .whereEqualTo(HAS_REMINDERS, true)
+                .whereEqualTo(DOCUMENT_ID, eventID)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -397,7 +397,7 @@ class CalendarEventViewModel : ViewModel() {
                                             .document(document.id)
                                             .collection(REMINDERS)
                                             .document(documentReference.id)
-                                            .update(DOCUMENTID, documentReference.id)
+                                            .update(DOCUMENT_ID, documentReference.id)
 
                                         db.collection(DATA)
                                             .document(userManagerId)
@@ -418,8 +418,8 @@ class CalendarEventViewModel : ViewModel() {
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(HASCOUNTDOWN, true)
-                .whereEqualTo(DOCUMENTID, eventID)
+                .whereEqualTo(HAS_COUNTDOWN, true)
+                .whereEqualTo(DOCUMENT_ID, eventID)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -441,7 +441,7 @@ class CalendarEventViewModel : ViewModel() {
                                             .document(document.id)
                                             .collection(COUNTDOWN)
                                             .document(documentReference.id)
-                                            .update(DOCUMENTID, documentReference.id)
+                                            .update(DOCUMENT_ID, documentReference.id)
 
 
                                         db.collection(DATA)
@@ -455,9 +455,9 @@ class CalendarEventViewModel : ViewModel() {
                                         db.collection(DATA)
                                             .document(userManagerId)
                                             .collection(CALENDAR)
-                                            .whereEqualTo(HASCOUNTDOWN, true)
-                                            .whereEqualTo(HASREMINDERS, true)
-                                            .whereEqualTo(DOCUMENTID, eventID)
+                                            .whereEqualTo(HAS_COUNTDOWN, true)
+                                            .whereEqualTo(HAS_REMINDERS, true)
+                                            .whereEqualTo(DOCUMENT_ID, eventID)
                                             .get()
                                             .addOnCompleteListener { task ->
                                                 if (task.isSuccessful) {
@@ -490,8 +490,8 @@ class CalendarEventViewModel : ViewModel() {
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(FROMGOOGLE, true)
-                .whereEqualTo(DOCUMENTID, eventID)
+                .whereEqualTo(FROM_GOOGLE, true)
+                .whereEqualTo(DOCUMENT_ID, eventID)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {

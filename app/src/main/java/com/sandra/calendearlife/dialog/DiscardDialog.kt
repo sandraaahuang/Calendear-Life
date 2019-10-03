@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sandra.calendearlife.NavigationDirections
+import com.sandra.calendearlife.constant.Const.Companion.TYPE_CALENDAR
 import com.sandra.calendearlife.databinding.DialogDiscardBinding
 import com.sandra.calendearlife.util.FragmentType
 
@@ -28,7 +29,7 @@ class DiscardDialog : BottomSheetDialogFragment() {
         binding.discardLayout.setOnClickListener {
 
             when (FragmentType.type) {
-                "calendar" -> {
+                TYPE_CALENDAR -> {
                     findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
                     this.dismiss()
                 }

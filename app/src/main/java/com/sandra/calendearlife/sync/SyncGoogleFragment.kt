@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.CalendarContract
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,26 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.FirebaseKey
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_GOOGLE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.END_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
+import com.sandra.calendearlife.constant.transferTimestamp2String
 import com.sandra.calendearlife.databinding.FragmentSyncGoogleBinding
+import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
-import java.text.SimpleDateFormat
 import java.util.*
 
 class SyncGoogleFragment : AppCompatDialogFragment() {
@@ -69,15 +85,15 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
 
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Snackbar.make(this.view!!, "Success", Snackbar.LENGTH_LONG).show()
-                query_calendar()
+                queryCalendar()
             } else {
                 Toast.makeText(this.context, "Permission DENIED", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun query_calendar() {
-        val EVENT_PROJECTION = arrayOf(
+    private fun queryCalendar() {
+        val eventProjection = arrayOf(
             CalendarContract.Calendars._ID, // 0 calendar id
             CalendarContract.Calendars.ACCOUNT_NAME, // 1 account name
             CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, // 2 display name
@@ -85,14 +101,14 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
             CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL
         )// 4 access level
 
-        val PROJECTION_ID_INDEX = 0
-        val PROJECTION_ACCOUNT_NAME_INDEX = 1
-        val PROJECTION_DISPLAY_NAME_INDEX = 2
-        val PROJECTION_OWNER_ACCOUNT_INDEX = 3
-        val PROJECTION_CALENDAR_ACCESS_LEVEL = 4
+        val projectionIdIndex = 0
+        val projectionAccountNameIndex = 1
+        val projectionDisplayNameIndex = 2
+        val projectionOwnerAccountIndex = 3
+        val projectionCalendarAccessLevel = 4
 
         // event data
-        val INSTANCE_PROJECTION = arrayOf(
+        val instanceProjection = arrayOf(
             CalendarContract.Instances.EVENT_ID, // 0 event id
             CalendarContract.Instances.BEGIN, // 1 begin date
             CalendarContract.Instances.END, // 2 end date
@@ -100,54 +116,51 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
             CalendarContract.Instances.DESCRIPTION // 4 note
         )
 
-        val PROJECTION_BEGIN_INDEX = 1
-        val PROJECTION_END_INDEX = 2
-        val PROJECTION_TITLE_INDEX = 3
-        val PROJECTION_DESCRIPTION_INDEX = 4
+        val projectionBeginIndex = 1
+        val projectionEndIndex = 2
+        val projectionTitleIndex = 3
+        val projectionDescriptionIndex = 4
 
         // Get user email
-        val targetAccount = UserManager.userEmail!!
+        val targetAccount = UserManager.userEmail
         // search calendar
         val cur: Cursor?
         val cr = MyApplication.instance.contentResolver
         val uri = CalendarContract.Calendars.CONTENT_URI
         // find
-        val selection = ("((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))")
+        val selection = (FirebaseKey.PARENTHESES + CalendarContract.Calendars.ACCOUNT_NAME + FirebaseKey.CONJUNCTION
+                + CalendarContract.Calendars.ACCOUNT_TYPE + FirebaseKey.CONJUNCTION
+                + CalendarContract.Calendars.OWNER_ACCOUNT + FirebaseKey.QUESTION_MARK)
         val selectionArgs =
-            arrayOf(targetAccount, "com.google", UserManager.userEmail)
+            arrayOf(targetAccount, FirebaseKey.MAIL_FORMAT, UserManager.userEmail)
 
         // create list to store result
         val accountNameList = ArrayList<String>()
         val calendarIdList = ArrayList<String>()
 
-        cur = cr?.query(uri, EVENT_PROJECTION, selection, selectionArgs, null)
+        cur = cr?.query(uri, eventProjection, selection, selectionArgs, null)
         if (cur != null) {
             while (cur.moveToNext()) {
-                val calendarId: String = cur.getString(PROJECTION_ID_INDEX)
-                val accountName: String = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
-                val displayName: String = cur.getString(PROJECTION_DISPLAY_NAME_INDEX)
-                val ownerAccount: String = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)
-                val accessLevel = cur.getInt(PROJECTION_CALENDAR_ACCESS_LEVEL)
+                val calendarId: String = cur.getString(projectionIdIndex)
+                val accountName: String = cur.getString(projectionAccountNameIndex)
+                val displayName: String = cur.getString(projectionDisplayNameIndex)
+                val ownerAccount: String = cur.getString(projectionOwnerAccountIndex)
+                val accessLevel = cur.getInt(projectionCalendarAccessLevel)
 
-                Log.i("query_calendar", String.format("calendarId=%s", calendarId))
-                Log.i("query_calendar", String.format("accountName=%s", accountName))
-                Log.i("query_calendar", String.format("displayName=%s", displayName))
-                Log.i("query_calendar", String.format("ownerAccount=%s", ownerAccount))
-                Log.i("query_calendar", String.format("accessLevel=%s", accessLevel))
+                Logger.i(String.format("calendarId=%s", calendarId))
+                Logger.i(String.format("accountName=%s", accountName))
+                Logger.i(String.format("displayName=%s", displayName))
+                Logger.i(String.format("ownerAccount=%s", ownerAccount))
+                Logger.i(String.format("accessLevel=%s", accessLevel))
                 // store calendar data
                 accountNameList.add(displayName)
                 calendarIdList.add(calendarId)
 
-                Log.d("sandraaa", "accountNameList = $accountNameList,calendarIdList = $calendarIdList ")
-
-                val targetCalendar = calendarId
                 val beginTime = Calendar.getInstance()
                 beginTime.set(2019, 8, 1, 24, 0)
                 val startMillis = beginTime.timeInMillis
                 val endTime = Calendar.getInstance()
-                endTime.set(2020, 8, 1, 24, 0)
+                endTime.set(2029, 8, 1, 24, 0)
                 val endMillis = endTime.timeInMillis
 
                 // search event
@@ -156,7 +169,7 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
                 val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
 
                 val selectionEvent = CalendarContract.Events.CALENDAR_ID + " = ?"
-                val selectionEventArgs = arrayOf(targetCalendar)
+                val selectionEventArgs = arrayOf(calendarId)
                 ContentUris.appendId(builder, startMillis)
                 ContentUris.appendId(builder, endMillis)
 
@@ -168,23 +181,23 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
 
                     cur2 = cr2?.query(
                         builder.build(),
-                        INSTANCE_PROJECTION,
+                        instanceProjection,
                         selectionEvent,
                         selectionEventArgs, null
                     )
                     if (cur2 != null) {
                         while (cur2.moveToNext()) {
-                            val eventID = cur2.getString(PROJECTION_ID_INDEX)
-                            val beginVal = cur2.getLong(PROJECTION_BEGIN_INDEX)
-                            val endVal = cur2.getLong(PROJECTION_END_INDEX)
-                            val title = cur2.getString(PROJECTION_TITLE_INDEX)
-                            val note = cur2.getString(PROJECTION_DESCRIPTION_INDEX)
+                            val eventID = cur2.getString(projectionIdIndex)
+                            val beginVal = cur2.getLong(projectionBeginIndex)
+                            val endVal = cur2.getLong(projectionEndIndex)
+                            val title = cur2.getString(projectionTitleIndex)
+                            val note = cur2.getString(projectionDescriptionIndex)
                             // 取得所需的資料
-                            Log.i("query_event", String.format("eventID=%s", eventID))
-                            Log.i("query_event", String.format("beginVal=%s", beginVal))
-                            Log.i("query_event", String.format("endVal=%s", endVal))
-                            Log.i("query_event", String.format("title=%s", title))
-                            Log.i("query_event", String.format("note=%s", note))
+                            Logger.i(String.format("eventID=%s", eventID))
+                            Logger.i(String.format("beginVal=%s", beginVal))
+                            Logger.i(String.format("endVal=%s", endVal))
+                            Logger.i(String.format("title=%s", title))
+                            Logger.i(String.format("note=%s", note))
                             // 暫存資料讓使用者選擇
                             val beginDate = Timestamp(beginVal / 1000, 0)
                             val endDate = Timestamp(endVal / 1000, 0)
@@ -194,22 +207,18 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
                             titleList.add(title)
                             noteList.add(note)
 
-                            val simpleDateFormat = SimpleDateFormat("yyyy/MM/dd")
-                            val dateFormat = simpleDateFormat.format(beginDate.seconds * 1000)
-
-
                             val item = hashMapOf(
-                                "date" to Timestamp(simpleDateFormat.parse(dateFormat)),
-                                "setDate" to FieldValue.serverTimestamp(),
-                                "beginDate" to beginDate,
-                                "endDate" to endDate,
-                                "title" to title,
-                                "note" to note,
-                                "fromGoogle" to true,
-                                "color" to "245E2C",
-                                "documentID" to eventID,
-                                "hasCountdown" to false,
-                                "hasReminders" to false
+                                DATE to transferTimestamp2String(SIMPLE_DATE_FORMAT, beginDate),
+                                SET_DATE to FieldValue.serverTimestamp(),
+                                BEGIN_DATE to beginDate,
+                                END_DATE to endDate,
+                                TITLE to title,
+                                NOTE to note,
+                                FROM_GOOGLE to true,
+                                COLOR to COLOR_GOOGLE,
+                                DOCUMENT_ID to eventID,
+                                HAS_COUNTDOWN to false,
+                                HAS_REMINDERS to false
                             )
                             writeGoogleItem(item, eventID)
                         }
@@ -225,16 +234,13 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
     private fun writeGoogleItem(item: Any, documentId: String) {
 
         // get all data from user at first
-        db.collection("data")
+        db.collection(DATA)
             .document(UserManager.id!!)
-            .collection("calendar")
+            .collection(CALENDAR)
             .document(documentId)
             .set(item)
-            .addOnSuccessListener { CdocumentReference ->
-                Log.d(
-                    "AddCountdownsIntoDB",
-                    "DocumentSnapshot added with ID = $documentId"
-                )
+            .addOnSuccessListener {
+                Logger.d("DocumentSnapshot added with ID = $documentId")
             }
             .addOnCompleteListener {
                 restart()

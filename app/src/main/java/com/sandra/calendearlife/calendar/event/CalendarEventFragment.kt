@@ -37,22 +37,22 @@ import com.sandra.calendearlife.constant.DateFormat.Companion.hour
 import com.sandra.calendearlife.constant.DateFormat.Companion.minute
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ENDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.END_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROMGOOGLE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HASCOUNTDOWN
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HASREMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISALLDAY
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISCHECKED
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_ALL_DAY
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.LOCATION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.databinding.FragmentCalendarEventBinding
 import com.sandra.calendearlife.dialog.ChooseFrequencyDialog
@@ -153,19 +153,19 @@ class CalendarEventFragment : Fragment() {
                 val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
 
                 val countdown = hashMapOf(
-                    SETDATE to FieldValue.serverTimestamp(),
+                    SET_DATE to FieldValue.serverTimestamp(),
                     TITLE to "${binding.eventTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
-                    TARGETDATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, endDate),
+                    TARGET_DATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, endDate),
                     OVERDUE to false
                 )
 
                 val reminders = hashMapOf(
-                    SETDATE to FieldValue.serverTimestamp(),
+                    SET_DATE to FieldValue.serverTimestamp(),
                     TITLE to "${binding.eventTitleInput.text}".trim(),
-                    SETREMINDATE to true,
-                    REMINDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
-                    ISCHECKED to false,
+                    SET_REMIND_DATE to true,
+                    REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
+                    IS_CHECKED to false,
                     NOTE to "${binding.noteInput.text}".trim(),
                     FREQUENCY to value
                 )
@@ -173,15 +173,15 @@ class CalendarEventFragment : Fragment() {
                 val item = hashMapOf(
                     FREQUENCY to value,
                     DATE to timeFormat2SqlTimestamp(DATE_WEEK_FORMAT, date),
-                    SETDATE to FieldValue.serverTimestamp(),
-                    BEGINDATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, beginDate),
-                    ENDDATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, endDate),
+                    SET_DATE to FieldValue.serverTimestamp(),
+                    BEGIN_DATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, beginDate),
+                    END_DATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, endDate),
                     TITLE to "${binding.eventTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
-                    ISALLDAY to "${binding.allDaySwitch.isChecked}",
-                    HASREMINDERS to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
-                    HASCOUNTDOWN to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
-                    FROMGOOGLE to "${binding.switchSetAsGoogle.isChecked}".toBoolean(),
+                    IS_ALL_DAY to "${binding.allDaySwitch.isChecked}",
+                    HAS_REMINDERS to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
+                    HAS_COUNTDOWN to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
+                    FROM_GOOGLE to "${binding.switchSetAsGoogle.isChecked}".toBoolean(),
                     LOCATION to "${binding.locationInput.text}".trim()
                 )
 

@@ -20,7 +20,7 @@ import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.util.UserManager
@@ -67,7 +67,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(DOCUMENTID, documentID)
+                .whereEqualTo(DOCUMENT_ID, documentID)
                 .get()
                 .addOnSuccessListener { documents ->
 
@@ -169,7 +169,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
             db.collection(DATA)
                 .document(userManagerId)
                 .collection(CALENDAR)
-                .whereEqualTo(DOCUMENTID, documentID)
+                .whereEqualTo(DOCUMENT_ID, documentID)
                 .get()
                 .addOnSuccessListener { calendarQuerySnapshot ->
 

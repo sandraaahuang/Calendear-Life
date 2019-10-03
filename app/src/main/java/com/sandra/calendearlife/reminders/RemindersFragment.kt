@@ -17,26 +17,26 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.Const
+import com.sandra.calendearlife.constant.*
 import com.sandra.calendearlife.constant.Const.Companion.EVALUATE_DIALOG
 import com.sandra.calendearlife.constant.Const.Companion.REQUEST_EVALUATE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE_EVALUATE
+import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.Const.Companion.value
-import com.sandra.calendearlife.constant.DateFormat
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_REMIND
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ENDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.END_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROMGOOGLE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HASREMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISCHECKED
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentRemindersBinding
@@ -52,16 +52,6 @@ class RemindersFragment : Fragment() {
     private val viewModel: RemindersViewModel by lazy {
         ViewModelProviders.of(this).get(RemindersViewModel::class.java)
     }
-
-    val locale: Locale =
-        if (Locale.getDefault().toString() == CHINESE) {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-    private val timeFormat = SimpleDateFormat("hh:mm a", locale)
-    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
-    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
 
     lateinit var binding: FragmentRemindersBinding
 
@@ -84,44 +74,44 @@ class RemindersFragment : Fragment() {
             dialog.show(fragmentManager!!, EVALUATE_DIALOG)
         }
 
-        binding.remindersDateInput.text =
-            simpleDateFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.remindersTimeInput.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.remindersDateInput.text = setDefaultTime(SIMPLE_DATE_FORMAT)
+        binding.remindersTimeInput.text = setDefaultTime(TIME_FORMAT)
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@RemindersFragment.fragmentManager!!, "show")
+                DiscardDialog().show(this@RemindersFragment.fragmentManager!!, SHOW)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, "show")
+            DiscardDialog().show(this.fragmentManager!!, SHOW)
         }
 
         binding.saveText.setOnClickListener {
-            val remindDate = "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"
-            val date = "${binding.remindersDateInput.text}"
 
             val calendar = hashMapOf(
                 COLOR to COLOR_REMIND,
-                SETDATE to FieldValue.serverTimestamp(),
-                BEGINDATE to Timestamp(dateTimeFormat.parse(remindDate).time),
-                ENDDATE to Timestamp(dateTimeFormat.parse(remindDate).time),
-                DATE to Timestamp(simpleDateFormat.parse(date).time),
+                SET_DATE to FieldValue.serverTimestamp(),
+                BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT,
+                    "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"),
+                END_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT,
+                    "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"),
+                DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, "${binding.remindersDateInput.text}"),
                 TITLE to "${binding.remindersTitleInput.text}".trim(),
                 NOTE to "${binding.remindersNoteInput.text}".trim(),
-                HASREMINDERS to true,
+                HAS_REMINDERS to true,
                 FREQUENCY to value,
-                FROMGOOGLE to false
+                FROM_GOOGLE to false
             )
 
             val reminders = hashMapOf(
-                SETDATE to FieldValue.serverTimestamp(),
+                SET_DATE to FieldValue.serverTimestamp(),
                 TITLE to "${binding.remindersTitleInput.text}".trim(),
-                SETREMINDATE to binding.setReminderswitch.isChecked,
-                REMINDDATE to Timestamp(dateTimeFormat.parse(remindDate).time),
-                ISCHECKED to false,
+                SET_REMIND_DATE to binding.setReminderswitch.isChecked,
+                REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT,
+                    "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"),
+                IS_CHECKED to false,
                 NOTE to "${binding.remindersNoteInput.text}".trim(),
                 FREQUENCY to value
             )
@@ -183,8 +173,7 @@ class RemindersFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(
             this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
             { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text =
-                    simpleDateFormat.format(Date(year - 1900, monthOfYear, dayOfMonth))
+                inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
             }, DateFormat.year, DateFormat.monthOfYear, DateFormat.dayOfMonth
         )
         datePickerDialog.show()
@@ -194,11 +183,7 @@ class RemindersFragment : Fragment() {
         val timePickerDialog = TimePickerDialog(
             this.context!!, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { _, hour, minute ->
-                inputTime.text =
-                    timeFormat.format(Date(
-                        DateFormat.year - 1900,
-                        DateFormat.monthOfYear,
-                        DateFormat.dayOfMonth, hour, minute))
+                inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
             }, DateFormat.hour, DateFormat.minute, false
         )
         timePickerDialog.show()
