@@ -34,8 +34,6 @@ class Const {
 
         // frequency value
         var value: String = "Does not repeat"
-        var frequency = listOf("Does not repeat"
-            , "Every day", "Every week", "Every month", "Every year")
 
         const val DOESNOTREPEAT = "Does not repeat"
         const val EVERYDAY = "Every day"
@@ -43,5 +41,7 @@ class Const {
         const val EVERYMONTH = "Every month"
         const val EVERYYEAR = "Every year"
 
+        // dialog TAG
+        const val SHOW = "show"
     }
 }

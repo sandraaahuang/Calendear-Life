@@ -45,9 +45,9 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
             .document(UserManager.id!!)
             .collection(CALENDAR)
             .get()
-            .addOnSuccessListener { documents ->
+            .addOnSuccessListener { calendarQuerySnapshot ->
 
-                for ((index, calendar) in documents.withIndex()) {
+                for ((index, calendar) in calendarQuerySnapshot.withIndex()) {
 
                     // get update item
                     db.collection(DATA)
@@ -78,7 +78,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                                     .update(calendarItem)
                             }
                         }
-                    if (index == documents.size() -1) {
+                    if (index == calendarQuerySnapshot.size() -1) {
                         _isUpdateCompleted.value = true
                     }
                 }
@@ -93,9 +93,9 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
             .document(UserManager.id!!)
             .collection(CALENDAR)
             .get()
-            .addOnSuccessListener { documents ->
+            .addOnSuccessListener { calendarQuerySnapshot ->
 
-                for ((index, calendar) in documents.withIndex()) {
+                for ((index, calendar) in calendarQuerySnapshot.withIndex()) {
 
                     // get delete item
                     db.collection(DATA)
@@ -127,7 +127,7 @@ class CountdownDetailViewModel(countdown: Countdown, app: Application) : Android
                             }
                         }
 
-                    if (index == documents.size() -1) {
+                    if (index == calendarQuerySnapshot.size() -1) {
                         _isUpdateCompleted.value = true
                     }
                 }

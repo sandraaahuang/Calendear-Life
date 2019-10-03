@@ -23,7 +23,6 @@ import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
 import com.sandra.calendearlife.constant.Const.Companion.putType
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
@@ -61,6 +60,7 @@ class CalendarMonthFragment : Fragment() {
     private val titleSameYearFormatter = DateTimeFormatter.ofPattern(month, locale)
     private val titleFormatter = DateTimeFormatter.ofPattern(monthYear, locale)
     private val selectionFormatter = DateTimeFormatter.ofPattern(date, locale)
+
     private val viewModel: CalenderMonthViewModel by lazy {
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
     }
@@ -79,8 +79,8 @@ class CalendarMonthFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.recyclerView.adapter = adapter
 
-        viewModel.navigateToCalendarProperty.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.navigateToCalendarProperty.observe(this, androidx.lifecycle.Observer { calendar ->
+            calendar?.let {
                 this.findNavController().navigate(NavigationDirections.actionGlobalCalendarDetailFragment(it))
                 viewModel.displayCalendarDetailsComplete()
             }
@@ -181,9 +181,10 @@ class CalendarMonthFragment : Fragment() {
 
                 textView.text = day.date.dayOfMonth.toString()
 
-                viewModel.liveAllCalendar.observe(this@CalendarMonthFragment, androidx.lifecycle.Observer {
-                    it?.let {
-                        for (value in it){
+                viewModel.liveAllCalendar.observe(this@CalendarMonthFragment,
+                    androidx.lifecycle.Observer { calendar ->
+                    calendar?.let {
+                        for (value in it) {
                             if (value.date == day.date.toString() && day.owner == DayOwner.THIS_MONTH) {
                                 dotView.visibility = View.VISIBLE
                             }
@@ -209,9 +210,10 @@ class CalendarMonthFragment : Fragment() {
                         else -> {
 
                             textView.setBackgroundResource(R.color.translucent_80)
-                             }
+                        }
                     }
                 } else {
+
                     textView.visibility = View.INVISIBLE
                     dotView.visibility = View.INVISIBLE
                 }

@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.Const
+import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
@@ -96,21 +96,21 @@ class CountdownDetailFragment : Fragment() {
             }
         })
 
-        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
+            clickedDate?.let {
                 showDatePicker(it)
             }
         })
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@CountdownDetailFragment.fragmentManager!!, "show")
+                DiscardDialog().show(this@CountdownDetailFragment.fragmentManager!!, SHOW)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, "show")
+            DiscardDialog().show(this.fragmentManager!!, SHOW)
         }
 
         return binding.root

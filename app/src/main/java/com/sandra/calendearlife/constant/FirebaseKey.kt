@@ -1,7 +1,5 @@
 package com.sandra.calendearlife.constant
 
-import com.google.firebase.Timestamp
-
 class FirebaseKey {
     companion object {
         // Collection path
