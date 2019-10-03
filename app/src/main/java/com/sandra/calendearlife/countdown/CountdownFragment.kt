@@ -20,19 +20,23 @@ import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ENDDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROMGOOGLE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HASCOUNTDOWN
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.END_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
+import com.sandra.calendearlife.constant.setDefaultTime
+import com.sandra.calendearlife.constant.timeFormat2SqlTimestamp
+import com.sandra.calendearlife.constant.timeFormat2String4DatePicker
 import com.sandra.calendearlife.databinding.FragmentCountdownBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
 import java.text.SimpleDateFormat
@@ -40,14 +44,6 @@ import java.util.*
 
 
 class CountdownFragment : Fragment() {
-
-    val locale: Locale =
-        if (Locale.getDefault().toString() == CHINESE) {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
 
     private val viewModel: CountdownViewModel by lazy {
         ViewModelProviders.of(this).get(CountdownViewModel::class.java)
@@ -61,7 +57,7 @@ class CountdownFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        binding.countdownDateInput.text = simpleDateFormat.format(Date(Timestamp.now().seconds*1000))
+        binding.countdownDateInput.text = setDefaultTime(SIMPLE_DATE_FORMAT)
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -85,25 +81,25 @@ class CountdownFragment : Fragment() {
 
                 val calendar = hashMapOf(
                     COLOR to COLOR_COUNTDOWN,
-                    SETDATE to FieldValue.serverTimestamp(),
-                    BEGINDATE to java.sql.Timestamp(simpleDateFormat.parse(targetDate).time),
-                    ENDDATE to java.sql.Timestamp(simpleDateFormat.parse(targetDate).time),
-                    DATE to java.sql.Timestamp(simpleDateFormat.parse(targetDate).time),
+                    SET_DATE to FieldValue.serverTimestamp(),
+                    BEGIN_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
+                    END_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
+                    DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
                     TITLE to "${binding.countdownTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
-                    HASCOUNTDOWN to true,
-                    FROMGOOGLE to false
+                    HAS_COUNTDOWN to true,
+                    FROM_GOOGLE to false
                 )
 
                 val countdown = hashMapOf(
-                    SETDATE to FieldValue.serverTimestamp(),
+                    SET_DATE to FieldValue.serverTimestamp(),
                     TITLE to "${binding.countdownTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
-                    TARGETDATE to java.sql.Timestamp(simpleDateFormat.parse(targetDate).time),
+                    TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
                     OVERDUE to false
                 )
 
-                viewModel.writeItem(calendar,countdown)
+                viewModel.writeItem(calendar, countdown)
                 Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
             }
         }
@@ -133,8 +129,7 @@ class CountdownFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(
             this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
             { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text =
-                    simpleDateFormat.format(Date(year - 1900, monthOfYear, dayOfMonth))
+                inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
             }, year, monthOfYear, dayOfMonth
         )
         datePickerDialog.show()

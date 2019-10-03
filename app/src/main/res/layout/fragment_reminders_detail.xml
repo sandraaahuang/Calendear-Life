@@ -85,7 +85,7 @@
                             android:textColor="?attr/textcolor"
                             android:textSize="@dimen/normal_text_size"
                             android:text="@{viewModel.selectedItem.remindDate.substring(0,10)}"
-                            android:onClick="@{() -> viewModel.showDatePicker(remindDate)}"
+                            android:onClick="@{viewModel::onButtonClick}"
                             app:layout_constraintEnd_toStartOf="@+id/remindTime" android:layout_marginEnd="8dp"
                             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
                     <TextView
@@ -96,7 +96,7 @@
                             android:textColor="?attr/textcolor"
                             android:textSize="@dimen/normal_text_size"
                             android:text="@{viewModel.selectedItem.remindDate.substring(10)}"
-                            android:onClick="@{() -> viewModel.showTimePicker(remindTime)}"
+                            android:onClick="@{viewModel::onButtonClick}"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginEnd="8dp" android:layout_marginTop="16dp"
                             app:layout_constraintTop_toTopOf="parent"/>

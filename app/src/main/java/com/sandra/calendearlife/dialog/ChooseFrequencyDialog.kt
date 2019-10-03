@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -53,7 +54,7 @@ class ChooseFrequencyDialog: AppCompatDialogFragment() {
         }
         else {
             val intent = Intent()
-            intent.putExtra(RESPONSE_EVALUATE, frequency)
+            intent.putExtra(RESPONSE_EVALUATE, frequency.toString())
             targetFragment?.onActivityResult(REQUEST_EVALUATE, Activity.RESULT_OK,intent)
         }
     }

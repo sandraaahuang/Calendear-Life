@@ -5,34 +5,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.sandra.calendearlife.constant.DATE_TIME_FORMAT
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ISCHECKED
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
+import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
+import com.sandra.calendearlife.constant.transferTimestamp2String
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.UserManager
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainViewModel : ViewModel() {
-
-    val locale: Locale =
-        if (Locale.getDefault().toString() == CHINESE) {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
-    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
 
     var db = FirebaseFirestore.getInstance()
 
@@ -47,97 +40,78 @@ class MainViewModel : ViewModel() {
     val liveReminders: LiveData<Reminders>
         get() = _liveReminders
 
-    private val dnrItem = ArrayList<Reminders>()
-    private val _livednr = MutableLiveData<List<Reminders>>()
-    val livednr: LiveData<List<Reminders>>
-        get() = _livednr
+    private val set4AlarmManagerReminderItem = ArrayList<Reminders>()
+    private val _liveSet4AlarmManagerReminderItem = MutableLiveData<List<Reminders>>()
+    val liveSet4AlarmManagerReminderItem: LiveData<List<Reminders>>
+        get() = _liveSet4AlarmManagerReminderItem
 
     fun getItem(documentId: String) {
-        //connect to countdown data ( only the item that overdue is false )
-        db.collection(DATA)
-            .document(UserManager.id!!)
-            .collection(CALENDAR)
-            .get()
-            .addOnSuccessListener { documents ->
 
-                for (calendar in documents) {
+        UserManager.id?.let {
+            db.collection(DATA)
+                .document(it)
+                .collection(CALENDAR)
+                .get()
+                .addOnSuccessListener { documents ->
 
-                    //get reminders ( only ischecked is false )
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .collection(REMINDERS)
-                        .whereEqualTo(DOCUMENTID, documentId)
-                        .get()
-                        .addOnSuccessListener { documents ->
+                    for (calendar in documents) {
 
-                            for (reminder in documents) {
+                        //get reminders ( only ischecked is false )
+                        db.collection(DATA)
+                            .document(it)
+                            .collection(CALENDAR)
+                            .document(calendar.id)
+                            .collection(REMINDERS)
+                            .whereEqualTo(DOCUMENT_ID, documentId)
+                            .get()
+                            .addOnSuccessListener { remindersDocuments ->
 
-                                val setDate = (reminder.data[SETDATE] as Timestamp)
-                                val remindDate = (reminder.data[REMINDDATE] as Timestamp)
+                                for (reminder in remindersDocuments) {
 
-                                remindAdd = Reminders(
-                                    simpleDateFormat.format(setDate.seconds * 1000),
-                                    reminder.data[TITLE].toString(),
-                                    reminder.data[SETREMINDATE].toString().toBoolean(),
-                                    dateTimeFormat.format(remindDate.seconds * 1000),
-                                    reminder.data[REMINDDATE] as Timestamp,
-                                    reminder.data[ISCHECKED].toString().toBoolean(),
-                                    reminder.data[NOTE].toString(),
-                                    reminder.data[FREQUENCY].toString(),
-                                    reminder.data[DOCUMENTID].toString()
-                                )
-                                _liveReminders.value = remindAdd
+                                    setupRemindersItem(reminder)
+
+                                    _liveReminders.value = remindAdd
+                                }
                             }
-                        }
+                    }
                 }
-            }
+        }
+
     }
 
-    fun dnrItem() {
-        //connect to countdown data ( only the item that overdue is false )
-        db.collection(DATA)
-            .document(UserManager.id!!)
-            .collection(CALENDAR)
-            .get()
-            .addOnSuccessListener { documents ->
+    fun set4AlarmManagerReminderItem() {
 
-                for (calendar in documents) {
+        UserManager.id?.let {
+            db.collection(DATA)
+                .document(it)
+                .collection(CALENDAR)
+                .get()
+                .addOnSuccessListener { documents ->
 
-                    //get reminders ( only ischecked is false )
-                    db.collection(DATA)
-                        .document(UserManager.id!!)
-                        .collection(CALENDAR)
-                        .document(calendar.id)
-                        .collection(REMINDERS)
-                        .whereEqualTo(ISCHECKED, false)
-                        .get()
-                        .addOnSuccessListener { documents ->
+                    for (calendar in documents) {
 
-                            for (reminder in documents) {
+                        //get reminders ( only is_checked is false )
+                        db.collection(DATA)
+                            .document(it)
+                            .collection(CALENDAR)
+                            .document(calendar.id)
+                            .collection(REMINDERS)
+                            .whereEqualTo(IS_CHECKED, false)
+                            .get()
+                            .addOnSuccessListener { remindersDocuments ->
 
-                                val setDate = (reminder.data[SETDATE] as Timestamp)
-                                val remindDate = (reminder.data[REMINDDATE] as Timestamp)
+                                for (reminder in remindersDocuments) {
 
-                                remindAdd = Reminders(
-                                    simpleDateFormat.format(setDate.seconds * 1000),
-                                    reminder.data[TITLE].toString(),
-                                    reminder.data[SETREMINDATE].toString().toBoolean(),
-                                    dateTimeFormat.format(remindDate.seconds * 1000),
-                                    reminder.data[REMINDDATE] as Timestamp,
-                                    reminder.data[ISCHECKED].toString().toBoolean(),
-                                    reminder.data[NOTE].toString(),
-                                    reminder.data[FREQUENCY].toString(),
-                                    reminder.data[DOCUMENTID].toString()
-                                )
+                                    setupRemindersItem(reminder)
 
-                                dnrItem.add(remindAdd)
+                                    set4AlarmManagerReminderItem.add(remindAdd)
+                                }
+                                _liveSet4AlarmManagerReminderItem.value = set4AlarmManagerReminderItem
                             }
-                            _livednr.value = dnrItem
-                        }
+                    }
                 }
-            }
+        }
+
     }
 
 
@@ -145,10 +119,29 @@ class MainViewModel : ViewModel() {
     fun writeGoogleItem(item: Any, documentId: String) {
 
         // get all data from user at first
-        db.collection(DATA)
-            .document(UserManager.id!!)
-            .collection(CALENDAR)
-            .document(documentId)
-            .set(item)
+        UserManager.id?.let {
+            db.collection(DATA)
+                .document(it)
+                .collection(CALENDAR)
+                .document(documentId)
+                .set(item)
+        }
+
+    }
+
+    private fun setupRemindersItem(reminder: QueryDocumentSnapshot) {
+        remindAdd = Reminders(
+            transferTimestamp2String(SIMPLE_DATE_FORMAT,
+                reminder.data[SET_DATE] as Timestamp),
+            reminder.data[TITLE].toString(),
+            reminder.data[SET_REMIND_DATE].toString().toBoolean(),
+            transferTimestamp2String(DATE_TIME_FORMAT,
+                reminder.data[REMIND_DATE] as Timestamp),
+            reminder.data[REMIND_DATE] as Timestamp,
+            reminder.data[IS_CHECKED].toString().toBoolean(),
+            reminder.data[NOTE].toString(),
+            reminder.data[FREQUENCY].toString(),
+            reminder.data[DOCUMENT_ID].toString()
+        )
     }
 }

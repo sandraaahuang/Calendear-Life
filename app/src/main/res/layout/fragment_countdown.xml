@@ -93,7 +93,7 @@
                     android:fontFamily="@font/noto_sans"
                     android:textSize="@dimen/normal_text_size"
                     android:text=""
-                    android:onClick="@{() -> viewModel.showDatePicker(countdownDateInput)}"
+                    android:onClick="@{viewModel::onButtonClick}"
                     android:textColor="?attr/textcolor"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="16dp"

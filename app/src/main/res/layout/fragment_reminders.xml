@@ -97,7 +97,7 @@
                     android:id="@+id/remindersDateInput"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> viewModel.showDatePicker(remindersDateInput)}"
+                    android:onClick="@{viewModel::onButtonClick}"
                     android:fontFamily="@font/noto_sans"
                     android:textColor="?attr/textcolor"
                     android:textSize="@dimen/normal_text_size"
@@ -106,7 +106,7 @@
                     app:layout_constraintStart_toEndOf="@+id/bellIcon" android:layout_marginStart="8dp"/>
             <TextView
                     android:id="@+id/remindersTimeInput"
-                    android:onClick="@{() -> viewModel.showTimePicker(remindersTimeInput)}"
+                    android:onClick="@{viewModel::onButtonClick}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"

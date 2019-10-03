@@ -24,7 +24,7 @@ import com.sandra.calendearlife.constant.DateFormat.Companion.hour
 import com.sandra.calendearlife.constant.DateFormat.Companion.minute
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_ALL
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_CAL
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_COUNTDOWN
@@ -33,11 +33,11 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_GOOGLE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_REMIND
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_REMIND_CAL
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.ENDDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.END_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.LOCATION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDDATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.databinding.FragmentCalendarDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
@@ -145,13 +145,13 @@ class CalendarDetailFragment : Fragment() {
             var updateRemind = hashMapOf(
                 TITLE to "${binding.detailTitleInput.text}".trim(),
                 NOTE to "${binding.noteInput.text}".trim(),
-                REMINDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
+                REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
             )
 
             var updateCountdown = hashMapOf(
                 TITLE to "${binding.detailTitleInput.text}".trim(),
                 NOTE to "${binding.noteInput.text}".trim(),
-                TARGETDATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
+                TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
             )
 
             when (calendar.color) {
@@ -160,12 +160,12 @@ class CalendarDetailFragment : Fragment() {
                     updateRemind = hashMapOf(
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
-                        REMINDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
+                        REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
                     )
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, remindDate),
-                        BEGINDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
-                        ENDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
+                        BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
+                        END_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim()
                     )
@@ -177,12 +177,12 @@ class CalendarDetailFragment : Fragment() {
                     updateCountdown = hashMapOf(
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
-                        TARGETDATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
+                        TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
                     )
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
-                        BEGINDATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
-                        ENDDATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
+                        BEGIN_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
+                        END_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim()
                     )
@@ -201,8 +201,8 @@ class CalendarDetailFragment : Fragment() {
 
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
-                        BEGINDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
-                        ENDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
+                        BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
+                        END_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
@@ -220,8 +220,8 @@ class CalendarDetailFragment : Fragment() {
                     }
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
-                        BEGINDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
-                        ENDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
+                        BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
+                        END_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
@@ -229,7 +229,7 @@ class CalendarDetailFragment : Fragment() {
                     updateRemind = hashMapOf(
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
-                        REMINDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
+                        REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
                     )
                     viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
                 }
@@ -244,8 +244,8 @@ class CalendarDetailFragment : Fragment() {
                     }
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
-                        BEGINDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
-                        ENDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
+                        BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
+                        END_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
@@ -253,7 +253,7 @@ class CalendarDetailFragment : Fragment() {
                     updateCountdown = hashMapOf(
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
-                        TARGETDATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
+                        TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
                     )
                     viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
                 }
@@ -268,8 +268,8 @@ class CalendarDetailFragment : Fragment() {
                     }
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
-                        BEGINDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
-                        ENDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
+                        BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
+                        END_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}"
@@ -277,12 +277,12 @@ class CalendarDetailFragment : Fragment() {
                     updateCountdown = hashMapOf(
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
-                        TARGETDATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
+                        TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
                     )
                     updateRemind = hashMapOf(
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
-                        REMINDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
+                        REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
                     )
                     viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
                 }
@@ -297,8 +297,8 @@ class CalendarDetailFragment : Fragment() {
                     }
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
-                        BEGINDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
-                        ENDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
+                        BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
+                        END_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, endDate),
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()

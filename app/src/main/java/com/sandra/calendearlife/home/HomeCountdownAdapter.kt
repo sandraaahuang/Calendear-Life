@@ -3,14 +3,12 @@ package com.sandra.calendearlife.home
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
-import com.sandra.calendearlife.R
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.databinding.ItemCountdownBinding
 import com.yy.mobile.rollingtextview.CharOrder
@@ -40,7 +38,7 @@ class HomeCountdownAdapter(private val onClickListener: OnClickListener, val vie
             binding.countdownDate.setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}")
 
             if (countdown.targetTimestamp.seconds < Timestamp.now().seconds){
-                viewModel.updateCountdown(countdown.documentID)
+                viewModel.updateOverdueCountdown(countdown.documentID)
             }
 
             if ((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400 == 0L) {
