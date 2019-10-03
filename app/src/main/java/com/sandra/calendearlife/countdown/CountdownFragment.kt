@@ -16,14 +16,13 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.Const
+import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
 import com.sandra.calendearlife.constant.DateFormat.Companion.year
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_COUNTDOWN
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.ENDDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROMGOOGLE
@@ -66,14 +65,14 @@ class CountdownFragment : Fragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@CountdownFragment.fragmentManager!!, "show")
+                DiscardDialog().show(this@CountdownFragment.fragmentManager!!, SHOW)
             }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, "show")
+            DiscardDialog().show(this.fragmentManager!!, SHOW)
         }
 
         binding.saveText.setOnClickListener {
@@ -121,8 +120,8 @@ class CountdownFragment : Fragment() {
             }
         })
 
-        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
+            clickedDate?.let {
                 showDatePicker(it)
             }
         })

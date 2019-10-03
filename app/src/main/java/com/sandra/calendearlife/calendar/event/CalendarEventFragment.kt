@@ -23,11 +23,11 @@ import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.Const
 import com.sandra.calendearlife.constant.Const.Companion.EVALUATE_DIALOG
 import com.sandra.calendearlife.constant.Const.Companion.REQUEST_EVALUATE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE_EVALUATE
+import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.Const.Companion.value
 import com.sandra.calendearlife.constant.DateFormat.Companion.BEGINTIME
 import com.sandra.calendearlife.constant.DateFormat.Companion.ENDTIME
@@ -57,6 +57,7 @@ import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCalendarEventBinding
 import com.sandra.calendearlife.dialog.ChooseFrequencyDialog
 import com.sandra.calendearlife.dialog.DiscardDialog
+import com.sandra.calendearlife.util.Logger
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -73,8 +74,8 @@ class CalendarEventFragment : Fragment() {
     private val timeFormat = SimpleDateFormat("hh:mm a", locale)
     private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
-    private val dateWeekFormat = SimpleDateFormat("yyyy/MM/dd EEEE", locale)
-    private val dateWeekTimeFormat = SimpleDateFormat("yyyy/MM/dd EEEE hh:mm a", locale)
+    private val dateWeekFormat = SimpleDateFormat("yyyy-MM-dd EEEE", locale)
+    private val dateWeekTimeFormat = SimpleDateFormat("yyyy-MM-dd EEEE hh:mm a", locale)
 
     lateinit var binding: FragmentCalendarEventBinding
 
@@ -110,38 +111,38 @@ class CalendarEventFragment : Fragment() {
         binding.repeatChoose.setOnClickListener {
             val dialog = ChooseFrequencyDialog()
             //setTargetFragment
-            dialog.setTargetFragment(this, REQUEST_EVALUATE);
+            dialog.setTargetFragment(this, REQUEST_EVALUATE)
             dialog.show(fragmentManager!!, EVALUATE_DIALOG)
         }
 
         setDefaultDate()
 
-        viewModel.showDateWeekPicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showDateWeekPicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
+            clickedDate?.let {
                 showDatePickerInWeekFormat(it)
             }
         })
 
-        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
+            clickedDate?.let {
                 showDatePicker(it)
             }
         })
 
-        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
+            clickedDate?.let {
                 showTimePicker(it)
             }
         })
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@CalendarEventFragment.fragmentManager!!, "show")
+                DiscardDialog().show(this@CalendarEventFragment.fragmentManager!!, SHOW)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(fragmentManager!!, "bottom")
+            DiscardDialog().show(fragmentManager!!, SHOW)
         }
 
         binding.saveText.setOnClickListener {
@@ -206,12 +207,12 @@ class CalendarEventFragment : Fragment() {
 
                     if (ContextCompat.checkSelfPermission(
                             this.context!!,
-                            Manifest.permission.READ_CALENDAR
-                        ) != PackageManager.PERMISSION_GRANTED
+                            Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED
                     ) {
                         ActivityCompat.requestPermissions(
                             (activity as MainActivity),
-                            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1
+                            arrayOf(Manifest.permission.READ_CALENDAR,
+                                Manifest.permission.WRITE_CALENDAR), 1
                         )
                     } else {
 
@@ -252,8 +253,10 @@ class CalendarEventFragment : Fragment() {
 
             binding.repeatChoose.text = evaluate
             val intent = Intent()
-            intent.putExtra(RESPONSE, evaluate);
+            intent.putExtra(RESPONSE, evaluate)
             activity?.setResult(Activity.RESULT_OK, intent)
+        } else {
+            Logger.d("don't have intent")
         }
     }
 
@@ -264,7 +267,8 @@ class CalendarEventFragment : Fragment() {
             simpleDateFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
         binding.beginTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
         binding.endTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.remindersTimeInput.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.remindersTimeInput.text =
+            timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
     }
 
     private fun showDatePicker(inputDate: TextView) {

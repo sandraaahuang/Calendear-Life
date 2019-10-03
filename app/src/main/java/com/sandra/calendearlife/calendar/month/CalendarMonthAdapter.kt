@@ -48,7 +48,6 @@ class CalendarMonthAdapter(private val onClickListener: OnClickListener) :
                     else -> View.GONE
                 }
 
-
             binding.executePendingBindings()
         }
     }

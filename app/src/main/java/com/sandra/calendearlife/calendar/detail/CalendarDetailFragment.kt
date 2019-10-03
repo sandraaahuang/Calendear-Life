@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.DateFormat.Companion.BEGINTIME
 import com.sandra.calendearlife.constant.DateFormat.Companion.ENDTIME
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
@@ -121,14 +122,14 @@ class CalendarDetailFragment : Fragment() {
             }
         }
 
-        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
+            clickedDate?.let {
                 showDatePicker(it)
             }
         })
 
-        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
+            clickedDate?.let {
                 showTimePicker(it)
             }
         })
@@ -350,13 +351,13 @@ class CalendarDetailFragment : Fragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@CalendarDetailFragment.fragmentManager!!, "show")
+                DiscardDialog().show(this@CalendarDetailFragment.fragmentManager!!, SHOW)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, "show")
+            DiscardDialog().show(this.fragmentManager!!, SHOW)
         }
 
         return binding.root
@@ -386,6 +387,7 @@ class CalendarDetailFragment : Fragment() {
     }
 
     private fun isAllDayVisibility() {
+        binding.beginDateText.text = MyApplication.instance.getString(R.string.date_b)
         binding.allDayLayout.visibility = View.VISIBLE
         binding.beginDate.visibility = View.VISIBLE
         binding.beginTime.visibility = View.GONE
@@ -395,9 +397,9 @@ class CalendarDetailFragment : Fragment() {
     }
 
     private fun isNotAllDayVisibility() {
+        binding.beginDateText.text = MyApplication.instance.getString(R.string.begin_date)
         binding.allDayLayout.visibility = View.VISIBLE
         binding.beginDate.visibility = View.VISIBLE
-        binding.beginDateText.text = MyApplication.instance.getString(R.string.begin_date)
         binding.endDate.visibility = View.VISIBLE
         binding.endTime.visibility = View.VISIBLE
     }

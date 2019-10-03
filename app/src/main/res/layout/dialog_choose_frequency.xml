@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable name="viewModel" type="com.sandra.calendearlife.dialog.ChooseFrequencyViewModel"/>
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -37,7 +41,9 @@
                     app:layout_constraintStart_toEndOf="@+id/imageView2" android:layout_marginStart="16dp"/>
             <ImageView
                     android:layout_width="20dp"
-                    android:layout_height="20dp" app:srcCompat="@drawable/icon_left"
+                    android:layout_height="20dp"
+                    android:onClick='@{() -> viewModel.chooseFrequency("Does not repeat")}'
+                    app:srcCompat="@drawable/icon_left"
                     android:id="@+id/imageView2" app:layout_constraintStart_toStartOf="@+id/buttonBack"
                     android:layout_marginStart="8dp" android:layout_marginTop="8dp"
                     app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
@@ -51,6 +57,7 @@
                     android:textColor="?attr/totalB2W"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
+                    android:onClick='@{() -> viewModel.chooseFrequency("Does not repeat")}'
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="1dp" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="1dp"
@@ -63,6 +70,7 @@
                     android:textAllCaps="false"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
+                    android:onClick='@{() -> viewModel.chooseFrequency("Every day")}'
                     android:id="@+id/buttonEveryDay" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -76,6 +84,7 @@
                     android:textColor="?attr/totalB2W"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
+                    android:onClick='@{() -> viewModel.chooseFrequency("Every week")}'
                     android:layout_height="wrap_content" android:id="@+id/buttonEveryWeek"
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="1dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="1dp"
@@ -88,6 +97,7 @@
                     android:textColor="?attr/totalB2W"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
+                    android:onClick='@{() -> viewModel.chooseFrequency("Every month")}'
                     app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="1dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="1dp"
                     android:layout_marginTop="1dp" app:layout_constraintTop_toBottomOf="@+id/buttonEveryWeek"
@@ -100,6 +110,7 @@
                     android:textColor="?attr/totalB2W"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
+                    android:onClick='@{() -> viewModel.chooseFrequency("Every year")}'
                     android:id="@+id/buttonEveryYear" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="1dp"
                     app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="1dp"
