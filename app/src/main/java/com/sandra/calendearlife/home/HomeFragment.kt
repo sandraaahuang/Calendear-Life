@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.Const.Companion.TYPEHOME
+import com.sandra.calendearlife.constant.Const.Companion.TYPE_HOME
 import com.sandra.calendearlife.databinding.FragmentHomeBinding
 import com.sandra.calendearlife.constant.Const.Companion.putType
 
@@ -31,12 +31,12 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val countdownAdapter = HomeCountdownAdapter(HomeCountdownAdapter.OnClickListener{
-            putType(TYPEHOME)
+            putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
         },viewModel)
 
         val remindersAdapter = HomeRemindersAdapter(viewModel, HomeRemindersAdapter.OnClickListener{
-            putType(TYPEHOME)
+            putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
         })
         binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -93,26 +93,26 @@ class HomeFragment : Fragment() {
             }
         }
         binding.remindersFab.setOnClickListener {
-            putType(TYPEHOME)
+            putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
         binding.countdownsFab.setOnClickListener {
-            putType(TYPEHOME)
+            putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
         binding.calendarFab.setOnClickListener {
-            putType(TYPEHOME)
+            putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
         binding.noCountdown.setOnClickListener {
-            putType(TYPEHOME)
+            putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
         binding.noReminder.setOnClickListener {
-            putType(TYPEHOME)
+            putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
 

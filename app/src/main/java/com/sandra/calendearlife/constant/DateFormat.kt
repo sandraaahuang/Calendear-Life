@@ -22,7 +22,20 @@ class DateFormat {
     }
 }
 
-fun timeFormat2String(formatType: String): String {
+fun timeFormat2String4DatePicker(formatType: String, year: Int, month: Int, day: Int): String {
+
+    val locale: Locale =
+        if (Locale.getDefault().toString() == SharedPreferenceKey.CHINESE) {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+
+    return SimpleDateFormat(formatType, locale).format(Date(
+        year - 1900, month, day))
+}
+
+fun timeFormat2String4TimePicker(formatType: String, hour: Int, minute: Int): String {
 
     val locale: Locale =
         if (Locale.getDefault().toString() == SharedPreferenceKey.CHINESE) {
@@ -37,7 +50,7 @@ fun timeFormat2String(formatType: String): String {
         DateFormat.dayOfMonth, hour, minute))
 }
 
-fun timeFormat2SQLTimestamp(formatType: String, parseString: String): java.sql.Timestamp {
+fun timeFormat2SqlTimestamp(formatType: String, parseString: String): java.sql.Timestamp {
 
     val locale: Locale =
         if (Locale.getDefault().toString() == SharedPreferenceKey.CHINESE) {
@@ -61,9 +74,22 @@ fun timeFormat2FirebaseTimestamp(formatType: String, parseString: String): Times
     return Timestamp(SimpleDateFormat(formatType, locale).parse(parseString))
 }
 
-const val TIMEFORMAT = "hh:mm a"
-const val DATETIMEFORMAT = "yyyy-MM-dd hh:mm a"
-const val SIMPLEDATEFORMAT = "yyyy-MM-dd"
+fun setDefaultTime(formatType: String): String {
+
+    val locale: Locale =
+        if (Locale.getDefault().toString() == SharedPreferenceKey.CHINESE) {
+            Locale.TAIWAN
+        } else {
+            Locale.ENGLISH
+        }
+   return SimpleDateFormat(formatType, locale).format(Date(Timestamp.now().seconds * 1000))
+}
+
+const val TIME_FORMAT = "hh:mm a"
+const val DATE_TIME_FORMAT = "yyyy-MM-dd hh:mm a"
+const val SIMPLE_DATE_FORMAT = "yyyy-MM-dd"
+const val DATE_WEEK_FORMAT = "yyyy-MM-dd EEEE"
+const val DATE_WEEK_TIME_FORMAT = "yyyy-MM-dd EEEE hh:mm a"
 
 
 

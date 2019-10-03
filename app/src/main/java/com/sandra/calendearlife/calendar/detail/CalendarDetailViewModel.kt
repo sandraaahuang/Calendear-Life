@@ -6,6 +6,7 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.provider.CalendarContract
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
@@ -15,6 +16,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
@@ -22,7 +24,6 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.util.UserManager
-import kotlin.collections.HashMap
 
 
 class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidViewModel(app) {
@@ -290,11 +291,23 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
         }
     }
 
-    fun showDatePicker(clickText: TextView) {
+    fun onButtonClick(view: View) {
+        when (view.id) {
+            R.id.beginDate -> showDatePicker(view.findViewById(R.id.beginDate))
+            R.id.beginTime -> showTimePicker(view.findViewById(R.id.beginTime))
+            R.id.endDate -> showDatePicker(view.findViewById(R.id.endDate))
+            R.id.endTime -> showTimePicker(view.findViewById(R.id.endTime))
+            R.id.remindDate -> showDatePicker(view.findViewById(R.id.remindDate))
+            R.id.remindTime -> showTimePicker(view.findViewById(R.id.remindTime))
+            R.id.targetDateInput -> showDatePicker(view.findViewById(R.id.targetDateInput))
+        }
+    }
+
+    private fun showDatePicker(clickText: TextView) {
         _showDatePicker.value = clickText
     }
 
-    fun showTimePicker(clickText: TextView) {
+    private fun showTimePicker(clickText: TextView) {
         _showTimePicker.value = clickText
     }
 }
