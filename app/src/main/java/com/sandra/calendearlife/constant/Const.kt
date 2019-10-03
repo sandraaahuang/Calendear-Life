@@ -19,8 +19,8 @@ class Const {
         const val REQUEST_EVALUATE = 0X110
 
         // Determine each fragment type
-        const val TYPECALENDAR = "calendar"
-        const val TYPEHOME = "home"
+        const val TYPE_CALENDAR = "calendar"
+        const val TYPE_HOME = "home"
 
         fun putType (type: String) {
             val preferences =
@@ -35,11 +35,11 @@ class Const {
         // frequency value
         var value: String = "Does not repeat"
 
-        const val DOESNOTREPEAT = "Does not repeat"
-        const val EVERYDAY = "Every day"
-        const val EVERYWEEK = "Every week"
-        const val EVERYMONTH = "Every month"
-        const val EVERYYEAR = "Every year"
+        const val DOES_NOT_REPEAT = "Does not repeat"
+        const val EVERY_DAY = "Every day"
+        const val EVERY_WEEK = "Every week"
+        const val EVERY_MONTH = "Every month"
+        const val EVERY_YEAR = "Every year"
 
         // dialog TAG
         const val SHOW = "show"

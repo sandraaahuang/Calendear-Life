@@ -21,9 +21,10 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
+import com.sandra.calendearlife.constant.Const.Companion.TYPE_CALENDAR
 import com.sandra.calendearlife.constant.Const.Companion.putType
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
@@ -68,7 +69,7 @@ class CalendarMonthFragment : Fragment() {
     lateinit var binding: FragmentCalendarMonthBinding
 
     private val adapter = CalendarMonthAdapter(CalendarMonthAdapter.OnClickListener {
-        putType(TYPECALENDAR)
+        putType(TYPE_CALENDAR)
         viewModel.displayCalendarDetails(it)
     })
 
@@ -119,16 +120,16 @@ class CalendarMonthFragment : Fragment() {
         }
 
         binding.remindersFab.setOnClickListener {
-            putType(TYPECALENDAR)
+            putType(TYPE_CALENDAR)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
         binding.countdownsFab.setOnClickListener {
-            putType(TYPECALENDAR)
+            putType(TYPE_CALENDAR)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownFragment())
         }
 
         binding.calendarFab.setOnClickListener {
-            putType(TYPECALENDAR)
+            putType(TYPE_CALENDAR)
             findNavController().navigate(NavigationDirections.actionGlobalCalendarEventFragment())
         }
 
@@ -197,7 +198,7 @@ class CalendarMonthFragment : Fragment() {
                     when (day.date) {
                         today -> {
 
-                            textView.setTextColorRes(R.color.white)
+                            textView.setTextColor(MyApplication.instance.getColor(R.color.white))
                             textView.setBackgroundResource(R.drawable.today_bg)
                             dotView.visibility = View.INVISIBLE
                         }
@@ -280,8 +281,5 @@ class CalendarMonthFragment : Fragment() {
         }
         return daysOfWeek
     }
-
-    private fun Context.getColorCompat(@ColorRes color: Int) = ContextCompat.getColor(this, color)
-    private fun TextView.setTextColorRes(@ColorRes color: Int) = setTextColor(context.getColorCompat(color))
 }
 

@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.*
 import com.sandra.calendearlife.constant.Const.Companion.EVALUATE_DIALOG
 import com.sandra.calendearlife.constant.Const.Companion.REQUEST_EVALUATE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE
@@ -53,29 +54,13 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SETREMINDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGETDATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentCalendarEventBinding
 import com.sandra.calendearlife.dialog.ChooseFrequencyDialog
 import com.sandra.calendearlife.dialog.DiscardDialog
 import com.sandra.calendearlife.util.Logger
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class CalendarEventFragment : Fragment() {
-
-    private val locale: Locale =
-        if (Locale.getDefault().toString() == CHINESE) {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-    private val timeFormat = SimpleDateFormat("hh:mm a", locale)
-    private val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", locale)
-    val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", locale)
-    private val dateWeekFormat = SimpleDateFormat("yyyy-MM-dd EEEE", locale)
-    private val dateWeekTimeFormat = SimpleDateFormat("yyyy-MM-dd EEEE hh:mm a", locale)
 
     lateinit var binding: FragmentCalendarEventBinding
 
@@ -120,8 +105,9 @@ class CalendarEventFragment : Fragment() {
         viewModel.showDateWeekPicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
             clickedDate?.let {
                 showDatePickerInWeekFormat(it)
-            }
-        })
+            } }
+        )
+
 
         viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
             clickedDate?.let {
@@ -170,7 +156,7 @@ class CalendarEventFragment : Fragment() {
                     SETDATE to FieldValue.serverTimestamp(),
                     TITLE to "${binding.eventTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
-                    TARGETDATE to Timestamp(dateWeekTimeFormat.parse(endDate).time),
+                    TARGETDATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, endDate),
                     OVERDUE to false
                 )
 
@@ -178,7 +164,7 @@ class CalendarEventFragment : Fragment() {
                     SETDATE to FieldValue.serverTimestamp(),
                     TITLE to "${binding.eventTitleInput.text}".trim(),
                     SETREMINDATE to true,
-                    REMINDDATE to Timestamp(dateTimeFormat.parse(remindDate).time),
+                    REMINDDATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
                     ISCHECKED to false,
                     NOTE to "${binding.noteInput.text}".trim(),
                     FREQUENCY to value
@@ -186,10 +172,10 @@ class CalendarEventFragment : Fragment() {
 
                 val item = hashMapOf(
                     FREQUENCY to value,
-                    DATE to Timestamp(dateWeekFormat.parse(date).time),
+                    DATE to timeFormat2SqlTimestamp(DATE_WEEK_FORMAT, date),
                     SETDATE to FieldValue.serverTimestamp(),
-                    BEGINDATE to Timestamp(dateWeekTimeFormat.parse(beginDate).time),
-                    ENDDATE to Timestamp(dateWeekTimeFormat.parse(endDate).time),
+                    BEGINDATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, beginDate),
+                    ENDDATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, endDate),
                     TITLE to "${binding.eventTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
                     ISALLDAY to "${binding.allDaySwitch.isChecked}",
@@ -200,8 +186,8 @@ class CalendarEventFragment : Fragment() {
                 )
 
                 if (binding.switchSetAsGoogle.isChecked) {
-                    val gBeginDate = com.google.firebase.Timestamp(dateWeekTimeFormat.parse(beginDate))
-                    val gEndDate = com.google.firebase.Timestamp(dateWeekTimeFormat.parse(endDate))
+                    val gBeginDate = timeFormat2FirebaseTimestamp(DATE_WEEK_TIME_FORMAT, beginDate)
+                    val gEndDate = timeFormat2FirebaseTimestamp(DATE_WEEK_TIME_FORMAT, endDate)
                     val gTitle = "${binding.eventTitleInput.text}".trim()
                     val gNote = "${binding.noteInput.text}".trim()
 
@@ -261,22 +247,19 @@ class CalendarEventFragment : Fragment() {
     }
 
     private fun setDefaultDate() {
-        binding.beginDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.endDate.text = dateWeekFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.remindersDateInput.text =
-            simpleDateFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.beginTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.endTime.text = timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
-        binding.remindersTimeInput.text =
-            timeFormat.format(Date(com.google.firebase.Timestamp.now().seconds * 1000))
+        binding.beginDate.text = setDefaultTime(DATE_WEEK_FORMAT)
+        binding.endDate.text = setDefaultTime(DATE_WEEK_FORMAT)
+        binding.remindersDateInput.text = setDefaultTime(SIMPLE_DATE_FORMAT)
+        binding.beginTime.text = setDefaultTime(TIME_FORMAT)
+        binding.endTime.text = setDefaultTime(TIME_FORMAT)
+        binding.remindersTimeInput.text = setDefaultTime(TIME_FORMAT)
     }
 
     private fun showDatePicker(inputDate: TextView) {
         val datePickerDialog = DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-            { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text =
-                    simpleDateFormat.format(Date(year - 1900, monthOfYear, dayOfMonth))
+            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener {
+                    _,year, monthOfYear, dayOfMonth ->
+                inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
             }, year, monthOfYear, dayOfMonth
         )
         datePickerDialog.show()
@@ -284,10 +267,9 @@ class CalendarEventFragment : Fragment() {
 
     private fun showDatePickerInWeekFormat(inputDate: TextView) {
         val datePickerDialog = DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-            { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text =
-                    dateWeekFormat.format(Date(year - 1900, monthOfYear, dayOfMonth))
+            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener {
+                    _,year, monthOfYear, dayOfMonth ->
+                inputDate.text = timeFormat2String4DatePicker(DATE_WEEK_FORMAT, year, monthOfYear, dayOfMonth)
             }, year, monthOfYear, dayOfMonth
         )
         datePickerDialog.show()
@@ -297,8 +279,7 @@ class CalendarEventFragment : Fragment() {
         val timePickerDialog = TimePickerDialog(
             this.context!!, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { _, hour, minute ->
-                inputTime.text =
-                    timeFormat.format(Date(year - 1900, monthOfYear, dayOfMonth, hour, minute))
+                inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
             }, hour, minute, false
         )
         timePickerDialog.show()

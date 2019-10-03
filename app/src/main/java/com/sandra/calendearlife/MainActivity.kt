@@ -42,18 +42,17 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.constant.Const
-import com.sandra.calendearlife.constant.Const.Companion.DOESNOTREPEAT
-import com.sandra.calendearlife.constant.Const.Companion.EVERYDAY
-import com.sandra.calendearlife.constant.Const.Companion.EVERYMONTH
-import com.sandra.calendearlife.constant.Const.Companion.EVERYWEEK
-import com.sandra.calendearlife.constant.Const.Companion.EVERYYEAR
-import com.sandra.calendearlife.constant.Const.Companion.TYPECALENDAR
-import com.sandra.calendearlife.constant.Const.Companion.TYPEHOME
+import com.sandra.calendearlife.constant.Const.Companion.DOES_NOT_REPEAT
+import com.sandra.calendearlife.constant.Const.Companion.EVERY_DAY
+import com.sandra.calendearlife.constant.Const.Companion.EVERY_MONTH
+import com.sandra.calendearlife.constant.Const.Companion.EVERY_WEEK
+import com.sandra.calendearlife.constant.Const.Companion.EVERY_YEAR
+import com.sandra.calendearlife.constant.Const.Companion.TYPE_CALENDAR
+import com.sandra.calendearlife.constant.Const.Companion.TYPE_HOME
 import com.sandra.calendearlife.constant.Const.Companion.putType
 import com.sandra.calendearlife.constant.FirebaseKey
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CONJUNCTION
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENTID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
@@ -72,7 +71,6 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.constant.SharedPreferenceKey
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ADDFRAGMENT
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
-import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DARK
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DARKMODE
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DNR
@@ -230,7 +228,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     for (value in it) {
 
                         when (value.frequency) {
-                            Const.DOESNOTREPEAT -> {
+                            Const.DOES_NOT_REPEAT -> {
 
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val dnrPending = PendingIntent.getBroadcast(
@@ -242,7 +240,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     value.remindTimestamp.seconds * 1000, dnrPending
                                 )
                             }
-                            EVERYDAY -> {
+                            EVERY_DAY -> {
 
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
@@ -255,7 +253,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     AlarmManager.INTERVAL_DAY, edPending
                                 )
                             }
-                            EVERYWEEK -> {
+                            EVERY_WEEK -> {
 
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
@@ -269,7 +267,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
 
                             }
-                            EVERYMONTH -> {
+                            EVERY_MONTH -> {
 
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
@@ -283,7 +281,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 )
 
                             }
-                            EVERYYEAR -> {
+                            EVERY_YEAR -> {
 
                                 val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
@@ -534,38 +532,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
 
             R.id.month -> {
-                putType(TYPECALENDAR)
+                putType(TYPE_CALENDAR)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
             R.id.home -> {
-                putType(TYPEHOME)
+                putType(TYPE_HOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHomeFragment())
             }
             R.id.addCalendar -> {
-                putType(TYPECALENDAR)
+                putType(TYPE_CALENDAR)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCalendarEventFragment())
             }
             R.id.addCountdown -> {
-                putType(TYPEHOME)
+                putType(TYPE_HOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalCountdownFragment())
             }
             R.id.addReminder -> {
-                putType(TYPEHOME)
+                putType(TYPE_HOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalRemindersFragment())
             }
             R.id.historyReminder -> {
-                putType(TYPEHOME)
+                putType(TYPE_HOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryReminders())
             }
 
             R.id.historyCountdown -> {
-                putType(TYPEHOME)
+                putType(TYPE_HOME)
                 findNavController(R.id.myNavHostFragment)
                     .navigate(NavigationDirections.actionGlobalHistoryCountdown2())
             }
@@ -837,7 +835,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .collection(REMINDERS)
                                 .whereEqualTo(ISCHECKED, false)
                                 .whereEqualTo(SETREMINDATE, true)
-                                .whereEqualTo(FREQUENCY, DOESNOTREPEAT)
+                                .whereEqualTo(FREQUENCY, DOES_NOT_REPEAT)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
@@ -930,7 +928,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .collection(REMINDERS)
                                 .whereEqualTo(ISCHECKED, false)
                                 .whereEqualTo(SETREMINDATE, true)
-                                .whereEqualTo(FREQUENCY, EVERYDAY)
+                                .whereEqualTo(FREQUENCY, EVERY_DAY)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
@@ -1022,7 +1020,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .collection(REMINDERS)
                                 .whereEqualTo(ISCHECKED, false)
                                 .whereEqualTo(SETREMINDATE, true)
-                                .whereEqualTo(FREQUENCY, EVERYWEEK)
+                                .whereEqualTo(FREQUENCY, EVERY_WEEK)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
@@ -1114,7 +1112,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .collection(REMINDERS)
                                 .whereEqualTo(ISCHECKED, false)
                                 .whereEqualTo(SETREMINDATE, true)
-                                .whereEqualTo(FREQUENCY, EVERYMONTH)
+                                .whereEqualTo(FREQUENCY, EVERY_MONTH)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
@@ -1206,7 +1204,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .collection(REMINDERS)
                                 .whereEqualTo(ISCHECKED, false)
                                 .whereEqualTo(SETREMINDATE, true)
-                                .whereEqualTo(FREQUENCY, EVERYYEAR)
+                                .whereEqualTo(FREQUENCY, EVERY_YEAR)
                                 .get()
                                 .addOnSuccessListener { documents ->
 
