@@ -31,6 +31,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentResolver
@@ -196,7 +197,8 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
                                 COLOR to COLOR_GOOGLE,
                                 DOCUMENT_ID to eventID,
                                 HAS_COUNTDOWN to false,
-                                HAS_REMINDERS to false
+                                HAS_REMINDERS to false,
+                                REMINDERS_DATE to beginDate
                             )
                             writeGoogleItem(item, eventID)
                         }

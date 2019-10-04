@@ -124,6 +124,12 @@ class CalendarEventFragment : Fragment() {
             }
         })
 
+        viewModel.hasPermission.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                requestPermission()
+            }
+        })
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 this@CalendarEventFragment.fragmentManager?.let {
@@ -297,6 +303,13 @@ class CalendarEventFragment : Fragment() {
                 }, hour, minute, false
             ).show()
         }
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            (activity as MainActivity),
+            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1
+        )
     }
 }
 

@@ -100,6 +100,7 @@ import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.util.getString
+import kotlinx.android.synthetic.main.item_calendar_event.*
 import java.util.*
 import java.util.Calendar.*
 import kotlin.collections.ArrayList
@@ -155,7 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         loadLocale()
 
-        if (Locale.getDefault().language == "" && nowLanguage == ZH) {
+        if (Locale.getDefault().language.isNullOrEmpty() && nowLanguage == ZH) {
             setLocale(CHINESE)
 
         } else {
@@ -187,6 +188,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
 
+        viewModel.hasPermission.observe(this, Observer {
+            it?.let {
+                requestPermission()
+            }
+        })
 
         val value = intent.getStringExtra(TURN)
 
@@ -349,114 +355,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         )
     }
 
-    private fun queryCalendar() {
 
-        // search calendar
-        val cur: Cursor?
-
-        // create list to store result
-        val accountNameList = java.util.ArrayList<String>()
-        val calendarIdList = java.util.ArrayList<String>()
-
-        // give permission to read
-        if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
-            cur = contentResolver?.query(contentUri, eventProjection, SELECTION, selectionArgs, null)
-            if (cur != null) {
-                while (cur.moveToNext()) {
-                    val calendarId: String = cur.getString(PROJECTION_ID_INDEX)
-                    val accountName: String = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
-                    val displayName: String = cur.getString(PROJECTION_DISPLAY_NAME_INDEX)
-                    val ownerAccount: String = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)
-                    val accessLevel = cur.getInt(PROJECTION_CALENDAR_ACCESS_LEVEL)
-
-                    Logger.i(String.format("calendarId=%s", calendarId))
-                    Logger.i(String.format("accountName=%s", accountName))
-                    Logger.i(String.format("displayName=%s", displayName))
-                    Logger.i(String.format("ownerAccount=%s", ownerAccount))
-                    Logger.i(String.format("accessLevel=%s", accessLevel))
-                    // store calendar data
-                    accountNameList.add(displayName)
-                    calendarIdList.add(calendarId)
-
-                    val beginTime = getInstance()
-                    beginTime.set(2019, 8, 1, 24, 0)
-                    val startMillis = beginTime.timeInMillis
-                    val endTime = getInstance()
-                    endTime.set(2029, 8, 1, 24, 0)
-                    val endMillis = endTime.timeInMillis
-
-                    // search event
-                    val cur2: Cursor?
-
-                    val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
-
-                    val selectionEvent = CalendarContract.Events.CALENDAR_ID + " = ?"
-                    val selectionEventArgs = arrayOf(calendarId)
-                    ContentUris.appendId(builder, startMillis)
-                    ContentUris.appendId(builder, endMillis)
-
-                    val eventIdList = java.util.ArrayList<String>()
-                    val beginList = java.util.ArrayList<Long>()
-                    val endList = java.util.ArrayList<Long>()
-                    val titleList = java.util.ArrayList<String>()
-                    val noteList = java.util.ArrayList<String>()
-
-
-                    if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
-                        cur2 = contentResolver?.query(
-                            builder.build(),
-                            instanceProjection,
-                            selectionEvent,
-                            selectionEventArgs, null
-                        )
-                        if (cur2 != null) {
-                            while (cur2.moveToNext()) {
-                                val eventID = cur2.getString(PROJECTION_ID_INDEX)
-                                val beginVal = cur2.getLong(PROJECTION_BEGIN_INDEX)
-                                val endVal = cur2.getLong(PROJECTION_END_INDEX)
-                                val title = cur2.getString(PROJECTION_TITLE_INDEX)
-                                val note = cur2.getString(PROJECTION_DESCRIPTION_INDEX)
-                                // 取得所需的資料
-                                Logger.i(String.format("eventID=%s", eventID))
-                                Logger.i(String.format("beginVal=%s", beginVal))
-                                Logger.i(String.format("endVal=%s", endVal))
-                                Logger.i(String.format("title=%s", title))
-                                Logger.i(String.format("note=%s", note))
-                                // 暫存資料讓使用者選擇
-                                val beginDate = Timestamp(beginVal / 1000, 0)
-                                val endDate = Timestamp(endVal / 1000, 0)
-                                eventIdList.add(eventID)
-                                beginList.add(beginVal)
-                                endList.add(endVal)
-                                titleList.add(title)
-                                noteList.add(note)
-
-                                val item = hashMapOf(
-                                    FirebaseKey.DATE to Timestamp(timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT,
-                                        transferTimestamp2String(SIMPLE_DATE_FORMAT, beginDate))),
-                                    SET_DATE to FieldValue.serverTimestamp(),
-                                    FirebaseKey.BEGIN_DATE to beginDate,
-                                    FirebaseKey.END_DATE to endDate,
-                                    TITLE to title,
-                                    NOTE to note,
-                                    FirebaseKey.FROM_GOOGLE to true,
-                                    FirebaseKey.COLOR to FirebaseKey.COLOR_GOOGLE,
-                                    DOCUMENT_ID to eventID,
-                                    FirebaseKey.HAS_COUNTDOWN to false,
-                                    FirebaseKey.HAS_REMINDERS to false
-                                )
-                                viewModel.writeGoogleItem(item, eventID)
-                            }
-                            cur2.close()
-                        }
-                    }
-                }
-                cur.close()
-            }
-        } else {
-            requestPermission()
-        }
-    }
 
 
     private fun setupToolbar() {
@@ -527,7 +426,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.sync -> {
-                queryCalendar()
+                viewModel.queryCalendar()
             }
 
             R.id.changeLanguage -> {
