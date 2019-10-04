@@ -4,16 +4,12 @@ import android.Manifest
 import android.annotation.TargetApi
 import android.app.*
 import android.content.BroadcastReceiver
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -37,7 +33,6 @@ import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.constant.*
 import com.sandra.calendearlife.constant.Const.Companion.DOES_NOT_REPEAT
@@ -50,30 +45,11 @@ import com.sandra.calendearlife.constant.Const.Companion.TYPE_HOME
 import com.sandra.calendearlife.constant.Const.Companion.putType
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_OVERDUE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ACCOUNT_NAME_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_BEGIN_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_CALENDAR_ACCESS_LEVEL
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_DESCRIPTION_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_DISPLAY_NAME_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_END_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ID_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_OWNER_ACCOUNT_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_TITLE_INDEX
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.SELECTION
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentUri
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.eventProjection
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.instanceProjection
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.permissionReadCheck
-import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.selectionArgs
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ADDFRAGMENT
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DARK
@@ -100,7 +76,6 @@ import com.sandra.calendearlife.util.CurrentFragmentType
 import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 import com.sandra.calendearlife.util.getString
-import kotlinx.android.synthetic.main.item_calendar_event.*
 import java.util.*
 import java.util.Calendar.*
 import kotlin.collections.ArrayList
@@ -169,22 +144,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.viewModel = viewModel
 
         setupToolbar()
-        setupStatusBar()
         setDrawer()
         setupNavController()
+        setupStatusBar()
 
-        intent.extras?.let {
-            if (UserManager.id != null) {
-                viewModel.getItem(it.get(REMINDERSITEM).toString())
-            } else {
-                Logger.d("don't have user")
+
+        intent.extras?.let { extras ->
+            UserManager.id?.let {
+                viewModel.getItem(extras.get(REMINDERSITEM).toString())
             }
         }
 
         viewModel.liveReminders.observe(this, Observer {
-            it?.let {
+            it?.let { remindersProperty ->
                 findNavController(R.id.myNavHostFragment)
-                    .navigate(NavigationDirections.actionGlobalRemindersDetailFragment(it))
+                    .navigate(NavigationDirections.actionGlobalRemindersDetailFragment(remindersProperty))
             }
         })
 
@@ -194,10 +168,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
 
-        val value = intent.getStringExtra(TURN)
+        val widgetExtras = intent.getStringExtra(TURN)
 
-        if (!TextUtils.isEmpty(value)) {
-            when (value) {
+        if (!TextUtils.isEmpty(widgetExtras)) {
+            when (widgetExtras) {
                 ADDFRAGMENT -> {
                     findNavController(R.id.myNavHostFragment)
                         .navigate(NavigationDirections.actionGlobalRemindersFragment())
@@ -209,7 +183,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        if (UserManager.id != null) {
+        UserManager.id?.let {
             viewModel.set4AlarmManagerReminderItem()
             // setup countdown notification
 
@@ -313,8 +287,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             })
         }
 
-        val menuItem = binding.navView.menu.findItem(R.id.changeMode)
-        val actionView = MenuItemCompat.getActionView(menuItem) as SwitchCompat
+        val actionView = MenuItemCompat.getActionView(
+            binding.navView.menu.findItem(R.id.changeMode)
+        ) as SwitchCompat
 
         if (preferences.getString(STATUS, null) == DARK) {
 
@@ -356,8 +331,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
-
     private fun setupToolbar() {
         binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
         drawerLayout = binding.drawerLayout
@@ -378,11 +351,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
+
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -526,6 +501,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
+
+
     }
 
     private fun getStatusBarHeight(): Int {

@@ -15,8 +15,6 @@ import com.sandra.calendearlife.util.UserManager
 class HistoryCountdownViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    private lateinit var countdownAdd: Countdown
-
     private val countdownItem = ArrayList<Countdown>()
     private val _liveCountdown = MutableLiveData<List<Countdown>>()
     val liveCountdown: LiveData<List<Countdown>>

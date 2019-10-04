@@ -35,42 +35,48 @@ class CountdownDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = FragmentCountdownDetailBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-
-        val application = requireNotNull(activity).application
-
-        val countdown = CountdownDetailFragmentArgs.fromBundle(arguments!!).countdownProperty
-        val viewModelFactory = CountdownDetailFactory(countdown, application)
+        val countdownProperty = CountdownDetailFragmentArgs.fromBundle(arguments!!).countdownProperty
+        val viewModelFactory = CountdownDetailFactory(countdownProperty, requireNotNull(activity).application)
         val viewModel = ViewModelProviders.of(
             this, viewModelFactory
         ).get(CountdownDetailViewModel::class.java)
+
+        binding = FragmentCountdownDetailBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         binding.saveButton.setOnClickListener {
-            val targetDate = binding.targetDateInput.text.toString()
 
             val updateItem = hashMapOf(
                 TITLE to "${binding.editTextCountdown.text}".trim(),
                 NOTE to "${binding.editTextCountdownNote.text}".trim(),
-                TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
+                TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT,
+                    binding.targetDateInput.text.toString())
             )
 
             val calendarItem = hashMapOf(
                 TITLE to "${binding.editTextCountdown.text}".trim(),
                 NOTE to "${binding.editTextCountdownNote.text}".trim(),
-                BEGIN_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
-                DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
+                BEGIN_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT,
+                    binding.targetDateInput.text.toString()),
+                DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT,
+                    binding.targetDateInput.text.toString())
             )
 
-            viewModel.updateItem(updateItem, calendarItem, countdown.documentID)
-            Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            viewModel.updateItem(updateItem, calendarItem, countdownProperty.documentID)
+            view?.let {
+                Snackbar.make(it, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            }
+
         }
 
         binding.deleteButton.setOnClickListener {
 
-            viewModel.deleteItem(countdown.documentID)
-            Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            viewModel.deleteItem(countdownProperty.documentID)
+            view?.let {
+                Snackbar.make(it, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            }
+
         }
         viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
@@ -96,26 +102,32 @@ class CountdownDetailFragment : Fragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@CountdownDetailFragment.fragmentManager!!, SHOW)
+                this@CountdownDetailFragment.fragmentManager?.let {
+                    DiscardDialog().show(it, SHOW)
+                }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, SHOW)
+            fragmentManager?.let {
+                DiscardDialog().show(it, SHOW)
+            }
         }
 
         return binding.root
     }
 
     private fun showDatePicker(inputDate: TextView) {
-        DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-            { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text =
-                    timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
-            }, year, monthOfYear, dayOfMonth
-        ).show()
+        context?.let {
+            DatePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+                { _, year, monthOfYear, dayOfMonth ->
+                    inputDate.text =
+                        timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
+                }, year, monthOfYear, dayOfMonth
+            ).show()
+        }
     }
 }
 

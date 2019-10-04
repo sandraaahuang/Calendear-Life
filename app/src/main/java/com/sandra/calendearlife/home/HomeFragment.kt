@@ -42,30 +42,24 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
-        val itemTouchHelper= ItemTouchHelper(
-            SwipeToDeleteCallback(
-                remindersAdapter,
-                viewModel
-            )
-        )
-        itemTouchHelper.attachToRecyclerView(binding.remindersRecyclerView)
-
         binding.countdownRecyclerView.adapter = countdownAdapter
         binding.remindersRecyclerView.adapter = remindersAdapter
+
+        ItemTouchHelper(SwipeToDeleteCallback(remindersAdapter, viewModel)).apply {
+            attachToRecyclerView(binding.remindersRecyclerView)
+        }
 
         LinearSnapHelper().apply {
             attachToRecyclerView(binding.countdownRecyclerView)
         }
-
-        val recyclerIndicator = binding.indicator
-        recyclerIndicator.attachToRecyclerView(binding.countdownRecyclerView)
+        
+        binding.indicator.attachToRecyclerView(binding.countdownRecyclerView)
 
         // floating action button
-        val fabOpen = AnimationUtils.loadAnimation(this.context, R.anim.fab_open)
-        val fabClose = AnimationUtils.loadAnimation(this.context, R.anim.fab_close)
-        val rotateForward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_forward)
-        val rotateBackward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_backward)
+        val fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
+        val fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
+        val rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward)
+        val rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward)
         var isOpen = false
 
         binding.fabAdd.setOnClickListener {
@@ -119,6 +113,7 @@ class HomeFragment : Fragment() {
         binding.swipeFreshHome.setOnRefreshListener {
             viewModel.getItem()
         }
+
         viewModel.isRefreshing.observe(this , Observer {
             it?.let {
                 binding.swipeFreshHome.isRefreshing = false

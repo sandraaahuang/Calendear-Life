@@ -3,6 +3,7 @@ package com.sandra.calendearlife.home
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.recyclerview.widget.DiffUtil
@@ -21,29 +22,34 @@ class HomeCountdownAdapter(private val onClickListener: OnClickListener, val vie
     class CountdownViewHolder(private var binding: ItemCountdownBinding):
         RecyclerView.ViewHolder(binding.root) {
         fun bind(countdown: Countdown, viewModel: HomeViewModel) {
-            binding.countdownDate.setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)+4}")
-            binding.countdownDate.setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)+3}")
-            binding.countdownDate.setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)+2}")
-            binding.countdownDate.setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)+1}")
             binding.countdown = countdown
-            binding.countdownDate.animationDuration = 2000L
-            binding.countdownDate.charStrategy = Strategy.NormalAnimation()
-            binding.countdownDate.addCharOrder(CharOrder.Number)
-            binding.countdownDate.animationInterpolator = AccelerateDecelerateInterpolator()
-            binding.countdownDate.addAnimatorListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                //finish
-            }
-        })
-            binding.countdownDate.setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}")
 
-            if (countdown.targetTimestamp.seconds < Timestamp.now().seconds){
+            binding.countdownDate.apply {
+                setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400) + 4}")
+                setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400) + 3}")
+                setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400) + 2}")
+                setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400) + 1}")
+                animationDuration = 2000L
+                charStrategy = Strategy.NormalAnimation()
+                addCharOrder(CharOrder.Number)
+                animationInterpolator = AccelerateDecelerateInterpolator()
+                addAnimatorListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        //finish
+                    }
+                })
+
+                if ((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400 == 0L) {
+                    setText("1")
+                } else {
+                    setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}")
+                }
+            }
+
+            if (countdown.targetTimestamp.seconds < Timestamp.now().seconds) {
                 viewModel.updateOverdueCountdown(countdown.documentID)
             }
 
-            if ((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400 == 0L) {
-                binding.countdownDate.setText("1")
-            }
             binding.executePendingBindings()
         }
     }
@@ -70,6 +76,7 @@ class HomeCountdownAdapter(private val onClickListener: OnClickListener, val vie
     override fun onBindViewHolder(holder: CountdownViewHolder, position: Int) {
         val countdown = getItem(position)
         holder.itemView.setOnClickListener {
+
             onClickListener.onClick(countdown)
         }
         holder.bind(countdown,viewModel)

@@ -77,13 +77,17 @@ class RemindersFragment : Fragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@RemindersFragment.fragmentManager!!, SHOW)
+                this@RemindersFragment.fragmentManager?.let {
+                    DiscardDialog().show(it, SHOW)
+                }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, SHOW)
+            fragmentManager?.let {
+                DiscardDialog().show(it, SHOW)
+            }
         }
 
         binding.saveText.setOnClickListener {
@@ -128,20 +132,21 @@ class RemindersFragment : Fragment() {
         viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
             restartApp()
         })
+
         viewModel.isClicked.observe(this, androidx.lifecycle.Observer {
             it?.let {
                 binding.saveText.isClickable = false
             }
         })
 
-        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedText ->
+            clickedText?.let {
                 showDatePicker(it)
             }
         })
 
-        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer { clickedText ->
+            clickedText?.let {
                 showTimePicker(it)
             }
         })
@@ -161,33 +166,33 @@ class RemindersFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_EVALUATE) {
-            val evaluate = data?.getStringExtra(RESPONSE_EVALUATE)
 
-            binding.repeatChoose.text = evaluate
-            val intent = Intent()
-            intent.putExtra(RESPONSE, evaluate);
-            activity?.setResult(Activity.RESULT_OK, intent)
+            binding.repeatChoose.text = data?.getStringExtra(RESPONSE_EVALUATE)
+            Intent().putExtra(RESPONSE, data?.getStringExtra(RESPONSE_EVALUATE))
+            activity?.setResult(Activity.RESULT_OK, Intent())
         }
     }
 
     private fun showDatePicker(inputDate: TextView) {
-        val datePickerDialog = DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-            { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
-            }, DateFormat.year, DateFormat.monthOfYear, DateFormat.dayOfMonth
-        )
-        datePickerDialog.show()
+        context?.let {
+            DatePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+                { _, year, monthOfYear, dayOfMonth ->
+                    inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
+                }, DateFormat.year, DateFormat.monthOfYear, DateFormat.dayOfMonth
+            ).show()
+        }
     }
 
     private fun showTimePicker(inputTime: TextView) {
-        val timePickerDialog = TimePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { _, hour, minute ->
-                inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
-            }, DateFormat.hour, DateFormat.minute, false
-        )
-        timePickerDialog.show()
+        context?.let {
+            TimePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+                { _, hour, minute ->
+                    inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
+                }, DateFormat.hour, DateFormat.minute, false
+            ).show()
+        }
     }
 
 }

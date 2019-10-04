@@ -53,8 +53,8 @@ class CalendarDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val calendarArguments = CalendarDetailFragmentArgs.fromBundle(arguments!!).calendar
-        val viewModelFactory = CalendarDetailFactory(calendarArguments, requireNotNull(activity).application)
+        val calendarProperty = CalendarDetailFragmentArgs.fromBundle(arguments!!).calendar
+        val viewModelFactory = CalendarDetailFactory(calendarProperty, requireNotNull(activity).application)
         val viewModel = ViewModelProviders.of(
             this, viewModelFactory
         ).get(CalendarDetailViewModel::class.java)
@@ -63,23 +63,22 @@ class CalendarDetailFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        if (calendarArguments.color == COLOR_GOOGLE
-            ||calendarArguments.color == COLOR_CAL
-            || calendarArguments.color == COLOR_REMIND_CAL
-            || calendarArguments.color == "53777A"
-            ||calendarArguments.color == COLOR_ALL
-            || calendarArguments.color == COLOR_COUNTDOWN_CAL){
+        if (calendarProperty.color == COLOR_GOOGLE
+            ||calendarProperty.color == COLOR_CAL
+            || calendarProperty.color == COLOR_REMIND_CAL
+            ||calendarProperty.color == COLOR_ALL
+            || calendarProperty.color == COLOR_COUNTDOWN_CAL){
 
             binding.allDayLayout.visibility = View.VISIBLE
             binding.beginDate.visibility = View.VISIBLE
 
 
-            if (calendarArguments.color == COLOR_CAL
-                || calendarArguments.color == COLOR_REMIND_CAL
-                ||calendarArguments.color == COLOR_ALL
-                || calendarArguments.color == COLOR_COUNTDOWN_CAL){
+            if (calendarProperty.color == COLOR_CAL
+                || calendarProperty.color == COLOR_REMIND_CAL
+                ||calendarProperty.color == COLOR_ALL
+                || calendarProperty.color == COLOR_COUNTDOWN_CAL){
 
-                if (calendarArguments.isAllDay){
+                if (calendarProperty.isAllDay){
                     binding.beginTime.visibility = View.GONE
                     binding.endDateText.visibility = View.GONE
                     binding.endDate.visibility = View.GONE
@@ -95,20 +94,19 @@ class CalendarDetailFragment : Fragment() {
             binding.allDayLayout.visibility = View.GONE
         }
 
-        if (calendarArguments.color == COLOR_REMIND
-            || calendarArguments.color == COLOR_REMIND_CAL
-            || calendarArguments.color == COLOR_ALL
-            ||calendarArguments.hasReminders){
+        if (calendarProperty.color == COLOR_REMIND
+            || calendarProperty.color == COLOR_REMIND_CAL
+            || calendarProperty.color == COLOR_ALL
+            ||calendarProperty.hasReminders){
             binding.remindLayout.visibility = View.VISIBLE
         } else {
             binding.remindLayout.visibility = View.GONE
         }
 
-        if (calendarArguments.color == COLOR_COUNTDOWN
-            ||calendarArguments.color == "53777A"
-            ||calendarArguments.color == COLOR_ALL
-            ||calendarArguments.hasCountdown
-            || calendarArguments.color == COLOR_COUNTDOWN_CAL) {
+        if (calendarProperty.color == COLOR_COUNTDOWN
+            ||calendarProperty.color == COLOR_ALL
+            ||calendarProperty.hasCountdown
+            || calendarProperty.color == COLOR_COUNTDOWN_CAL) {
             binding.countdownLayout.visibility = View.VISIBLE
         } else {
             binding.countdownLayout.visibility = View.GONE
@@ -133,10 +131,10 @@ class CalendarDetailFragment : Fragment() {
         })
 
         binding.deleteButton.setOnClickListener {
-            calendarArguments.documentID?.let {
+            calendarProperty.documentID?.let {
                 viewModel.deleteEvent(it)
 
-                if (calendarArguments.fromGoogle) {
+                if (calendarProperty.fromGoogle) {
                     viewModel.deleteGoogleEvent(it)
                 } else {
                     Logger.d("is not google item")
@@ -170,7 +168,7 @@ class CalendarDetailFragment : Fragment() {
                 TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
             )
 
-            when (calendarArguments.color) {
+            when (calendarProperty.color) {
 
                 COLOR_REMIND -> {
 //
@@ -181,7 +179,7 @@ class CalendarDetailFragment : Fragment() {
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim()
                     )
-                    calendarArguments.documentID?.let {
+                    calendarProperty.documentID?.let {
                         viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
                     }
                 }
@@ -196,14 +194,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim()
                     )
 
-                    calendarArguments.documentID?.let {
+                    calendarProperty.documentID?.let {
                         viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
                     }
 
                 }
 
                 COLOR_CAL -> {
-                    if (calendarArguments.isAllDay) {
+                    if (calendarProperty.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -219,14 +217,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
-                    calendarArguments.documentID?.let {
+                    calendarProperty.documentID?.let {
                         viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
                     }
 
                 }
 
                 COLOR_REMIND_CAL -> {
-                    if (calendarArguments.isAllDay) {
+                    if (calendarProperty.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -242,13 +240,13 @@ class CalendarDetailFragment : Fragment() {
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
 
-                    calendarArguments.documentID?.let {
+                    calendarProperty.documentID?.let {
                         viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
                     }
                 }
 
                 COLOR_COUNTDOWN_CAL -> {
-                    if (calendarArguments.isAllDay) {
+                    if (calendarProperty.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -264,13 +262,13 @@ class CalendarDetailFragment : Fragment() {
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
 
-                    calendarArguments.documentID?.let {
+                    calendarProperty.documentID?.let {
                         viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
                     }
                 }
 
                 COLOR_ALL -> {
-                    if (calendarArguments.isAllDay) {
+                    if (calendarProperty.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -285,14 +283,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}"
                     )
-                    calendarArguments.documentID?.let {
+                    calendarProperty.documentID?.let {
                         viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
                     }
 
                 }
 
                 COLOR_GOOGLE -> {
-                    if (calendarArguments.isAllDay) {
+                    if (calendarProperty.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -307,16 +305,16 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
-                    calendarArguments.documentID?.let {
+                    calendarProperty.documentID?.let {
                         viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
                     }
 
                 }
             }
 
-            if (calendarArguments.fromGoogle) {
+            if (calendarProperty.fromGoogle) {
 
-                calendarArguments.documentID?.let {
+                calendarProperty.documentID?.let {
                     viewModel.updateGoogleEvent(
                         it,
                         "${binding.detailTitleInput.text}",

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,19 +43,127 @@ class PreviewFragment : Fragment() {
         ViewModelProviders.of(this).get(PreviewViewModel::class.java)
     }
 
-    private val images = intArrayOf(R.drawable.preview_photo_widget, R.drawable.preview_photo_notify,
-        R.drawable.preview_photo_home, R.drawable.preview_photo_mode)
+    private lateinit var binding: FragmentPreviewBinding
 
-    lateinit var binding: FragmentPreviewBinding
+    //Initialize Firebase Auth
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    private lateinit var auth: FirebaseAuth
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        binding = FragmentPreviewBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.recyclerView.adapter = PreviewImageAdapter(
+            intArrayOf(
+                R.drawable.preview_photo_widget,
+                R.drawable.preview_photo_notify,
+                R.drawable.preview_photo_home,
+                R.drawable.preview_photo_mode
+            )
+        )
+
+        binding.indicator.attachToRecyclerView(binding.recyclerView)
+        LinearSnapHelper().apply {
+            attachToRecyclerView(binding.recyclerView)
+        }
+
+        UserManager.id?.let {
+            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+        }
+
+        binding.connect.setOnClickListener {
+            signIn()
+            setLogin(true)
+            updateWidgetWhenIsLogin()
+        }
+
+        return binding.root
+    }
+
+    private fun signIn() {
+
+        val signInIntent = GoogleSignIn.getClient(
+
+            MyApplication.instance,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(
+                    MyApplication.instance.getString(R.string.default_web_client_id)
+                )
+                .requestEmail()
+                .build()
+
+        ).signInIntent
+
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        super.onActivityResult(requestCode, resultCode, data)
+
+        System.out.println(REQUEST_CODE)
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...)
+        handleSignInResult(
+            GoogleSignIn.getSignedInAccountFromIntent(data)
+        )
+    }
+
+    private fun handleSignInResult(completeTask: Task<GoogleSignInAccount>) {
+        try {
+            completeTask.getResult(ApiException::class.java)?.let {
+                firebaseAuthWithGoogle(it) }
+
+        } catch (e: ApiException) {
+            Logger.w("signInResult:failed code=" + e.statusCode)
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+        Logger.d("firebaseAuthWithGoogle:" + acct.id)
+
+        auth.signInWithCredential(
+
+            GoogleAuthProvider.getCredential(acct.idToken, null)
+
+        ).addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+
+                    val preferences =
+                        MyApplication.instance.getSharedPreferences(GOOGLEINFO, Context.MODE_PRIVATE)
+
+                    preferences.edit().putString(ID, auth.uid).apply()
+                    preferences.getString(ID, auth.uid)
+                    UserManager.id = auth.uid
+
+                    preferences.edit().putString(USERNAME, auth.currentUser?.displayName).apply()
+                    preferences.getString(USERNAME, auth.currentUser?.displayName)
+                    UserManager.userName = auth.currentUser?.displayName
+
+                    preferences.edit().putString(USEREMAIL, auth.currentUser?.email).apply()
+                    preferences.getString(USEREMAIL, auth.currentUser?.email)
+                    UserManager.userEmail = auth.currentUser?.email
+
+                    preferences.edit().putString(USERPHOTO, auth.currentUser?.photoUrl.toString()).apply()
+                    preferences.getString(USERPHOTO, auth.currentUser?.photoUrl.toString())
+                    UserManager.userPhoto = auth.currentUser?.photoUrl.toString()
+
+                    viewModel.insertUserData2Firebase()
+                    findNavController().navigate(NavigationDirections.actionGlobalSyncDialog())
+
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Logger.w("signInWithCredential:failure = ${task.exception}")
+                }
+            }
+    }
 
     private fun setLogin(login: Boolean) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(LOGIN, login)
             .apply()
     }
 
-    private fun updateWidget() {
+    private fun updateWidgetWhenIsLogin() {
 
         val thisWidget = ComponentName(context!!, RemindersWidget::class.java)
         val views = RemoteViews(this.context!!.packageName, R.layout.reminders_widget)
@@ -69,109 +176,5 @@ class PreviewFragment : Fragment() {
             views.setViewVisibility(R.id.empty, View.VISIBLE)
         }
         AppWidgetManager.getInstance(this.context).updateAppWidget(thisWidget, views)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        binding = FragmentPreviewBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-
-        if (UserManager.id != null) {
-            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
-        }
-
-        //Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
-
-        binding.connect.setOnClickListener {
-            signIn()
-            setLogin(true)
-            updateWidget()
-        }
-
-        binding.recyclerView.adapter = PreviewImageAdapter(images)
-
-        LinearSnapHelper().apply {
-            attachToRecyclerView(binding.recyclerView)
-        }
-
-        val recyclerIndicator = binding.indicator
-        recyclerIndicator.attachToRecyclerView(binding.recyclerView)
-
-        return binding.root
-    }
-
-    // Configure Google Sign In
-    private val singInOption: GoogleSignInOptions =
-        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(MyApplication.instance.getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
-    // Build a GoogleSignInClient with the options specified by gso.
-    private val googleSignInClint = GoogleSignIn.getClient(MyApplication.instance, singInOption)
-
-    private fun signIn() {
-        val signInIntent = googleSignInClint.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        System.out.println(REQUEST_CODE)
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...)
-        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-        handleSignInResult(task)
-    }
-
-    private fun handleSignInResult(completeTask: Task<GoogleSignInAccount>) {
-        try {
-            val account = completeTask.getResult(ApiException::class.java)
-            firebaseAuthWithGoogle(account!!)
-
-        } catch (e: ApiException) {
-            Logger.w("signInResult:failed code=" + e.statusCode)
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        Logger.d("firebaseAuthWithGoogle:" + acct.id!!)
-
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    val id = auth.uid
-                    val userName = auth.currentUser?.displayName
-                    val userEmail = auth.currentUser?.email
-                    val userPhoto = auth.currentUser?.photoUrl.toString()
-
-                    val preferences =
-                        MyApplication.instance.getSharedPreferences(GOOGLEINFO, Context.MODE_PRIVATE)
-                    preferences.edit().putString(ID, id).apply()
-                    preferences.getString(ID, id)
-                    UserManager.id = id
-
-                    preferences.edit().putString(USERNAME, userName).apply()
-                    preferences.getString(USERNAME, userName)
-                    UserManager.userName = userName
-
-                    preferences.edit().putString(USEREMAIL, userEmail).apply()
-                    preferences.getString(USEREMAIL, userEmail)
-                    UserManager.userEmail = userEmail
-
-                    preferences.edit().putString(USERPHOTO, userPhoto).apply()
-                    preferences.getString(USERPHOTO, userPhoto)
-                    UserManager.userPhoto = userPhoto
-
-                    viewModel.getItem()
-                    findNavController().navigate(NavigationDirections.actionGlobalSyncDialog())
-
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Logger.w("signInWithCredential:failure = ${task.exception}")
-                }
-            }
     }
 }
