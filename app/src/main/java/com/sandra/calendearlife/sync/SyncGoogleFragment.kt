@@ -19,7 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.constant.FirebaseKey
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR
@@ -34,6 +33,21 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentResolver
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentUri
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.eventProjection
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.instanceProjection
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ACCOUNT_NAME_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_BEGIN_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_CALENDAR_ACCESS_LEVEL
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_DESCRIPTION_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_DISPLAY_NAME_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_END_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ID_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_OWNER_ACCOUNT_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_TITLE_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.SELECTION
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.selectionArgs
 import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
 import com.sandra.calendearlife.constant.transferTimestamp2String
 import com.sandra.calendearlife.databinding.FragmentSyncGoogleBinding
@@ -93,59 +107,20 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
     }
 
     private fun queryCalendar() {
-        val eventProjection = arrayOf(
-            CalendarContract.Calendars._ID, // 0 calendar id
-            CalendarContract.Calendars.ACCOUNT_NAME, // 1 account name
-            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, // 2 display name
-            CalendarContract.Calendars.OWNER_ACCOUNT, // 3 owner account
-            CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL
-        )// 4 access level
 
-        val projectionIdIndex = 0
-        val projectionAccountNameIndex = 1
-        val projectionDisplayNameIndex = 2
-        val projectionOwnerAccountIndex = 3
-        val projectionCalendarAccessLevel = 4
-
-        // event data
-        val instanceProjection = arrayOf(
-            CalendarContract.Instances.EVENT_ID, // 0 event id
-            CalendarContract.Instances.BEGIN, // 1 begin date
-            CalendarContract.Instances.END, // 2 end date
-            CalendarContract.Instances.TITLE, // 3 title
-            CalendarContract.Instances.DESCRIPTION // 4 note
-        )
-
-        val projectionBeginIndex = 1
-        val projectionEndIndex = 2
-        val projectionTitleIndex = 3
-        val projectionDescriptionIndex = 4
-
-        // Get user email
-        val targetAccount = UserManager.userEmail
         // search calendar
-        val cur: Cursor?
-        val cr = MyApplication.instance.contentResolver
-        val uri = CalendarContract.Calendars.CONTENT_URI
-        // find
-        val selection = (FirebaseKey.PARENTHESES + CalendarContract.Calendars.ACCOUNT_NAME + FirebaseKey.CONJUNCTION
-                + CalendarContract.Calendars.ACCOUNT_TYPE + FirebaseKey.CONJUNCTION
-                + CalendarContract.Calendars.OWNER_ACCOUNT + FirebaseKey.QUESTION_MARK)
-        val selectionArgs =
-            arrayOf(targetAccount, FirebaseKey.MAIL_FORMAT, UserManager.userEmail)
-
+        val cur: Cursor? = contentResolver.query(contentUri, eventProjection, SELECTION, selectionArgs, null)
         // create list to store result
         val accountNameList = ArrayList<String>()
         val calendarIdList = ArrayList<String>()
 
-        cur = cr?.query(uri, eventProjection, selection, selectionArgs, null)
         if (cur != null) {
             while (cur.moveToNext()) {
-                val calendarId: String = cur.getString(projectionIdIndex)
-                val accountName: String = cur.getString(projectionAccountNameIndex)
-                val displayName: String = cur.getString(projectionDisplayNameIndex)
-                val ownerAccount: String = cur.getString(projectionOwnerAccountIndex)
-                val accessLevel = cur.getInt(projectionCalendarAccessLevel)
+                val calendarId = cur.getString(PROJECTION_ID_INDEX)
+                val accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
+                val displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX)
+                val ownerAccount = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)
+                val accessLevel = cur.getInt(PROJECTION_CALENDAR_ACCESS_LEVEL)
 
                 Logger.i(String.format("calendarId=%s", calendarId))
                 Logger.i(String.format("accountName=%s", accountName))
@@ -165,7 +140,6 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
 
                 // search event
                 val cur2: Cursor?
-                val cr2 = MyApplication.instance.contentResolver
                 val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
 
                 val selectionEvent = CalendarContract.Events.CALENDAR_ID + " = ?"
@@ -179,7 +153,7 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
                 val titleList = ArrayList<String>()
                 val noteList = ArrayList<String>()
 
-                    cur2 = cr2?.query(
+                    cur2 = contentResolver.query(
                         builder.build(),
                         instanceProjection,
                         selectionEvent,
@@ -187,11 +161,11 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
                     )
                     if (cur2 != null) {
                         while (cur2.moveToNext()) {
-                            val eventID = cur2.getString(projectionIdIndex)
-                            val beginVal = cur2.getLong(projectionBeginIndex)
-                            val endVal = cur2.getLong(projectionEndIndex)
-                            val title = cur2.getString(projectionTitleIndex)
-                            val note = cur2.getString(projectionDescriptionIndex)
+                            val eventID = cur2.getString(PROJECTION_ID_INDEX)
+                            val beginVal = cur2.getLong(PROJECTION_BEGIN_INDEX)
+                            val endVal = cur2.getLong(PROJECTION_END_INDEX)
+                            val title = cur2.getString(PROJECTION_TITLE_INDEX)
+                            val note = cur2.getString(PROJECTION_DESCRIPTION_INDEX)
                             // 取得所需的資料
                             Logger.i(String.format("eventID=%s", eventID))
                             Logger.i(String.format("beginVal=%s", beginVal))
@@ -208,7 +182,7 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
                             noteList.add(note)
 
                             val item = hashMapOf(
-                                DATE to transferTimestamp2String(SIMPLE_DATE_FORMAT, beginDate),
+                                DATE to beginDate,
                                 SET_DATE to FieldValue.serverTimestamp(),
                                 BEGIN_DATE to beginDate,
                                 END_DATE to endDate,

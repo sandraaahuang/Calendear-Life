@@ -130,23 +130,21 @@ class RemindersDetailFragment : Fragment() {
     }
 
     private fun showDatePicker(inputDate: TextView) {
-        val datePickerDialog = DatePickerDialog(
+        DatePickerDialog(
             this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
             { _, year, monthOfYear, dayOfMonth ->
                 inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
             }, DateFormat.year, DateFormat.monthOfYear, DateFormat.dayOfMonth
-        )
-        datePickerDialog.show()
+        ).show()
     }
 
     private fun showTimePicker(inputTime: TextView) {
-        val timePickerDialog = TimePickerDialog(
+        TimePickerDialog(
             this.context!!, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
             { _, hour, minute ->
                 inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
             }, DateFormat.hour, DateFormat.minute, false
-        )
-        timePickerDialog.show()
+        ).show()
     }
 }
 

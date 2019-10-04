@@ -1,14 +1,12 @@
 package com.sandra.calendearlife.calendar.detail
 
-import android.Manifest.permission.WRITE_CALENDAR
 import android.app.Application
 import android.content.ContentUris
-import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.provider.CalendarContract
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +20,9 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentResolver
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentValues
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.permissionWriteCheck
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.util.UserManager
 
@@ -54,7 +55,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     }
 
     //update item
-    fun updateItem(
+    fun updateEvent(
         documentID: String,
         calendarItem: HashMap<String, Any>,
         countdown: HashMap<String, Any>,
@@ -113,7 +114,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                     }
                 }
         }
-
     }
 
     private fun updateRemindersItem(
@@ -143,7 +143,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                     }
                 }
         }
-
     }
 
     private fun updateCalendarItem(
@@ -158,11 +157,10 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                 .document(queryDocumentSnapshot.id)
                 .update(calendarItem)
         }
-
     }
 
     //delete item
-    fun deleteItem(documentID: String) {
+    fun deleteEvent(documentID: String) {
         _isClicked.value = true
 
         UserManager.id?.let { userManagerId ->
@@ -185,7 +183,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                     }
                 }
         }
-
     }
 
     private fun deleteCountdownItem(queryDocumentSnapshot: QueryDocumentSnapshot) {
@@ -211,7 +208,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                     }
                 }
         }
-
     }
 
     private fun deleteRemindersItem(queryDocumentSnapshot: QueryDocumentSnapshot) {
@@ -237,7 +233,6 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                     }
                 }
         }
-
     }
 
     private fun deleteCalendarItem(queryDocumentSnapshot: QueryDocumentSnapshot) {
@@ -249,44 +244,39 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
                 .document(queryDocumentSnapshot.id)
                 .delete()
         }
-
     }
 
-    fun updateEvent(eventId: String, title: String, note: String, beginDate: Timestamp, endDate: Timestamp) {
+    fun updateGoogleEvent(eventId: String, title: String, note: String, beginDate: Timestamp, endDate: Timestamp) {
         _isClicked.value = true
 
-        val longEventId = java.lang.Long.parseLong(eventId)
-
         // update event
-        val contentResolver = MyApplication.instance.contentResolver
-        val values = ContentValues()
-        values.put(CalendarContract.Events.TITLE, title)
-        values.put(CalendarContract.Events.DESCRIPTION, note)
-        values.put(CalendarContract.Events.DTSTART, beginDate.seconds * 1000)
-        values.put(CalendarContract.Events.DTEND, endDate.seconds * 1000)
+        contentValues.put(CalendarContract.Events.TITLE, title)
+        contentValues.put(CalendarContract.Events.DESCRIPTION, note)
+        contentValues.put(CalendarContract.Events.DTSTART, beginDate.seconds * 1000)
+        contentValues.put(CalendarContract.Events.DTEND, endDate.seconds * 1000)
 
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            MyApplication.instance, WRITE_CALENDAR
-        )
+        if (permissionWriteCheck == PackageManager.PERMISSION_GRANTED) {
+            val uri = ContentUris.withAppendedId(
+                CalendarContract.Events.CONTENT_URI,
+                java.lang.Long.parseLong(eventId)
+            )
 
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, longEventId)
-            contentResolver.update(uri, values, null, null)
+            contentResolver.update(uri, contentValues, null, null)
+        } else {
+            Toast.makeText(MyApplication.instance, MyApplication.instance.getString(R.string.open_permission),
+                Toast.LENGTH_LONG).show()
         }
     }
 
-    fun deleteEvent(eventId: String) {
+    fun deleteGoogleEvent(eventId: String) {
         _isClicked.value = true
 
-        val longEventId = java.lang.Long.parseLong(eventId)
+        if (permissionWriteCheck == PackageManager.PERMISSION_GRANTED) {
+            val uri = ContentUris.withAppendedId(
+                CalendarContract.Events.CONTENT_URI,
+                java.lang.Long.parseLong(eventId)
+            )
 
-        val contentResolver = MyApplication.instance.contentResolver
-
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            MyApplication.instance, WRITE_CALENDAR
-        )
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            val uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, longEventId)
             contentResolver.delete(uri, null, null)
         }
     }
@@ -303,11 +293,11 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
         }
     }
 
-    private fun showDatePicker(clickText: TextView) {
-        _showDatePicker.value = clickText
+    private fun showDatePicker(clickedText: TextView) {
+        _showDatePicker.value = clickedText
     }
 
-    private fun showTimePicker(clickText: TextView) {
-        _showTimePicker.value = clickText
+    private fun showTimePicker(clickedText: TextView) {
+        _showTimePicker.value = clickedText
     }
 }

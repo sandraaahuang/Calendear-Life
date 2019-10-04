@@ -5,28 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.sandra.calendearlife.addCalendarItem
-import com.sandra.calendearlife.constant.DATE_TIME_FORMAT
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
+import com.sandra.calendearlife.getCalendarItemFromFirebase
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.END_DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_LOCATION
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_ALL_DAY
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.LOCATION
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
-import com.sandra.calendearlife.constant.transferTimestamp2String
 import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.util.UserManager
 
@@ -73,7 +55,7 @@ class CalenderMonthViewModel : ViewModel() {
                     val calendarItem = ArrayList<Calendar>()
                     for (calendar in documents) {
 
-                        addCalendarItem(calendar, calendarItem)
+                        getCalendarItemFromFirebase(calendar, calendarItem)
 
                     }
                     _liveCalendar.value = calendarItem
@@ -93,7 +75,7 @@ class CalenderMonthViewModel : ViewModel() {
                     val calendarItem = ArrayList<Calendar>()
                     for (calendar in documents) {
 
-                        addCalendarItem(calendar, calendarItem)
+                        getCalendarItemFromFirebase(calendar, calendarItem)
 
                     }
                     _liveAllCalendar.value = calendarItem

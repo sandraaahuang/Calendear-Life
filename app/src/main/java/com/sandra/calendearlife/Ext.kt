@@ -10,7 +10,7 @@ import com.sandra.calendearlife.data.Calendar
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 
-fun addCalendarItem(calendar: QueryDocumentSnapshot, calendarItem: ArrayList<Calendar>) {
+fun getCalendarItemFromFirebase(calendar: QueryDocumentSnapshot, calendarItem: ArrayList<Calendar>) {
     calendarItem.add(Calendar(
         calendar.data[FirebaseKey.COLOR].toString(),
         transferTimestamp2String(SIMPLE_DATE_FORMAT, calendar.data[FirebaseKey.DATE] as Timestamp),
@@ -30,7 +30,7 @@ fun addCalendarItem(calendar: QueryDocumentSnapshot, calendarItem: ArrayList<Cal
     ))
 }
 
-fun addCountdownItem(countdown: QueryDocumentSnapshot, countdownItem: ArrayList<Countdown>) {
+fun getCountdownItemFromFirebase(countdown: QueryDocumentSnapshot, countdownItem: ArrayList<Countdown>) {
     countdownItem.add(Countdown(
         transferTimestamp2String(SIMPLE_DATE_FORMAT, countdown.data[FirebaseKey.SET_DATE] as Timestamp),
         countdown.data[FirebaseKey.TITLE].toString(),
@@ -42,7 +42,7 @@ fun addCountdownItem(countdown: QueryDocumentSnapshot, countdownItem: ArrayList<
     ))
 }
 
-fun addRemindersItem(reminder: QueryDocumentSnapshot, remindersItem: ArrayList<Reminders>) {
+fun getRemindersItemFromFirebase(reminder: QueryDocumentSnapshot, remindersItem: ArrayList<Reminders>) {
     remindersItem.add(
         Reminders(
             transferTimestamp2String(SIMPLE_DATE_FORMAT, reminder.data[FirebaseKey.SET_DATE] as Timestamp),

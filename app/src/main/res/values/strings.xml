@@ -91,4 +91,5 @@
     <string name="date_b">Date</string>
     <string name="until">Until......</string>
     <string name="target_date__">Target Date：</string>
+    <string name="open_permission">Please open the permission of Calendar in settings</string>
 </resources>

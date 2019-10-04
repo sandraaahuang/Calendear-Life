@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.sandra.calendearlife.addCountdownItem
-import com.sandra.calendearlife.addRemindersItem
+import com.sandra.calendearlife.getCountdownItemFromFirebase
+import com.sandra.calendearlife.getRemindersItemFromFirebase
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
@@ -75,7 +75,7 @@ class HomeViewModel : ViewModel() {
 
                     for (countdown in countdownDocuments) {
 
-                        addCountdownItem(countdown, countdownItem)
+                        getCountdownItemFromFirebase(countdown, countdownItem)
 
                     }
 
@@ -99,7 +99,7 @@ class HomeViewModel : ViewModel() {
 
                     for (reminder in documents) {
 
-                        addRemindersItem(reminder, remindersItem)
+                        getRemindersItemFromFirebase(reminder, remindersItem)
 
                     }
                     _liveReminders.value = remindersItem
