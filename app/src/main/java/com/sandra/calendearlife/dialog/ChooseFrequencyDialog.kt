@@ -54,7 +54,7 @@ class ChooseFrequencyDialog: AppCompatDialogFragment() {
         }
         else {
             val intent = Intent()
-            intent.putExtra(RESPONSE_EVALUATE, frequency.toString())
+            intent.putExtra(RESPONSE_EVALUATE, frequency)
             targetFragment?.onActivityResult(REQUEST_EVALUATE, Activity.RESULT_OK,intent)
         }
     }

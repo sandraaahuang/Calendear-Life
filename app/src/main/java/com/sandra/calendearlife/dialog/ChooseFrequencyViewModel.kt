@@ -23,7 +23,7 @@ class ChooseFrequencyViewModel : ViewModel() {
         }
     }
 
-    fun chooseFrequency(frequency: String) {
+    private fun chooseFrequency(frequency: String) {
         _chooseFrequency.value = frequency
     }
 

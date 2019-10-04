@@ -25,17 +25,18 @@ class PreviewViewModel : ViewModel() {
     )
 
     //get all data to determine if the user is already existed
-    fun getItem() {
+    fun insertUserData2Firebase() {
         db.collection(DATA)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
 
                     if (document.id != UserManager.id) {
-                        // to add the user info first
 
+                        // to add the user info first
                         UserManager.id?.let {
-                            db.collection(DATA).document(it)
+                            db.collection(DATA)
+                                .document(it)
                                 .set(userData)
                                 .addOnSuccessListener { documentReference ->
                                     Logger.d("DocumentSnapshot added with ID: $documentReference")

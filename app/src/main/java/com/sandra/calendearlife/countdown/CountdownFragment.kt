@@ -62,12 +62,15 @@ class CountdownFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, SHOW)
+            fragmentManager?.let {
+                DiscardDialog().show(it, SHOW)
+            }
         }
 
         binding.saveText.setOnClickListener {
 
-            if ("${binding.countdownTitleInput.text}" == "") {
+            if (binding.countdownTitleInput.text.isNullOrEmpty()) {
+
                 binding.countdownTitleInput.setHintTextColor(resources.getColor(R.color.delete_red))
             } else {
 
@@ -96,7 +99,9 @@ class CountdownFragment : Fragment() {
                 )
 
                 viewModel.writeItem(calendar, countdown)
-                Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
+                view?.let {
+                    Snackbar.make(it, getString(R.string.save_message), Snackbar.LENGTH_LONG).show()
+                }
             }
         }
 
@@ -122,12 +127,13 @@ class CountdownFragment : Fragment() {
     }
 
     private fun showDatePicker(inputDate: TextView) {
-        val datePickerDialog = DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-            { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
-            }, year, monthOfYear, dayOfMonth
-        )
-        datePickerDialog.show()
+        context?.let {
+            DatePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+                { _, year, monthOfYear, dayOfMonth ->
+                    inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
+                }, year, monthOfYear, dayOfMonth
+            ).show()
+        }
     }
 }

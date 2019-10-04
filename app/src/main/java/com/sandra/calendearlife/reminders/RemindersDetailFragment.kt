@@ -22,12 +22,8 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentRemindersDetailBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class RemindersDetailFragment : Fragment() {
@@ -36,14 +32,13 @@ class RemindersDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = FragmentRemindersDetailBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-
-        val application = requireNotNull(activity).application
-        val reminders = RemindersDetailFragmentArgs.fromBundle(arguments!!).remindersProperty
-        val viewModelFactory = DetailViewModelFactory(reminders, application)
+        val remindersProperty = RemindersDetailFragmentArgs.fromBundle(arguments!!).remindersProperty
+        val viewModelFactory = DetailViewModelFactory(remindersProperty, requireNotNull(activity).application)
         val viewModel = ViewModelProviders.of(
             this, viewModelFactory).get(RemindersDetailViewModel::class.java)
+
+        binding = FragmentRemindersDetailBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
         binding.switchRemindDay.setOnCheckedChangeListener { _, isChecked ->
@@ -73,14 +68,21 @@ class RemindersDetailFragment : Fragment() {
                     SIMPLE_DATE_FORMAT, "${binding.remindDate.text}" )
             )
 
-            viewModel.updateItem(updateItem, calendarItem, reminders.documentID)
+            viewModel.updateItem(updateItem, calendarItem, remindersProperty.documentID)
 
-            Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            view?.let {
+                Snackbar.make(it, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            }
+
         }
 
         binding.deleteButton2.setOnClickListener {
-            viewModel.deleteItem(reminders.documentID)
-            Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            viewModel.deleteItem(remindersProperty.documentID)
+
+            view?.let {
+                Snackbar.make(it, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            }
+
         }
 
         viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
@@ -97,14 +99,14 @@ class RemindersDetailFragment : Fragment() {
             }
         })
 
-        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedText ->
+            clickedText?.let {
                 showDatePicker(it)
             }
         })
 
-        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer {
-            it?.let {
+        viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer { clickedText ->
+            clickedText?.let {
                 showTimePicker(it)
             }
         })

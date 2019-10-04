@@ -110,7 +110,7 @@ class HomeViewModel : ViewModel() {
     }
 
     // update isChecked to true when user click the button
-    fun updateCheckedReminder(documentID: String) {
+    fun updateCheckedReminders(documentID: String) {
 
         UserManager.id?.let {
             db.collection(DATA)
@@ -187,7 +187,7 @@ class HomeViewModel : ViewModel() {
     }
 
     // delete item due to swipe specific item
-    fun deleteItem(title: String) {
+    fun swipe2deleteRemindersItem(title: String) {
 
         UserManager.id?.let {
             db.collection(DATA)

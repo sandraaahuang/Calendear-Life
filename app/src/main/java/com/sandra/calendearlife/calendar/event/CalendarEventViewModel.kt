@@ -39,6 +39,8 @@ import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJEC
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ID_INDEX
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_OWNER_ACCOUNT_INDEX
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.SELECTION
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentValues
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.permissionWriteCheck
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.selectionArgs
 import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
@@ -268,7 +270,7 @@ class CalendarEventViewModel : ViewModel() {
         val calendarIdList = ArrayList<String>()
 
         // give permission to read
-        if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
+        if (permissionWriteCheck == PackageManager.PERMISSION_GRANTED) {
             cur = contentResolver.query(contentUri, eventProjection, SELECTION, selectionArgs, null)
             cur?.let {
                 while (cur.moveToNext()) {
@@ -291,21 +293,24 @@ class CalendarEventViewModel : ViewModel() {
                     Logger.d("accountNameList = $accountNameList, calendarIdList = $calendarIdList")
 
                     // add event
-                    ContentValues().put(CalendarContract.Events.DTSTART, googleBeginDate.seconds * 1000)
-                    ContentValues().put(
+                    val values = ContentValues()
+                    values.put(CalendarContract.Events.DTSTART, googleBeginDate.seconds * 1000)
+                    values.put(
                         CalendarContract.Events.DTEND, googleEndDate.seconds * 1000
                     )
-                    ContentValues().put(CalendarContract.Events.TITLE, googleTitle)
-                    ContentValues().put(CalendarContract.Events.DESCRIPTION, googleNote)
-                    ContentValues().put(CalendarContract.Events.CALENDAR_ID, calendarId)
-                    ContentValues().put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
+                    values.put(CalendarContract.Events.TITLE, googleTitle)
+                    values.put(CalendarContract.Events.DESCRIPTION, googleNote)
+                    values.put(CalendarContract.Events.CALENDAR_ID, calendarId)
+                    values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
 
-                    if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
+                    if (permissionWriteCheck == PackageManager.PERMISSION_GRANTED) {
                         contentResolver.insert(
-                            CalendarContract.Events.CONTENT_URI, ContentValues())?.let {
+                            CalendarContract.Events.CONTENT_URI, values
+                        )?.let {
 
-                            it.lastPathSegment?.let { lastPathSegment ->
-                                val eventID = java.lang.Long.parseLong(lastPathSegment).toString()
+                            it.lastPathSegment?.let { lastPathSegmentOfEventId ->
+
+                                val eventID = java.lang.Long.parseLong(lastPathSegmentOfEventId).toString()
 
                                 // get all data from user at first
                                 UserManager.id?.let { userManagerId ->
@@ -338,8 +343,9 @@ class CalendarEventViewModel : ViewModel() {
                                         }
                                 }
                             }
-
                         }
+
+
                     }
 
                 }
@@ -348,6 +354,7 @@ class CalendarEventViewModel : ViewModel() {
             }
         } else {
             _hasPermission.value = true
+            _isClicked.value = null
         }
     }
 

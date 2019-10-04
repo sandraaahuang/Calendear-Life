@@ -252,13 +252,12 @@ class CalendarEventFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_EVALUATE) {
-            val evaluate = data?.getStringExtra(RESPONSE_EVALUATE)
 
-            binding.repeatChoose.text = evaluate
-            val intent = Intent()
-            intent.putExtra(RESPONSE, evaluate)
-            activity?.setResult(Activity.RESULT_OK, intent)
+            binding.repeatChoose.text = data?.getStringExtra(RESPONSE_EVALUATE)
+            Intent().putExtra(RESPONSE, data?.getStringExtra(RESPONSE_EVALUATE))
+            activity?.setResult(Activity.RESULT_OK, Intent())
         } else {
+
             Logger.d("don't have intent")
         }
     }

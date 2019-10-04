@@ -18,7 +18,6 @@ class SwipeToDeleteCallback(private val adapter: HomeRemindersAdapter, val viewM
 
     private val background: ColorDrawable = ColorDrawable(MyApplication.instance.getColor(R.color.delete_red))
 
-
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -29,10 +28,9 @@ class SwipeToDeleteCallback(private val adapter: HomeRemindersAdapter, val viewM
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        viewModel.remindersItem.removeAt(position)
-        val title = viewHolder.itemView.remindersTitle.text.toString()
-        viewModel.deleteItem(title)
+
+        viewModel.remindersItem.removeAt(viewHolder.adapterPosition)
+        viewModel.swipe2deleteRemindersItem(viewHolder.itemView.remindersTitle.text.toString())
         adapter.notifyDataSetChanged()
     }
 
@@ -46,35 +44,53 @@ class SwipeToDeleteCallback(private val adapter: HomeRemindersAdapter, val viewM
         isCurrentlyActive: Boolean
     ) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-        icon = MyApplication.instance.getDrawable(R.drawable.icon_delete)!!
-        val itemView = viewHolder.itemView
-        val iconMargin = (itemView.height - icon.intrinsicHeight) / 2
-        val iconTop = itemView.top + (itemView.height - icon.intrinsicHeight) / 2
+        MyApplication.instance.getDrawable(R.drawable.icon_delete)?.let {
+            icon = it
+        }
+        val iconMargin = (viewHolder.itemView.height - icon.intrinsicHeight) / 2
+        val iconTop = viewHolder.itemView.top + (viewHolder.itemView.height - icon.intrinsicHeight) / 2
         val iconBottom = iconTop + icon.intrinsicHeight
         val backgroundCornerOffset = 20
 
-        if (dX > 0) { // Swiping to the right
-            icon = MyApplication.instance.getDrawable(R.drawable.icon_delete)!!
-            val iconLeft = itemView.left + iconMargin + icon.intrinsicWidth
-            val iconRight = itemView.left + iconMargin
-            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+        when {
+            dX > 0 -> { // Swiping to the right
 
-            background.setBounds(
-                itemView.left, itemView.top,
-                itemView.left + dX.toInt() + backgroundCornerOffset,
-                itemView.bottom
-            )
-        } else if (dX < 0) { // Swiping to the left
-            val iconLeft = itemView.right - iconMargin - icon.intrinsicWidth
-            val iconRight = itemView.right - iconMargin
-            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                MyApplication.instance.getDrawable(R.drawable.icon_delete)?.let {
+                    icon = it
+                }
 
-            background.setBounds(
-                itemView.right + dX.toInt() - backgroundCornerOffset,
-                itemView.top, itemView.right, itemView.bottom
-            )
-        } else { // view is unSwiped
-            background.setBounds(0, 0, 0, 0)
+                icon.setBounds(
+                    viewHolder.itemView.left + iconMargin + icon.intrinsicWidth,
+                    iconTop,
+                    viewHolder.itemView.left + iconMargin,
+                    iconBottom
+                )
+
+                background.setBounds(
+                    viewHolder.itemView.left,
+                    viewHolder.itemView.top,
+                    viewHolder.itemView.left + dX.toInt() + backgroundCornerOffset,
+                    viewHolder.itemView.bottom
+                )
+            }
+            dX < 0 -> { // Swiping to the left
+
+                icon.setBounds(
+                    viewHolder.itemView.right - iconMargin - icon.intrinsicWidth,
+                    iconTop,
+                    viewHolder.itemView.right - iconMargin,
+                    iconBottom
+                )
+
+                background.setBounds(
+                    viewHolder.itemView.right + dX.toInt() - backgroundCornerOffset,
+                    viewHolder.itemView.top,
+                    viewHolder.itemView.right,
+                    viewHolder.itemView.bottom
+                )
+            }
+            else -> // view is unSwiped
+                background.setBounds(0, 0, 0, 0)
         }
 
         background.draw(c)
