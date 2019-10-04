@@ -1,14 +1,12 @@
 package com.sandra.calendearlife.calendar.event
 
-import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.provider.CalendarContract
-import android.provider.CalendarContract.Calendars
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,17 +22,24 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_CAL
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_COUNTDOWN_CAL
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_GOOGLE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COLOR_REMIND_CAL
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.CONJUNCTION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.MAIL_FORMAT
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.PARENTHESES
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.QUESTION_MARK
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentResolver
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentUri
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.eventProjection
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.permissionReadCheck
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ACCOUNT_NAME_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_CALENDAR_ACCESS_LEVEL
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_DISPLAY_NAME_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ID_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_OWNER_ACCOUNT_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.SELECTION
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.selectionArgs
 import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 import java.util.*
@@ -244,57 +249,29 @@ class CalendarEventViewModel : ViewModel() {
     }
 
     fun writeGoogle(
-
-        gBeginDate: Timestamp, gEndDate: Timestamp, gNote: String, gTitle: String,
+        googleBeginDate: Timestamp, googleEndDate: Timestamp,
+        googleNote: String, googleTitle: String,
         item: Any, countdown: Any, reminders: Any
     ) {
         _isClicked.value = true
-        val eventProjection = arrayOf(
-            Calendars._ID,
-            Calendars.ACCOUNT_NAME,
-            Calendars.CALENDAR_DISPLAY_NAME,
-            Calendars.OWNER_ACCOUNT,
-            Calendars.CALENDAR_ACCESS_LEVEL
-        )// 4 access level
 
-        val projectionIdIndex = 0
-        val projectionAccountNameIndex = 1
-        val projectionDisplayNameIndex = 2
-        val projectionOwnerAccountIndex = 3
-        val projectionCalendarAccessLevel = 4
-
-        // Get user email
-        val targetAccount = UserManager.userEmail
         // search calendar
         val cur: Cursor?
-        val cr = MyApplication.instance.contentResolver
-        val uri = Calendars.CONTENT_URI
-        // find
-        val selection = (PARENTHESES + Calendars.ACCOUNT_NAME + CONJUNCTION
-                + Calendars.ACCOUNT_TYPE + CONJUNCTION
-                + Calendars.OWNER_ACCOUNT + QUESTION_MARK)
-        val selectionArgs =
-            arrayOf(targetAccount, MAIL_FORMAT, UserManager.userEmail)
 
-        //check permission
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            MyApplication.instance,
-            Manifest.permission.READ_CALENDAR
-        )
         // create list to store result
         val accountNameList = ArrayList<String>()
         val calendarIdList = ArrayList<String>()
 
         // give permission to read
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            cur = cr?.query(uri, eventProjection, selection, selectionArgs, null)
+        if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
+            cur = contentResolver.query(contentUri, eventProjection, SELECTION, selectionArgs, null)
             cur?.let {
                 while (cur.moveToNext()) {
-                    val calendarId: String = cur.getString(projectionIdIndex)
-                    val accountName: String = cur.getString(projectionAccountNameIndex)
-                    val displayName: String = cur.getString(projectionDisplayNameIndex)
-                    val ownerAccount: String = cur.getString(projectionOwnerAccountIndex)
-                    val accessLevel = cur.getInt(projectionCalendarAccessLevel)
+                    val calendarId = cur.getString(PROJECTION_ID_INDEX)
+                    val accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
+                    val displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX)
+                    val ownerAccount = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)
+                    val accessLevel = cur.getInt(PROJECTION_CALENDAR_ACCESS_LEVEL)
 
                     Logger.i(String.format("calendarId=%s", calendarId))
                     Logger.i(String.format("accountName=%s", accountName))
@@ -309,20 +286,19 @@ class CalendarEventViewModel : ViewModel() {
                     Logger.d("accountNameList = $accountNameList, calendarIdList = $calendarIdList")
 
                     // add event
-                    val contentResolver = MyApplication.instance.contentResolver
-                    ContentValues().put(CalendarContract.Events.DTSTART, gBeginDate.seconds * 1000)
+                    ContentValues().put(CalendarContract.Events.DTSTART, googleBeginDate.seconds * 1000)
                     ContentValues().put(
-                        CalendarContract.Events.DTEND, gEndDate.seconds * 1000
+                        CalendarContract.Events.DTEND, googleEndDate.seconds * 1000
                     )
-                    ContentValues().put(CalendarContract.Events.TITLE, gTitle)
-                    ContentValues().put(CalendarContract.Events.DESCRIPTION, gNote)
+                    ContentValues().put(CalendarContract.Events.TITLE, googleTitle)
+                    ContentValues().put(CalendarContract.Events.DESCRIPTION, googleNote)
                     ContentValues().put(CalendarContract.Events.CALENDAR_ID, calendarId)
                     ContentValues().put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().displayName)
 
-                    if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                        val contentUri = contentResolver?.insert(CalendarContract.Events.CONTENT_URI, ContentValues())
-                        // get Event ID
-                        contentUri?.let {
+                    if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
+                        contentResolver.insert(
+                            CalendarContract.Events.CONTENT_URI, ContentValues())?.let {
+
                             it.lastPathSegment?.let { lastPathSegment ->
                                 val eventID = java.lang.Long.parseLong(lastPathSegment).toString()
 
@@ -365,6 +341,10 @@ class CalendarEventViewModel : ViewModel() {
 
                 cur.close()
             }
+        } else {
+            Toast.makeText(
+                MyApplication.instance, MyApplication.instance.getString(R.string.open_permission),
+                Toast.LENGTH_LONG).show()
         }
     }
 

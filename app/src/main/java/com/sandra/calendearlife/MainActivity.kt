@@ -26,7 +26,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.databinding.DataBindingUtil
@@ -40,6 +39,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sandra.calendearlife.constant.*
 import com.sandra.calendearlife.constant.Const.Companion.DOES_NOT_REPEAT
 import com.sandra.calendearlife.constant.Const.Companion.EVERY_DAY
 import com.sandra.calendearlife.constant.Const.Companion.EVERY_MONTH
@@ -48,24 +48,32 @@ import com.sandra.calendearlife.constant.Const.Companion.EVERY_YEAR
 import com.sandra.calendearlife.constant.Const.Companion.TYPE_CALENDAR
 import com.sandra.calendearlife.constant.Const.Companion.TYPE_HOME
 import com.sandra.calendearlife.constant.Const.Companion.putType
-import com.sandra.calendearlife.constant.FirebaseKey
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.CONJUNCTION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.MAIL_FORMAT
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.PARENTHESES
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.QUESTION_MARK
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
-import com.sandra.calendearlife.constant.SharedPreferenceKey
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ACCOUNT_NAME_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_BEGIN_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_CALENDAR_ACCESS_LEVEL
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_DESCRIPTION_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_DISPLAY_NAME_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_END_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ID_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_OWNER_ACCOUNT_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_TITLE_INDEX
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.SELECTION
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentUri
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.eventProjection
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.instanceProjection
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.permissionReadCheck
+import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.selectionArgs
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ADDFRAGMENT
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DARK
@@ -84,7 +92,6 @@ import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.SETTINGS
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.STATUS
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.TURN
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ZH
-import com.sandra.calendearlife.constant.transferTimestamp2String
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.data.Reminders
 import com.sandra.calendearlife.databinding.ActivityMainBinding
@@ -343,66 +350,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun queryCalendar() {
-        val eventProjection = arrayOf(
-            CalendarContract.Calendars._ID, // 0 calendar id
-            CalendarContract.Calendars.ACCOUNT_NAME, // 1 account name
-            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, // 2 display name
-            CalendarContract.Calendars.OWNER_ACCOUNT, // 3 owner account
-            CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL
-        )// 4 access level
 
-        val projectionIdIndex = 0
-        val projectionAccountNameIndex = 1
-        val projectionDisplayNameIndex = 2
-        val projectionOwnerAccountIndex = 3
-        val projectionCalendarAccessLevel = 4
-
-        // event data
-        val instanceProjection = arrayOf(
-            CalendarContract.Instances.EVENT_ID, // 0 event id
-            CalendarContract.Instances.BEGIN, // 1 begin date
-            CalendarContract.Instances.END, // 2 end date
-            CalendarContract.Instances.TITLE, // 3 title
-            CalendarContract.Instances.DESCRIPTION // 4 note
-        )
-
-        val projectionBeginIndex = 1
-        val projectionEndIndex = 2
-        val projectionTitleIndex = 3
-        val projectionDescriptionIndex = 4
-
-        // Get user email
-        val targetAccount = UserManager.userEmail
         // search calendar
         val cur: Cursor?
-        val cr = MyApplication.instance.contentResolver
-        val uri = CalendarContract.Calendars.CONTENT_URI
-        // find
-        val selection = (PARENTHESES + CalendarContract.Calendars.ACCOUNT_NAME + CONJUNCTION
-                + CalendarContract.Calendars.ACCOUNT_TYPE + CONJUNCTION
-                + CalendarContract.Calendars.OWNER_ACCOUNT + QUESTION_MARK)
-        val selectionArgs =
-            arrayOf(targetAccount, MAIL_FORMAT, UserManager.userEmail)
 
-        //check permission
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            MyApplication.instance,
-            Manifest.permission.READ_CALENDAR
-        )
         // create list to store result
         val accountNameList = java.util.ArrayList<String>()
         val calendarIdList = java.util.ArrayList<String>()
 
         // give permission to read
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            cur = cr?.query(uri, eventProjection, selection, selectionArgs, null)
+        if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
+            cur = contentResolver?.query(contentUri, eventProjection, SELECTION, selectionArgs, null)
             if (cur != null) {
                 while (cur.moveToNext()) {
-                    val calendarId: String = cur.getString(projectionIdIndex)
-                    val accountName: String = cur.getString(projectionAccountNameIndex)
-                    val displayName: String = cur.getString(projectionDisplayNameIndex)
-                    val ownerAccount: String = cur.getString(projectionOwnerAccountIndex)
-                    val accessLevel = cur.getInt(projectionCalendarAccessLevel)
+                    val calendarId: String = cur.getString(PROJECTION_ID_INDEX)
+                    val accountName: String = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX)
+                    val displayName: String = cur.getString(PROJECTION_DISPLAY_NAME_INDEX)
+                    val ownerAccount: String = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX)
+                    val accessLevel = cur.getInt(PROJECTION_CALENDAR_ACCESS_LEVEL)
 
                     Logger.i(String.format("calendarId=%s", calendarId))
                     Logger.i(String.format("accountName=%s", accountName))
@@ -422,7 +387,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     // search event
                     val cur2: Cursor?
-                    val cr2 = MyApplication.instance.contentResolver
+
                     val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
 
                     val selectionEvent = CalendarContract.Events.CALENDAR_ID + " = ?"
@@ -437,8 +402,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val noteList = java.util.ArrayList<String>()
 
 
-                    if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                        cur2 = cr2?.query(
+                    if (permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
+                        cur2 = contentResolver?.query(
                             builder.build(),
                             instanceProjection,
                             selectionEvent,
@@ -446,11 +411,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         )
                         if (cur2 != null) {
                             while (cur2.moveToNext()) {
-                                val eventID = cur2.getString(projectionIdIndex)
-                                val beginVal = cur2.getLong(projectionBeginIndex)
-                                val endVal = cur2.getLong(projectionEndIndex)
-                                val title = cur2.getString(projectionTitleIndex)
-                                val note = cur2.getString(projectionDescriptionIndex)
+                                val eventID = cur2.getString(PROJECTION_ID_INDEX)
+                                val beginVal = cur2.getLong(PROJECTION_BEGIN_INDEX)
+                                val endVal = cur2.getLong(PROJECTION_END_INDEX)
+                                val title = cur2.getString(PROJECTION_TITLE_INDEX)
+                                val note = cur2.getString(PROJECTION_DESCRIPTION_INDEX)
                                 // 取得所需的資料
                                 Logger.i(String.format("eventID=%s", eventID))
                                 Logger.i(String.format("beginVal=%s", beginVal))
@@ -467,7 +432,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 noteList.add(note)
 
                                 val item = hashMapOf(
-                                    FirebaseKey.DATE to transferTimestamp2String(SIMPLE_DATE_FORMAT, beginDate),
+                                    FirebaseKey.DATE to beginDate,
                                     SET_DATE to FieldValue.serverTimestamp(),
                                     FirebaseKey.BEGIN_DATE to beginDate,
                                     FirebaseKey.END_DATE to endDate,
@@ -743,7 +708,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
                                     for (countdown in countdownDocuments) {
 
-                                        addCountdownItem(countdown, countdownItem)
+                                        getCountdownItemFromFirebase(countdown, countdownItem)
                                     }
 
                                     for ((index, value) in countdownItem.withIndex()) {
@@ -818,7 +783,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
                                     for (reminder in remindersDocuments) {
 
-                                        addRemindersItem(reminder, remindersItem)
+                                        getRemindersItemFromFirebase(reminder, remindersItem)
                                     }
 
                                     for ((index, value) in remindersItem.withIndex()) {
@@ -880,7 +845,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
                         for (reminder in remindersDocuments) {
 
-                            addRemindersItem(reminder, remindersItem)
+                            getRemindersItemFromFirebase(reminder, remindersItem)
                         }
 
                         for ((index, value) in remindersItem.withIndex()) {
@@ -939,7 +904,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
                         for (reminder in remindersDocuments) {
 
-                            addRemindersItem(reminder, remindersItem)
+                            getRemindersItemFromFirebase(reminder, remindersItem)
                         }
 
                         for ((index, value) in remindersItem.withIndex()) {
@@ -1012,7 +977,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
                                     for (reminder in remindersDocuments) {
 
-                                        addRemindersItem(reminder, remindersItem)
+                                        getRemindersItemFromFirebase(reminder, remindersItem)
                                     }
 
                                     for ((index, value) in remindersItem.withIndex()) {
@@ -1088,7 +1053,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
                                     for (reminder in remindersDocuments) {
 
-                                        addRemindersItem(reminder, remindersItem)
+                                        getRemindersItemFromFirebase(reminder, remindersItem)
                                     }
 
                                     for ((index, value) in remindersItem.withIndex()) {

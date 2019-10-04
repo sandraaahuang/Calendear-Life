@@ -50,63 +50,59 @@ class CalendarDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = FragmentCalendarDetailBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-
-        val application = requireNotNull(activity).application
-        val calendar = CalendarDetailFragmentArgs.fromBundle(arguments!!).calendar
-        val viewModelFactory = CalendarDetailFactory(calendar, application)
+        val calendarArguments = CalendarDetailFragmentArgs.fromBundle(arguments!!).calendar
+        val viewModelFactory = CalendarDetailFactory(calendarArguments, requireNotNull(activity).application)
         val viewModel = ViewModelProviders.of(
             this, viewModelFactory
         ).get(CalendarDetailViewModel::class.java)
+
+        binding = FragmentCalendarDetailBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        when (calendar.color) {
-            COLOR_GOOGLE -> {
-                if (calendar.isAllDay) {
-                    isAllDayVisibility()
+        when (calendarArguments.color) {
+
+            COLOR_GOOGLE, COLOR_CAL -> {
+                if (calendarArguments.isAllDay) {
+                    isAllDayEvent()
                 } else {
-                    isNotAllDayVisibility()
+                    isNotAllDayEvent()
                 }
             }
-            COLOR_CAL -> {
-                if (calendar.isAllDay) {
-                    isAllDayVisibility()
-                } else {
-                    isNotAllDayVisibility()
-                }
-            }
+
             COLOR_REMIND_CAL -> {
-                remindLayoutVisibility()
-                if (calendar.isAllDay) {
-                    isAllDayVisibility()
+                showRemindLayout()
+                if (calendarArguments.isAllDay) {
+                    isAllDayEvent()
                 } else {
-                    isNotAllDayVisibility()
+                    isNotAllDayEvent()
                 }
             }
+
             COLOR_ALL -> {
-                remindLayoutVisibility()
-                countdownVisibility()
-                if (calendar.isAllDay) {
-                    isAllDayVisibility()
+                showRemindLayout()
+                showCountdownLayout()
+                if (calendarArguments.isAllDay) {
+                    isAllDayEvent()
                 } else {
-                    isNotAllDayVisibility()
+                    isNotAllDayEvent()
                 }
             }
+
             COLOR_COUNTDOWN_CAL -> {
-                countdownVisibility()
-                if (calendar.isAllDay) {
-                    isAllDayVisibility()
+                showCountdownLayout()
+                if (calendarArguments.isAllDay) {
+                    isAllDayEvent()
                 } else {
-                    isNotAllDayVisibility()
+                    isNotAllDayEvent()
                 }
             }
-            COLOR_REMIND -> {
-                remindLayoutVisibility()
-            }
-            COLOR_COUNTDOWN -> {
-                countdownVisibility()
-            }
+
+            COLOR_REMIND -> showRemindLayout()
+
+
+            COLOR_COUNTDOWN -> showCountdownLayout()
+
         }
 
         viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
@@ -122,15 +118,20 @@ class CalendarDetailFragment : Fragment() {
         })
 
         binding.deleteButton.setOnClickListener {
-            viewModel.deleteItem(calendar.documentID!!)
+            calendarArguments.documentID?.let {
+                viewModel.deleteEvent(it)
 
-            if (calendar.fromGoogle) {
-                viewModel.deleteEvent(calendar.documentID)
-            } else {
-                Logger.d("is not google item")
+                if (calendarArguments.fromGoogle) {
+                    viewModel.deleteGoogleEvent(it)
+                } else {
+                    Logger.d("is not google item")
+                }
             }
 
-            Snackbar.make(this.view!!, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            view?.let {
+                Snackbar.make(it, getString(R.string.delete_message), Snackbar.LENGTH_LONG).show()
+            }
+
         }
 
         binding.saveButton.setOnClickListener {
@@ -142,26 +143,22 @@ class CalendarDetailFragment : Fragment() {
 
             val updateCalendar: HashMap<String, Any>
 
-            var updateRemind = hashMapOf(
+            val updateRemind = hashMapOf(
                 TITLE to "${binding.detailTitleInput.text}".trim(),
                 NOTE to "${binding.noteInput.text}".trim(),
                 REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
             )
 
-            var updateCountdown = hashMapOf(
+            val updateCountdown = hashMapOf(
                 TITLE to "${binding.detailTitleInput.text}".trim(),
                 NOTE to "${binding.noteInput.text}".trim(),
                 TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
             )
 
-            when (calendar.color) {
+            when (calendarArguments.color) {
 
                 COLOR_REMIND -> {
-                    updateRemind = hashMapOf(
-                        TITLE to "${binding.detailTitleInput.text}".trim(),
-                        NOTE to "${binding.noteInput.text}".trim(),
-                        REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
-                    )
+//
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, remindDate),
                         BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
@@ -169,16 +166,13 @@ class CalendarDetailFragment : Fragment() {
                         TITLE to "${binding.detailTitleInput.text}".trim(),
                         NOTE to "${binding.noteInput.text}".trim()
                     )
-
-                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                    calendarArguments.documentID?.let {
+                        viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
+                    }
                 }
 
                 COLOR_COUNTDOWN -> {
-                    updateCountdown = hashMapOf(
-                        TITLE to "${binding.detailTitleInput.text}".trim(),
-                        NOTE to "${binding.noteInput.text}".trim(),
-                        TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
-                    )
+
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
                         BEGIN_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
@@ -187,11 +181,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim()
                     )
 
-                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                    calendarArguments.documentID?.let {
+                        viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
+                    }
+
                 }
 
                 COLOR_CAL -> {
-                    if (calendar.isAllDay) {
+                    if (calendarArguments.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -207,11 +204,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
-                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                    calendarArguments.documentID?.let {
+                        viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
+                    }
+
                 }
 
                 COLOR_REMIND_CAL -> {
-                    if (calendar.isAllDay) {
+                    if (calendarArguments.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -226,16 +226,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
-                    updateRemind = hashMapOf(
-                        TITLE to "${binding.detailTitleInput.text}".trim(),
-                        NOTE to "${binding.noteInput.text}".trim(),
-                        REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
-                    )
-                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+
+                    calendarArguments.documentID?.let {
+                        viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
+                    }
                 }
 
                 COLOR_COUNTDOWN_CAL -> {
-                    if (calendar.isAllDay) {
+                    if (calendarArguments.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -250,16 +248,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
-                    updateCountdown = hashMapOf(
-                        TITLE to "${binding.detailTitleInput.text}".trim(),
-                        NOTE to "${binding.noteInput.text}".trim(),
-                        TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
-                    )
-                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+
+                    calendarArguments.documentID?.let {
+                        viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
+                    }
                 }
 
                 COLOR_ALL -> {
-                    if (calendar.isAllDay) {
+                    if (calendarArguments.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -274,21 +270,14 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}"
                     )
-                    updateCountdown = hashMapOf(
-                        TITLE to "${binding.detailTitleInput.text}".trim(),
-                        NOTE to "${binding.noteInput.text}".trim(),
-                        TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
-                    )
-                    updateRemind = hashMapOf(
-                        TITLE to "${binding.detailTitleInput.text}".trim(),
-                        NOTE to "${binding.noteInput.text}".trim(),
-                        REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
-                    )
-                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
+                    calendarArguments.documentID?.let {
+                        viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
+                    }
+
                 }
 
                 COLOR_GOOGLE -> {
-                    if (calendar.isAllDay) {
+                    if (calendarArguments.isAllDay) {
                         beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
                         endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
                     } else {
@@ -303,24 +292,32 @@ class CalendarDetailFragment : Fragment() {
                         NOTE to "${binding.noteInput.text}".trim(),
                         LOCATION to "${binding.locationInput.text}".trim()
                     )
+                    calendarArguments.documentID?.let {
+                        viewModel.updateEvent(it, updateCalendar, updateCountdown, updateRemind)
+                    }
 
-                    viewModel.updateItem(calendar.documentID!!, updateCalendar, updateCountdown, updateRemind)
                 }
             }
 
-            if (calendar.fromGoogle) {
-                viewModel.updateEvent(
-                    calendar.documentID!!,
-                    "${binding.detailTitleInput.text}",
-                    "${binding.noteInput.text}",
-                    timeFormat2FirebaseTimestamp(DATE_TIME_FORMAT, beginDate),
-                    timeFormat2FirebaseTimestamp(DATE_TIME_FORMAT, endDate)
-                )
+            if (calendarArguments.fromGoogle) {
+
+                calendarArguments.documentID?.let {
+                    viewModel.updateGoogleEvent(
+                        it,
+                        "${binding.detailTitleInput.text}",
+                        "${binding.noteInput.text}",
+                        timeFormat2FirebaseTimestamp(DATE_TIME_FORMAT, beginDate),
+                        timeFormat2FirebaseTimestamp(DATE_TIME_FORMAT, endDate)
+                    )
+                }
+
             } else {
                 Logger.d("is not google item")
             }
 
-            Snackbar.make(this.view!!, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            view?.let {
+                Snackbar.make(it, getString(R.string.update_message), Snackbar.LENGTH_LONG).show()
+            }
         }
 
         viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
@@ -338,13 +335,17 @@ class CalendarDetailFragment : Fragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@CalendarDetailFragment.fragmentManager!!, SHOW)
+                this@CalendarDetailFragment.fragmentManager?.let {
+                    DiscardDialog().show(it, SHOW)
+                }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(this.fragmentManager!!, SHOW)
+            this.fragmentManager?.let {
+                DiscardDialog().show(it, SHOW)
+            }
         }
 
         return binding.root
@@ -352,26 +353,31 @@ class CalendarDetailFragment : Fragment() {
 
 
     private fun showDatePicker(inputDate: TextView) {
-        val datePickerDialog = DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
-            { _, year, monthOfYear, dayOfMonth ->
-                inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
-            }, year, monthOfYear, dayOfMonth
-        )
-        datePickerDialog.show()
+        context?.let {
+            DatePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
+                { _, year, monthOfYear, dayOfMonth ->
+                    inputDate.text =
+                        timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
+                }, year, monthOfYear, dayOfMonth
+            ).show()
+        }
     }
 
     private fun showTimePicker(inputTime: TextView) {
-        val timePickerDialog = TimePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { _, hour, minute ->
-                inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
-            }, hour, minute, false
-        )
-        timePickerDialog.show()
+        context?.let {
+            TimePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+                { _, hour, minute ->
+                    inputTime.text =
+                        timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
+                }, hour, minute, false
+            ).show()
+        }
     }
 
-    private fun isAllDayVisibility() {
+    private fun isAllDayEvent() {
+
         binding.allDayLayout.visibility = View.VISIBLE
         binding.beginDate.visibility = View.VISIBLE
         binding.beginTime.visibility = View.GONE
@@ -382,7 +388,8 @@ class CalendarDetailFragment : Fragment() {
         binding.countdownLayout.visibility = View.GONE
     }
 
-    private fun isNotAllDayVisibility() {
+    private fun isNotAllDayEvent() {
+
         binding.allDayLayout.visibility = View.VISIBLE
         binding.beginDate.visibility = View.VISIBLE
         binding.endDate.visibility = View.VISIBLE
@@ -391,16 +398,17 @@ class CalendarDetailFragment : Fragment() {
         binding.countdownLayout.visibility = View.GONE
     }
 
-    private fun remindLayoutVisibility() {
+    private fun showRemindLayout() {
+
         binding.allDayLayout.visibility = View.GONE
         binding.countdownLayout.visibility = View.GONE
         binding.remindLayout.visibility = View.VISIBLE
     }
 
-    private fun countdownVisibility() {
+    private fun showCountdownLayout() {
+
         binding.allDayLayout.visibility = View.GONE
         binding.countdownLayout.visibility = View.VISIBLE
         binding.remindLayout.visibility = View.GONE
-
     }
 }

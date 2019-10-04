@@ -10,7 +10,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.R
-import com.sandra.calendearlife.addRemindersItem
+import com.sandra.calendearlife.getRemindersItemFromFirebase
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
@@ -64,7 +64,7 @@ class RemindersWidgetService : RemoteViewsService() {
 
                                     for (reminder in remindersDocuments) {
 
-                                        addRemindersItem(reminder, remindersItem)
+                                        getRemindersItemFromFirebase(reminder, remindersItem)
                                     }
 
                                     appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.remindersWidgetStackView)
@@ -216,7 +216,7 @@ class RemindersWidgetService : RemoteViewsService() {
 
                                     for (reminder in documents) {
 
-                                        addRemindersItem(reminder, remindersItem)
+                                        getRemindersItemFromFirebase(reminder, remindersItem)
                                     }
 
                                     if (index == totalDocuments.size() -1 ) {

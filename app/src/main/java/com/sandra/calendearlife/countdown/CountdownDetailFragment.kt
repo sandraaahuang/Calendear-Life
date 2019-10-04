@@ -109,14 +109,13 @@ class CountdownDetailFragment : Fragment() {
     }
 
     private fun showDatePicker(inputDate: TextView) {
-        val datePickerDialog = DatePickerDialog(
+        DatePickerDialog(
             this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener
             { _, year, monthOfYear, dayOfMonth ->
                 inputDate.text =
                     timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
             }, year, monthOfYear, dayOfMonth
-        )
-        datePickerDialog.show()
+        ).show()
     }
 }
 
