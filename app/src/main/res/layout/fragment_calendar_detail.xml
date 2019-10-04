@@ -196,7 +196,7 @@
                             android:fontFamily="@font/noto_sans"
                             android:textColor="?attr/textcolor"
                             android:textSize="@dimen/normal_text_size"
-                            android:text="@{viewModel.selectedItem.beginDate.substring(0,10)}"
+                            android:text="@{viewModel.selectedItem.remindersDate.substring(0,10)}"
                             android:onClick="@{viewModel::onButtonClick}"
                             app:layout_constraintEnd_toStartOf="@+id/remindTime" android:layout_marginEnd="16dp"
                             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"/>
@@ -207,7 +207,7 @@
                             android:textColor="?attr/textcolor"
                             android:textSize="@dimen/normal_text_size"
                             android:id="@+id/remindTime"
-                            android:text="@{viewModel.selectedItem.beginDate.substring(10)}"
+                            android:text="@{viewModel.selectedItem.remindersDate.substring(10)}"
                             android:onClick="@{viewModel::onButtonClick}"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginEnd="16dp" android:layout_marginTop="16dp"

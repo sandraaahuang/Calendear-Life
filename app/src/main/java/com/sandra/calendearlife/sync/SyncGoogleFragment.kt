@@ -49,10 +49,13 @@ import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJEC
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.SELECTION
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.selectionArgs
 import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
+import com.sandra.calendearlife.constant.timeFormat2FirebaseTimestamp
+import com.sandra.calendearlife.constant.timeFormat2SqlTimestamp
 import com.sandra.calendearlife.constant.transferTimestamp2String
 import com.sandra.calendearlife.databinding.FragmentSyncGoogleBinding
 import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
+import java.text.SimpleDateFormat
 import java.util.*
 
 class SyncGoogleFragment : AppCompatDialogFragment() {
@@ -182,7 +185,8 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
                             noteList.add(note)
 
                             val item = hashMapOf(
-                                DATE to beginDate,
+                                DATE to Timestamp(timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT,
+                                    transferTimestamp2String(SIMPLE_DATE_FORMAT, beginDate))),
                                 SET_DATE to FieldValue.serverTimestamp(),
                                 BEGIN_DATE to beginDate,
                                 END_DATE to endDate,

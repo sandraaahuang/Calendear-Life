@@ -24,15 +24,16 @@ class FirebaseKey {
         const val DOCUMENT_ID = "documentID"
         const val FREQUENCY = "frequency"
         const val FROM_GOOGLE = "fromGoogle"
+        const val REMINDERS_DATE = "remindersDate"
 
         // Reminders column
-        const val SET_REMIND_DATE = "setRemindDate"
+        const val HAS_REMIND_DATE = "hasRemindDate"
         const val REMIND_DATE = "remindDate"
         const val IS_CHECKED = "isChecked"
 
         // Countdown column
         const val TARGET_DATE = "targetDate"
-        const val OVERDUE = "overdue"
+        const val IS_OVERDUE = "isOverdue"
 
         // Color
         const val COLOR_REMIND = "C02942"

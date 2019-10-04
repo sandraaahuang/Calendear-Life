@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
+import com.sandra.calendearlife.constant.*
 import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.monthOfYear
@@ -28,19 +28,13 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.END_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FROM_GOOGLE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
-import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
-import com.sandra.calendearlife.constant.setDefaultTime
-import com.sandra.calendearlife.constant.timeFormat2SqlTimestamp
-import com.sandra.calendearlife.constant.timeFormat2String4DatePicker
 import com.sandra.calendearlife.databinding.FragmentCountdownBinding
 import com.sandra.calendearlife.dialog.DiscardDialog
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class CountdownFragment : Fragment() {
@@ -88,7 +82,9 @@ class CountdownFragment : Fragment() {
                     TITLE to "${binding.countdownTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
                     HAS_COUNTDOWN to true,
-                    FROM_GOOGLE to false
+                    FROM_GOOGLE to false,
+                    FirebaseKey.LOCATION to "",
+                    REMINDERS_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate)
                 )
 
                 val countdown = hashMapOf(
@@ -96,7 +92,7 @@ class CountdownFragment : Fragment() {
                     TITLE to "${binding.countdownTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
                     TARGET_DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, targetDate),
-                    OVERDUE to false
+                    IS_OVERDUE to false
                 )
 
                 viewModel.writeItem(calendar, countdown)

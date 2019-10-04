@@ -26,7 +26,8 @@ fun getCalendarItemFromFirebase(calendar: QueryDocumentSnapshot, calendarItem: A
         calendar.data[FirebaseKey.HAS_COUNTDOWN].toString().toBoolean(),
         calendar.data[FirebaseKey.DOCUMENT_ID].toString(),
         calendar.data[FirebaseKey.FREQUENCY].toString(),
-        calendar.data[FirebaseKey.FROM_GOOGLE].toString().toBoolean()
+        calendar.data[FirebaseKey.FROM_GOOGLE].toString().toBoolean(),
+        transferTimestamp2String(DATE_TIME_FORMAT, calendar.data[FirebaseKey.REMINDERS_DATE] as Timestamp)
     ))
 }
 
@@ -37,7 +38,7 @@ fun getCountdownItemFromFirebase(countdown: QueryDocumentSnapshot, countdownItem
         countdown.data[FirebaseKey.NOTE].toString(),
         transferTimestamp2String(SIMPLE_DATE_FORMAT, countdown.data[FirebaseKey.TARGET_DATE] as Timestamp),
         countdown.data[FirebaseKey.TARGET_DATE] as Timestamp,
-        countdown.data[FirebaseKey.OVERDUE].toString().toBoolean(),
+        countdown.data[FirebaseKey.IS_OVERDUE].toString().toBoolean(),
         countdown.data[FirebaseKey.DOCUMENT_ID].toString()
     ))
 }
@@ -47,7 +48,7 @@ fun getRemindersItemFromFirebase(reminder: QueryDocumentSnapshot, remindersItem:
         Reminders(
             transferTimestamp2String(SIMPLE_DATE_FORMAT, reminder.data[FirebaseKey.SET_DATE] as Timestamp),
             reminder.data[FirebaseKey.TITLE].toString(),
-            reminder.data[FirebaseKey.SET_REMIND_DATE].toString().toBoolean(),
+            reminder.data[FirebaseKey.HAS_REMIND_DATE].toString().toBoolean(),
             transferTimestamp2String(DATE_TIME_FORMAT, reminder.data[FirebaseKey.REMIND_DATE] as Timestamp),
             reminder.data[FirebaseKey.REMIND_DATE] as Timestamp,
             reminder.data[FirebaseKey.IS_CHECKED].toString().toBoolean(),

@@ -14,7 +14,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
 import com.sandra.calendearlife.constant.transferTimestamp2String
@@ -36,7 +36,7 @@ class HistoryRemindersViewModel : ViewModel() {
     }
 
     private fun getItem() {
-        //connect to countdown data ( only the item that overdue is false )
+        //connect to countdown data ( only the item that isOverdue is false )
         UserManager.id?.let { userManagerId ->
             db.collection(DATA)
                 .document(userManagerId)
@@ -61,7 +61,7 @@ class HistoryRemindersViewModel : ViewModel() {
                                     remindAdd = Reminders(
                                         transferTimestamp2String(SIMPLE_DATE_FORMAT, reminder.data[SET_DATE] as Timestamp),
                                         reminder.data[TITLE].toString(),
-                                        reminder.data[SET_REMIND_DATE].toString().toBoolean(),
+                                        reminder.data[HAS_REMIND_DATE].toString().toBoolean(),
                                         transferTimestamp2String(SIMPLE_DATE_FORMAT, reminder.data[REMIND_DATE] as Timestamp),
                                         reminder.data[REMIND_DATE] as Timestamp,
                                         reminder.data[IS_CHECKED].toString().toBoolean(),
