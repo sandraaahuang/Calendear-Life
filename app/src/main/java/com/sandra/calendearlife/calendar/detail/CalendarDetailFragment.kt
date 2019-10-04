@@ -1,5 +1,6 @@
 package com.sandra.calendearlife.calendar.detail
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -9,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.*
@@ -60,14 +63,22 @@ class CalendarDetailFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        if (calendarArguments.color == "245E2C" ||calendarArguments.color == "8C6B8B" || calendarArguments.color == "542437"
-            || calendarArguments.color == "53777A" ||calendarArguments.color == "A6292F" || calendarArguments.color == "cb9b8c"){
+        if (calendarArguments.color == COLOR_GOOGLE
+            ||calendarArguments.color == COLOR_CAL
+            || calendarArguments.color == COLOR_REMIND_CAL
+            || calendarArguments.color == "53777A"
+            ||calendarArguments.color == COLOR_ALL
+            || calendarArguments.color == COLOR_COUNTDOWN_CAL){
+
             binding.allDayLayout.visibility = View.VISIBLE
             binding.beginDate.visibility = View.VISIBLE
 
 
-            if (calendarArguments.color == "8C6B8B" || calendarArguments.color == "542437"||calendarArguments.color == "A6292F"
-                || calendarArguments.color == "cb9b8c"){
+            if (calendarArguments.color == COLOR_CAL
+                || calendarArguments.color == COLOR_REMIND_CAL
+                ||calendarArguments.color == COLOR_ALL
+                || calendarArguments.color == COLOR_COUNTDOWN_CAL){
+
                 if (calendarArguments.isAllDay){
                     binding.beginTime.visibility = View.GONE
                     binding.endDateText.visibility = View.GONE
@@ -84,16 +95,20 @@ class CalendarDetailFragment : Fragment() {
             binding.allDayLayout.visibility = View.GONE
         }
 
-
-
-        if (calendarArguments.color == "C02942" || calendarArguments.color == "542437" || calendarArguments.color == "A6292F" ||calendarArguments.hasReminders){
+        if (calendarArguments.color == COLOR_REMIND
+            || calendarArguments.color == COLOR_REMIND_CAL
+            || calendarArguments.color == COLOR_ALL
+            ||calendarArguments.hasReminders){
             binding.remindLayout.visibility = View.VISIBLE
         } else {
             binding.remindLayout.visibility = View.GONE
         }
 
-        if (calendarArguments.color == "100038" ||calendarArguments.color == "53777A" ||calendarArguments.color == "A6292F" ||calendarArguments.hasCountdown
-            || calendarArguments.color == "cb9b8c") {
+        if (calendarArguments.color == COLOR_COUNTDOWN
+            ||calendarArguments.color == "53777A"
+            ||calendarArguments.color == COLOR_ALL
+            ||calendarArguments.hasCountdown
+            || calendarArguments.color == COLOR_COUNTDOWN_CAL) {
             binding.countdownLayout.visibility = View.VISIBLE
         } else {
             binding.countdownLayout.visibility = View.GONE
@@ -108,6 +123,12 @@ class CalendarDetailFragment : Fragment() {
         viewModel.showTimePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
             clickedDate?.let {
                 showTimePicker(it)
+            }
+        })
+
+        viewModel.hasPermission.observe(this, androidx.lifecycle.Observer {
+            it?.let {
+                requestPermission()
             }
         })
 
@@ -368,6 +389,13 @@ class CalendarDetailFragment : Fragment() {
                 }, hour, minute, false
             ).show()
         }
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(
+            (activity as MainActivity),
+            arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1
+        )
     }
 
     private fun isAllDayEvent() {

@@ -50,6 +50,10 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
     val showTimePicker: LiveData<TextView>
         get() = _showTimePicker
 
+    private val _hasPermission = MutableLiveData<Boolean>()
+    val hasPermission: LiveData<Boolean>
+        get() = _hasPermission
+
     init {
         _selectedItem.value = calendar
     }
@@ -263,8 +267,7 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
 
             contentResolver.update(uri, contentValues, null, null)
         } else {
-            Toast.makeText(MyApplication.instance, MyApplication.instance.getString(R.string.open_permission),
-                Toast.LENGTH_LONG).show()
+            _hasPermission.value = true
         }
     }
 
@@ -278,6 +281,8 @@ class CalendarDetailViewModel(calendar: Calendar, app: Application) : AndroidVie
             )
 
             contentResolver.delete(uri, null, null)
+        } else {
+            _hasPermission.value = true
         }
     }
 

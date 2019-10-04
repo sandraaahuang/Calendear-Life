@@ -68,6 +68,11 @@ class CalendarEventViewModel : ViewModel() {
     val showTimePicker: LiveData<TextView>
         get() = _showTimePicker
 
+    private val _hasPermission = MutableLiveData<Boolean>()
+    val hasPermission: LiveData<Boolean>
+        get() = _hasPermission
+
+
     fun writeItem(item: Any, countdown: Any, reminder: Any) {
         _isClicked.value = true
         // get all data from user at first
@@ -342,9 +347,7 @@ class CalendarEventViewModel : ViewModel() {
                 cur.close()
             }
         } else {
-            Toast.makeText(
-                MyApplication.instance, MyApplication.instance.getString(R.string.open_permission),
-                Toast.LENGTH_LONG).show()
+            _hasPermission.value = true
         }
     }
 
