@@ -30,7 +30,7 @@ class HomeRemindersAdapter(val viewModel: HomeViewModel, private val onClickList
                 binding.remindersTime.setTextColor(MyApplication.instance.getColor(R.color.delete_red))
             }
 
-            if (!reminders.setRemindDate){
+            if (!reminders.hasRemindDate){
                 binding.remindersTime.visibility = View.GONE
             }
 

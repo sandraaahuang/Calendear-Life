@@ -60,49 +60,43 @@ class CalendarDetailFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        when (calendarArguments.color) {
+        if (calendarArguments.color == "245E2C" ||calendarArguments.color == "8C6B8B" || calendarArguments.color == "542437"
+            || calendarArguments.color == "53777A" ||calendarArguments.color == "A6292F" || calendarArguments.color == "cb9b8c"){
+            binding.allDayLayout.visibility = View.VISIBLE
+            binding.beginDate.visibility = View.VISIBLE
 
-            COLOR_GOOGLE, COLOR_CAL -> {
-                if (calendarArguments.isAllDay) {
-                    isAllDayEvent()
-                } else {
-                    isNotAllDayEvent()
+
+            if (calendarArguments.color == "8C6B8B" || calendarArguments.color == "542437"||calendarArguments.color == "A6292F"
+                || calendarArguments.color == "cb9b8c"){
+                if (calendarArguments.isAllDay){
+                    binding.beginTime.visibility = View.GONE
+                    binding.endDateText.visibility = View.GONE
+                    binding.endDate.visibility = View.GONE
+                    binding.endTime.visibility = View.GONE
+                }
+                else {
+                    binding.endDate.visibility = View.VISIBLE
+                    binding.endTime.visibility = View.VISIBLE
                 }
             }
 
-            COLOR_REMIND_CAL -> {
-                showRemindLayout()
-                if (calendarArguments.isAllDay) {
-                    isAllDayEvent()
-                } else {
-                    isNotAllDayEvent()
-                }
-            }
-
-            COLOR_ALL -> {
-                showRemindLayout()
-                showCountdownLayout()
-                if (calendarArguments.isAllDay) {
-                    isAllDayEvent()
-                } else {
-                    isNotAllDayEvent()
-                }
-            }
-
-            COLOR_COUNTDOWN_CAL -> {
-                showCountdownLayout()
-                if (calendarArguments.isAllDay) {
-                    isAllDayEvent()
-                } else {
-                    isNotAllDayEvent()
-                }
-            }
-
-            COLOR_REMIND -> showRemindLayout()
+        } else {
+            binding.allDayLayout.visibility = View.GONE
+        }
 
 
-            COLOR_COUNTDOWN -> showCountdownLayout()
 
+        if (calendarArguments.color == "C02942" || calendarArguments.color == "542437" || calendarArguments.color == "A6292F" ||calendarArguments.hasReminders){
+            binding.remindLayout.visibility = View.VISIBLE
+        } else {
+            binding.remindLayout.visibility = View.GONE
+        }
+
+        if (calendarArguments.color == "100038" ||calendarArguments.color == "53777A" ||calendarArguments.color == "A6292F" ||calendarArguments.hasCountdown
+            || calendarArguments.color == "cb9b8c") {
+            binding.countdownLayout.visibility = View.VISIBLE
+        } else {
+            binding.countdownLayout.visibility = View.GONE
         }
 
         viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
@@ -380,12 +374,7 @@ class CalendarDetailFragment : Fragment() {
 
         binding.allDayLayout.visibility = View.VISIBLE
         binding.beginDate.visibility = View.VISIBLE
-        binding.beginTime.visibility = View.GONE
-        binding.endDateText.visibility = View.GONE
-        binding.endDate.visibility = View.GONE
-        binding.endTime.visibility = View.GONE
-        binding.remindLayout.visibility = View.GONE
-        binding.countdownLayout.visibility = View.GONE
+        binding.beginDateText.text = context?.getString(R.string.date_b)
     }
 
     private fun isNotAllDayEvent() {
@@ -394,21 +383,15 @@ class CalendarDetailFragment : Fragment() {
         binding.beginDate.visibility = View.VISIBLE
         binding.endDate.visibility = View.VISIBLE
         binding.endTime.visibility = View.VISIBLE
-        binding.remindLayout.visibility = View.GONE
-        binding.countdownLayout.visibility = View.GONE
     }
 
     private fun showRemindLayout() {
 
-        binding.allDayLayout.visibility = View.GONE
-        binding.countdownLayout.visibility = View.GONE
         binding.remindLayout.visibility = View.VISIBLE
     }
 
     private fun showCountdownLayout() {
 
-        binding.allDayLayout.visibility = View.GONE
         binding.countdownLayout.visibility = View.VISIBLE
-        binding.remindLayout.visibility = View.GONE
     }
 }

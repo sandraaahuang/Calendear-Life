@@ -36,15 +36,13 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.LOCATION
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
-import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.databinding.FragmentRemindersBinding
 import com.sandra.calendearlife.dialog.ChooseFrequencyDialog
 import com.sandra.calendearlife.dialog.DiscardDialog
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class RemindersFragment : Fragment() {
@@ -102,13 +100,16 @@ class RemindersFragment : Fragment() {
                 NOTE to "${binding.remindersNoteInput.text}".trim(),
                 HAS_REMINDERS to true,
                 FREQUENCY to value,
-                FROM_GOOGLE to false
+                FROM_GOOGLE to false,
+                LOCATION to "",
+                REMINDERS_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT,
+                    "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}")
             )
 
             val reminders = hashMapOf(
                 SET_DATE to FieldValue.serverTimestamp(),
                 TITLE to "${binding.remindersTitleInput.text}".trim(),
-                SET_REMIND_DATE to binding.setReminderswitch.isChecked,
+                HAS_REMIND_DATE to binding.setReminderswitch.isChecked,
                 REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT,
                     "${binding.remindersDateInput.text} ${binding.remindersTimeInput.text}"),
                 IS_CHECKED to false,

@@ -61,7 +61,7 @@
                         android:id="@+id/switchRemindDay"
                         android:textColor="?attr/totalB2W"
                         android:fontFamily="@font/noto_sans"
-                        android:checked="@{viewModel.selectedItem.setRemindDate}"
+                        android:checked="@{viewModel.selectedItem.hasRemindDate}"
                         app:layout_constraintStart_toStartOf="@+id/remindersTitle"
                         app:layout_constraintEnd_toEndOf="@+id/view_spacing_line"
                         app:layout_constraintHorizontal_bias="1.0"

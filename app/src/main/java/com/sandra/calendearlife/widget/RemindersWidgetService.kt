@@ -96,7 +96,7 @@ class RemindersWidgetService : RemoteViewsService() {
 
             views.setTextViewText(R.id.remindersTextView, remindersItem[position].title)
 
-            if (remindersItem[position].setRemindDate){
+            if (remindersItem[position].hasRemindDate){
             views.setTextViewText(R.id.remindersTime, remindersItem[position].remindDate)}
             else {
                 views.setViewVisibility(R.id.remindersTime, View.GONE)

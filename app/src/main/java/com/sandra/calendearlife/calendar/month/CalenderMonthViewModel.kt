@@ -15,7 +15,6 @@ import com.sandra.calendearlife.util.UserManager
 class CalenderMonthViewModel : ViewModel() {
     var db = FirebaseFirestore.getInstance()
 
-    private lateinit var calendarAdd: Calendar
     private val _liveCalendar = MutableLiveData<List<Calendar>>()
     val liveCalendar: LiveData<List<Calendar>>
         get() = _liveCalendar

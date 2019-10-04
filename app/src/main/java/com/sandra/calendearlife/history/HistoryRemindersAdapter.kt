@@ -28,7 +28,7 @@ class HistoryRemindersAdapter :
         fun bind(reminders: Reminders) {
             binding.reminders = reminders
 
-            if (reminders.setRemindDate){
+            if (reminders.hasRemindDate){
                 binding.remindersTime.visibility = View.VISIBLE
             }
             else {

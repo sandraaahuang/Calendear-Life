@@ -54,10 +54,10 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_OVERDUE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_ACCOUNT_NAME_INDEX
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJECTION_BEGIN_INDEX
@@ -432,7 +432,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 noteList.add(note)
 
                                 val item = hashMapOf(
-                                    FirebaseKey.DATE to beginDate,
+                                    FirebaseKey.DATE to Timestamp(timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT,
+                                        transferTimestamp2String(SIMPLE_DATE_FORMAT, beginDate))),
                                     SET_DATE to FieldValue.serverTimestamp(),
                                     FirebaseKey.BEGIN_DATE to beginDate,
                                     FirebaseKey.END_DATE to endDate,
@@ -702,7 +703,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .collection(CALENDAR)
                                 .document(calendar.id)
                                 .collection(FirebaseKey.COUNTDOWN)
-                                .whereEqualTo(OVERDUE, false)
+                                .whereEqualTo(IS_OVERDUE, false)
                                 .get()
                                 .addOnSuccessListener { countdownDocuments ->
 
@@ -776,7 +777,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .document(calendar.id)
                                 .collection(REMINDERS)
                                 .whereEqualTo(IS_CHECKED, false)
-                                .whereEqualTo(SET_REMIND_DATE, true)
+                                .whereEqualTo(HAS_REMIND_DATE, true)
                                 .whereEqualTo(FREQUENCY, DOES_NOT_REPEAT)
                                 .get()
                                 .addOnSuccessListener { remindersDocuments ->
@@ -970,7 +971,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .document(calendar.id)
                                 .collection(REMINDERS)
                                 .whereEqualTo(IS_CHECKED, false)
-                                .whereEqualTo(SET_REMIND_DATE, true)
+                                .whereEqualTo(HAS_REMIND_DATE, true)
                                 .whereEqualTo(FREQUENCY, EVERY_MONTH)
                                 .get()
                                 .addOnSuccessListener { remindersDocuments ->
@@ -1046,7 +1047,7 @@ class AlarmReceiver : BroadcastReceiver() {
                                 .document(calendar.id)
                                 .collection(REMINDERS)
                                 .whereEqualTo(IS_CHECKED, false)
-                                .whereEqualTo(SET_REMIND_DATE, true)
+                                .whereEqualTo(HAS_REMIND_DATE, true)
                                 .whereEqualTo(FREQUENCY, EVERY_YEAR)
                                 .get()
                                 .addOnSuccessListener { remindersDocuments ->

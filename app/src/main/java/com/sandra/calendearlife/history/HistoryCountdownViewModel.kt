@@ -8,7 +8,7 @@ import com.sandra.calendearlife.getCountdownItemFromFirebase
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_OVERDUE
 import com.sandra.calendearlife.data.Countdown
 import com.sandra.calendearlife.util.UserManager
 
@@ -27,7 +27,7 @@ class HistoryCountdownViewModel : ViewModel() {
     }
 
     private fun getItem() {
-        //connect to countdown data ( only the item that overdue is true )
+        //connect to countdown data ( only the item that isOverdue is true )
         UserManager.id?.let { userManager ->
             db.collection(DATA)
                 .document(userManager)
@@ -43,7 +43,7 @@ class HistoryCountdownViewModel : ViewModel() {
                             .collection(CALENDAR)
                             .document(calendar.id)
                             .collection(COUNTDOWN)
-                            .whereEqualTo(OVERDUE, true)
+                            .whereEqualTo(IS_OVERDUE, true)
                             .get()
                             .addOnSuccessListener { countdownDocuments ->
 

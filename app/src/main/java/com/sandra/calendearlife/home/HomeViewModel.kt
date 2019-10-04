@@ -12,7 +12,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.COUNTDOWN
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_OVERDUE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.data.Countdown
@@ -41,7 +41,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun getItem() {
-        //connect to countdown data ( only the item that overdue is false )
+        //connect to countdown data ( only the item that isOverdue is false )
         UserManager.id?.let {
             db.collection(DATA)
                 .document(it)
@@ -69,7 +69,7 @@ class HomeViewModel : ViewModel() {
                 .collection(CALENDAR)
                 .document(calendar.id)
                 .collection(COUNTDOWN)
-                .whereEqualTo(OVERDUE, false)
+                .whereEqualTo(IS_OVERDUE, false)
                 .get()
                 .addOnSuccessListener { countdownDocuments ->
 
@@ -149,7 +149,7 @@ class HomeViewModel : ViewModel() {
 
     }
 
-    //update countdown item to overdue depends on time
+    //update countdown item to isOverdue depends on time
     fun updateOverdueCountdown(documentId: String) {
         UserManager.id?.let {
             db.collection(DATA)
@@ -160,7 +160,7 @@ class HomeViewModel : ViewModel() {
 
                     for (calendar in documents) {
 
-                        // get overdue countdowns
+                        // get isOverdue countdowns
                         db.collection(DATA)
                             .document(it)
                             .collection(CALENDAR)
@@ -171,14 +171,14 @@ class HomeViewModel : ViewModel() {
 
                                 for (countdown in countdownDocuments) {
 
-                                    // update countdowns to overdue status
+                                    // update countdowns to isOverdue status
                                     db.collection(DATA)
                                         .document(it)
                                         .collection(CALENDAR)
                                         .document(calendar.id)
                                         .collection(COUNTDOWN)
                                         .document(documentId)
-                                        .update(OVERDUE, true)
+                                        .update(IS_OVERDUE, true)
                                 }
                             }
                     }

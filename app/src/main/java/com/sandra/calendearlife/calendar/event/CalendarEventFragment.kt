@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.FieldValue
 import com.sandra.calendearlife.MainActivity
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.*
@@ -48,10 +49,11 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_ALL_DAY
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.LOCATION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.OVERDUE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_OVERDUE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TARGET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.databinding.FragmentCalendarEventBinding
@@ -97,7 +99,9 @@ class CalendarEventFragment : Fragment() {
             val dialog = ChooseFrequencyDialog()
             //setTargetFragment
             dialog.setTargetFragment(this, REQUEST_EVALUATE)
-            dialog.show(fragmentManager!!, EVALUATE_DIALOG)
+            fragmentManager?.let {
+                dialog.show(it, EVALUATE_DIALOG)
+            }
         }
 
         setDefaultDate()
@@ -107,7 +111,6 @@ class CalendarEventFragment : Fragment() {
                 showDatePickerInWeekFormat(it)
             } }
         )
-
 
         viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->
             clickedDate?.let {
@@ -123,17 +126,21 @@ class CalendarEventFragment : Fragment() {
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                DiscardDialog().show(this@CalendarEventFragment.fragmentManager!!, SHOW)
+                this@CalendarEventFragment.fragmentManager?.let {
+                    DiscardDialog().show(it, SHOW)
+                }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
         binding.removeIcon.setOnClickListener {
-            DiscardDialog().show(fragmentManager!!, SHOW)
+            fragmentManager?.let {
+                DiscardDialog().show(it, SHOW)
+            }
         }
 
         binding.saveText.setOnClickListener {
             // error handle
-            if ("${binding.eventTitleInput.text}" == "") {
+            if (binding.eventTitleInput.text.isNullOrEmpty()) {
                 binding.eventTitleInput.setHintTextColor(resources.getColor(R.color.delete_red))
             } else {
                 val date: String
@@ -157,13 +164,13 @@ class CalendarEventFragment : Fragment() {
                     TITLE to "${binding.eventTitleInput.text}".trim(),
                     NOTE to "${binding.noteInput.text}".trim(),
                     TARGET_DATE to timeFormat2SqlTimestamp(DATE_WEEK_TIME_FORMAT, endDate),
-                    OVERDUE to false
+                    IS_OVERDUE to false
                 )
 
                 val reminders = hashMapOf(
                     SET_DATE to FieldValue.serverTimestamp(),
                     TITLE to "${binding.eventTitleInput.text}".trim(),
-                    SET_REMIND_DATE to true,
+                    HAS_REMIND_DATE to true,
                     REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate),
                     IS_CHECKED to false,
                     NOTE to "${binding.noteInput.text}".trim(),
@@ -182,17 +189,18 @@ class CalendarEventFragment : Fragment() {
                     HAS_REMINDERS to "${binding.switchSetAsReminder.isChecked}".toBoolean(),
                     HAS_COUNTDOWN to "${binding.switchSetAsCountdown.isChecked}".toBoolean(),
                     FROM_GOOGLE to "${binding.switchSetAsGoogle.isChecked}".toBoolean(),
-                    LOCATION to "${binding.locationInput.text}".trim()
+                    LOCATION to "${binding.locationInput.text}".trim(),
+                    REMINDERS_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, remindDate)
                 )
 
                 if (binding.switchSetAsGoogle.isChecked) {
-                    val gBeginDate = timeFormat2FirebaseTimestamp(DATE_WEEK_TIME_FORMAT, beginDate)
-                    val gEndDate = timeFormat2FirebaseTimestamp(DATE_WEEK_TIME_FORMAT, endDate)
-                    val gTitle = "${binding.eventTitleInput.text}".trim()
-                    val gNote = "${binding.noteInput.text}".trim()
+                    val googleBeginDate = timeFormat2FirebaseTimestamp(DATE_WEEK_TIME_FORMAT, beginDate)
+                    val googleEndDate = timeFormat2FirebaseTimestamp(DATE_WEEK_TIME_FORMAT, endDate)
+                    val googleTitle = "${binding.eventTitleInput.text}".trim()
+                    val googleNote = "${binding.noteInput.text}".trim()
 
                     if (ContextCompat.checkSelfPermission(
-                            this.context!!,
+                            MyApplication.instance,
                             Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED
                     ) {
                         ActivityCompat.requestPermissions(
@@ -203,7 +211,7 @@ class CalendarEventFragment : Fragment() {
                     } else {
 
                         viewModel.writeGoogle(
-                            gBeginDate, gEndDate, gNote, gTitle,
+                            googleBeginDate, googleEndDate, googleNote, googleTitle,
                             item, countdown, reminders
                         )
                     }
@@ -215,9 +223,12 @@ class CalendarEventFragment : Fragment() {
             }
         }
 
-        viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer {
+        viewModel.isUpdateCompleted.observe(this, androidx.lifecycle.Observer { it ->
             it?.let {
-                Snackbar.make(this.view!!, getString(R.string.save_message), Snackbar.LENGTH_SHORT).show()
+                view?.let { view ->
+                    Snackbar.make(view, getString(R.string.save_message), Snackbar.LENGTH_SHORT).show()
+                }
+
                 findNavController().navigate(NavigationDirections.actionGlobalCalendarMonthFragment())
             }
         })
@@ -256,34 +267,36 @@ class CalendarEventFragment : Fragment() {
     }
 
     private fun showDatePicker(inputDate: TextView) {
-        val datePickerDialog = DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener {
-                    _,year, monthOfYear, dayOfMonth ->
-                inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
-            }, year, monthOfYear, dayOfMonth
-        )
-        datePickerDialog.show()
+        context?.let {
+            DatePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener {
+                        _,year, monthOfYear, dayOfMonth ->
+                    inputDate.text = timeFormat2String4DatePicker(SIMPLE_DATE_FORMAT, year, monthOfYear, dayOfMonth)
+                }, year, monthOfYear, dayOfMonth
+            ).show()
+        }
     }
 
     private fun showDatePickerInWeekFormat(inputDate: TextView) {
-        val datePickerDialog = DatePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener {
-                    _,year, monthOfYear, dayOfMonth ->
-                inputDate.text = timeFormat2String4DatePicker(DATE_WEEK_FORMAT, year, monthOfYear, dayOfMonth)
-            }, year, monthOfYear, dayOfMonth
-        )
-        datePickerDialog.show()
+        context?.let {
+            DatePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, DatePickerDialog.OnDateSetListener {
+                        _,year, monthOfYear, dayOfMonth ->
+                    inputDate.text = timeFormat2String4DatePicker(DATE_WEEK_FORMAT, year, monthOfYear, dayOfMonth)
+                }, year, monthOfYear, dayOfMonth
+            ).show()
+        }
     }
 
     private fun showTimePicker(inputTime: TextView) {
-        val timePickerDialog = TimePickerDialog(
-            this.context!!, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
-            { _, hour, minute ->
-                inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
-            }, hour, minute, false
-        )
-        timePickerDialog.show()
+        context?.let {
+            TimePickerDialog(
+                it, AlertDialog.THEME_HOLO_DARK, TimePickerDialog.OnTimeSetListener
+                { _, hour, minute ->
+                    inputTime.text = timeFormat2String4TimePicker(TIME_FORMAT, hour, minute)
+                }, hour, minute, false
+            ).show()
+        }
     }
-
 }
 
