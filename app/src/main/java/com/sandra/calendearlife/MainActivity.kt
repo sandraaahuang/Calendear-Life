@@ -148,6 +148,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupNavController()
         setupStatusBar()
 
+        if (UserManager.id.isNullOrEmpty()) {
+            setDrawerEnabled(false)
+        }
 
         intent.extras?.let { extras ->
             UserManager.id?.let {
@@ -416,6 +419,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun setDrawerEnabled(enabled: Boolean) {
+        val lockMode = if (enabled) {
+            DrawerLayout.LOCK_MODE_UNLOCKED
+        } else {
+            DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+        }
+        binding.drawerLayout.setDrawerLockMode(lockMode)
     }
 
     private fun showChangeLanguageList() {
