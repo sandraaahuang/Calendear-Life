@@ -48,4 +48,7 @@ object UserManager {
         set(value) {
             field = preferences.edit().putString(USERPHOTO, value)?.apply().toString()
         }
+
+    val isLoggedIn: Boolean
+        get() = id != null
 }
