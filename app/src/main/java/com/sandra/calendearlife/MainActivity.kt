@@ -6,6 +6,7 @@ import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
@@ -147,6 +148,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setDrawer()
         setupNavController()
         setupStatusBar()
+        registerConnectionReceiver()
 
         when {
             !UserManager.isLoggedIn -> setDrawerEnabled(false)
@@ -562,6 +564,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
+
+    private fun registerConnectionReceiver() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val intentFilter = IntentFilter()
+            intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+            registerReceiver(InternetReceiver(), intentFilter)
+        }
+    }
+
 }
 
 
