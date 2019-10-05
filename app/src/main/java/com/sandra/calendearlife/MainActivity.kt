@@ -148,8 +148,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupNavController()
         setupStatusBar()
 
-        if (UserManager.id.isNullOrEmpty()) {
-            setDrawerEnabled(false)
+        when {
+            !UserManager.isLoggedIn -> setDrawerEnabled(false)
         }
 
         intent.extras?.let { extras ->
