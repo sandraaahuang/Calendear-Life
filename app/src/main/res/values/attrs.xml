@@ -2,21 +2,20 @@
 <resources>
     <declare-styleable name="ds">
         
-        <attr name="backgroundcolor" format="color"/>
-        <attr name="cardbackground" format="color"/>
-        <attr name="textcolor" format="color"/>
-        <attr name="toolbarcolor" format="color"/>
-        <attr name="toolbarText" format="color"/>
-        <attr name="linecolor" format="color"/>
-        <attr name="dotcolor" format="color"/>
-        <attr name="redText" format="color"/>
-        <attr name="buttoncolor" format="color"/>
-        <attr name="drawableTint" format="color"/>
-        <attr name="stoneTint" format="color"/>
-        <attr name="saveColor" format="color"/>
-        <attr name="monthBackground" format="color"/>
-        <attr name="totalWhite2Black" format="color"/>
-        <attr name="totalB2W" format="color"/>
-        <attr name="homeCardColor" format="color"/>
+        <attr name="background_color" format="color"/>
+        <attr name="card_background_color" format="color"/>
+        <attr name="normal_text_color" format="color"/>
+        <attr name="toolbar_color" format="color"/>
+        <attr name="toolbar_text_color" format="color"/>
+        <attr name="separate_line_color" format="color"/>
+        <attr name="dot_color" format="color"/>
+        <attr name="button_color" format="color"/>
+        <attr name="drawable_tint_color" format="color"/>
+        <attr name="stone_tint_color" format="color"/>
+        <attr name="save_button_color" format="color"/>
+        <attr name="month_background" format="color"/>
+        <attr name="total_white2black" format="color"/>
+        <attr name="total_black2white" format="color"/>
+        <attr name="home_card_color" format="color"/>
     </declare-styleable>
 </resources>

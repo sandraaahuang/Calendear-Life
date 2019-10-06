@@ -73,6 +73,7 @@ class HomeFragment : Fragment() {
                 binding.addReminderText.startAnimation(fabClose)
                 binding.addCountdownText.startAnimation(fabClose)
                 binding.addEventText.startAnimation(fabClose)
+                binding.translucentBackground.visibility = View.GONE
                 false
 
             } else {
@@ -83,6 +84,7 @@ class HomeFragment : Fragment() {
                 binding.addReminderText.startAnimation(fabOpen)
                 binding.addCountdownText.startAnimation(fabOpen)
                 binding.addEventText.startAnimation(fabOpen)
+                binding.translucentBackground.visibility = View.VISIBLE
                 true
             }
         }

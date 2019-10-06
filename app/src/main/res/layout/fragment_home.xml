@@ -19,7 +19,7 @@
                                                                android:id="@+id/swipeFreshHome">
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:orientation="vertical"
-                    android:background="?attr/stoneTint"
+                    android:background="?attr/stone_tint_color"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -30,7 +30,7 @@
                         android:layout_width="0dp"
                         android:layout_height="300dp"
                         android:backgroundTintMode="src_atop"
-                        android:backgroundTint="?attr/stoneTint"
+                        android:backgroundTint="?attr/stone_tint_color"
                         android:background="@drawable/background_stone2">
 
 
@@ -56,7 +56,7 @@
                             android:layout_marginEnd="16dp"
                             android:text='@{viewModel.liveCountdown != null ? @string/no_countdown : ""}'
                             android:textSize="20sp"
-                            android:textColor="?attr/textcolor"
+                            android:textColor="?attr/normal_text_color"
                             android:gravity="center"
                             android:visibility="@{viewModel.liveCountdown.size == 0 ? View.VISIBLE : View.GONE}"
                             app:layout_constraintTop_toTopOf="parent"
@@ -68,7 +68,7 @@
                             android:id="@+id/indicator"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:spi_dotSelectedColor="?attr/dotcolor"
+                            app:spi_dotSelectedColor="?attr/dot_color"
                             app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
@@ -98,7 +98,7 @@
                         android:layout_marginEnd="16dp"
                         android:text='@{viewModel.liveReminders != null ? @string/no_reminder : ""}'
                         android:textSize="20sp"
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/normal_text_color"
                         android:gravity="center"
                         android:visibility="@{viewModel.liveReminders.size == 0 ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -106,94 +106,104 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/remindersRecyclerView"/>
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:src="@drawable/fab_add"
-                        android:backgroundTint="?attr/toolbarText"
-                        android:tint="?attr/totalWhite2Black"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="32dp"
-                        android:id="@+id/fab_add"/>
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@+id/fab_add"
-                        android:src="@drawable/icon_add_calendar_h"
-                        android:backgroundTint="?attr/toolbarText"
-                        android:tint="?attr/totalWhite2Black"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="8dp"
-                        android:visibility="invisible"
-                        android:id="@+id/calendarFab"/>
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@+id/calendarFab"
-                        android:src="@drawable/icon_add_countdown_h"
-                        android:backgroundTint="?attr/toolbarText"
-                        android:tint="?attr/totalWhite2Black"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="8dp"
-                        android:visibility="invisible"
-                        android:id="@+id/countdownsFab"/>
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toTopOf="@+id/countdownsFab"
-                        android:src="@drawable/icon_add_reminder_h"
-                        android:backgroundTint="?attr/toolbarText"
-                        android:tint="?attr/totalWhite2Black"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="8dp"
-                        android:visibility="invisible"
-                        android:id="@+id/remindersFab"/>
-                <TextView
-                        android:text="@string/new_event"
-                        android:textSize="@dimen/normal_text_size"
-                        android:textColor="?attr/toolbarText"
-                        android:fontFamily="@font/noto_sans"
-                        android:visibility="invisible"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/addEventText"
-                        app:layout_constraintBottom_toBottomOf="@+id/calendarFab"
-                        app:layout_constraintTop_toTopOf="@+id/calendarFab"
-                        app:layout_constraintStart_toStartOf="@+id/addCountdownText"
-                        app:layout_constraintEnd_toEndOf="@+id/addCountdownText"/>
-
-                <TextView
-                        android:text="@string/new_reminder"
-                        android:textSize="@dimen/normal_text_size"
-                        android:textColor="?attr/toolbarText"
-                        android:fontFamily="@font/noto_sans"
-                        android:visibility="invisible"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/addReminderText"
-                        app:layout_constraintBottom_toBottomOf="@+id/remindersFab"
-                        app:layout_constraintTop_toTopOf="@+id/remindersFab"
-                        app:layout_constraintStart_toStartOf="@+id/addCountdownText"
-                        app:layout_constraintEnd_toEndOf="@+id/addCountdownText"/>
-
-                <TextView
-                        android:text="@string/new_countdown"
-                        android:textSize="@dimen/normal_text_size"
-                        android:textColor="?attr/toolbarText"
-                        android:fontFamily="@font/noto_sans"
-                        android:visibility="invisible"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/addCountdownText"
-                        app:layout_constraintEnd_toStartOf="@+id/countdownsFab"
-                        app:layout_constraintBottom_toBottomOf="@+id/countdownsFab"
-                        app:layout_constraintTop_toTopOf="@+id/countdownsFab"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/translucent_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:background="@color/translucent_white">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/fab_add"
+                android:backgroundTint="?attr/total_black2white"
+                android:tint="?attr/total_white2black"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                android:id="@+id/fab_add"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/fab_add"
+                android:src="@drawable/icon_add_calendar_h"
+                android:backgroundTint="?attr/total_black2white"
+                android:tint="?attr/total_white2black"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="invisible"
+                android:id="@+id/calendarFab"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/calendarFab"
+                android:src="@drawable/icon_add_countdown_h"
+                android:backgroundTint="?attr/total_black2white"
+                android:tint="?attr/total_white2black"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="invisible"
+                android:id="@+id/countdownsFab"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/countdownsFab"
+                android:src="@drawable/icon_add_reminder_h"
+                android:backgroundTint="?attr/total_black2white"
+                android:tint="?attr/total_white2black"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="invisible"
+                android:id="@+id/remindersFab"/>
+        <TextView
+                android:text="@string/new_event"
+                android:textSize="@dimen/normal_text_size"
+                android:textColor="?attr/total_black2white"
+                android:fontFamily="@font/noto_sans"
+                android:visibility="invisible"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/addEventText"
+                app:layout_constraintBottom_toBottomOf="@+id/calendarFab"
+                app:layout_constraintTop_toTopOf="@+id/calendarFab"
+                app:layout_constraintStart_toStartOf="@+id/addCountdownText"
+                app:layout_constraintEnd_toEndOf="@+id/addCountdownText"/>
+
+        <TextView
+                android:text="@string/new_reminder"
+                android:textSize="@dimen/normal_text_size"
+                android:textColor="?attr/total_black2white"
+                android:fontFamily="@font/noto_sans"
+                android:visibility="invisible"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/addReminderText"
+                app:layout_constraintBottom_toBottomOf="@+id/remindersFab"
+                app:layout_constraintTop_toTopOf="@+id/remindersFab"
+                app:layout_constraintStart_toStartOf="@+id/addCountdownText"
+                app:layout_constraintEnd_toEndOf="@+id/addCountdownText"/>
+
+        <TextView
+                android:text="@string/new_countdown"
+                android:textSize="@dimen/normal_text_size"
+                android:textColor="?attr/total_black2white"
+                android:fontFamily="@font/noto_sans"
+                android:visibility="invisible"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/addCountdownText"
+                app:layout_constraintEnd_toStartOf="@+id/countdownsFab"
+                app:layout_constraintBottom_toBottomOf="@+id/countdownsFab"
+                app:layout_constraintTop_toTopOf="@+id/countdownsFab"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

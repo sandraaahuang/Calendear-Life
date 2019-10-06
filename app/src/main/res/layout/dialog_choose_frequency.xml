@@ -13,7 +13,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="?attr/totalB2W"
+                android:background="?attr/total_black2white"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -53,8 +53,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/buttonDoesNotRepeat"
-                    android:background="?attr/totalWhite2Black"
-                    android:textColor="?attr/totalB2W"
+                    android:background="?attr/total_white2black"
+                    android:textColor="?attr/total_black2white"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
                     android:onClick='@{viewModel::onButtonClick}'
@@ -65,8 +65,8 @@
             <Button
                     android:text="@string/every_day"
                     android:layout_width="0dp"
-                    android:background="?attr/totalWhite2Black"
-                    android:textColor="?attr/totalB2W"
+                    android:background="?attr/total_white2black"
+                    android:textColor="?attr/total_black2white"
                     android:textAllCaps="false"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/noto_sans"
@@ -80,8 +80,8 @@
             <Button
                     android:text="@string/every_week"
                     android:layout_width="0dp"
-                    android:background="?attr/totalWhite2Black"
-                    android:textColor="?attr/totalB2W"
+                    android:background="?attr/total_white2black"
+                    android:textColor="?attr/total_black2white"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
                     android:onClick='@{viewModel::onButtonClick}'
@@ -93,8 +93,8 @@
                     android:text="@string/every_month"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="?attr/totalWhite2Black"
-                    android:textColor="?attr/totalB2W"
+                    android:background="?attr/total_white2black"
+                    android:textColor="?attr/total_black2white"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
                     android:onClick='@{viewModel::onButtonClick}'
@@ -106,8 +106,8 @@
                     android:text="@string/every_year"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="?attr/totalWhite2Black"
-                    android:textColor="?attr/totalB2W"
+                    android:background="?attr/total_white2black"
+                    android:textColor="?attr/total_black2white"
                     android:textAllCaps="false"
                     android:fontFamily="@font/noto_sans"
                     android:onClick='@{viewModel::onButtonClick}'
