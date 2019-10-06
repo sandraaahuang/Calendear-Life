@@ -1,5 +1,6 @@
 package com.sandra.calendearlife.reminders
 
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.LiveData
@@ -11,6 +12,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DOCUMENT_ID
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
+import com.sandra.calendearlife.util.Logger
 import com.sandra.calendearlife.util.UserManager
 
 class RemindersViewModel : ViewModel() {
@@ -69,6 +71,7 @@ class RemindersViewModel : ViewModel() {
                 }
                 .addOnCompleteListener {
                     _isUpdateCompleted.value = true
+                    Logger.e("calendar = $calendar, reminder = $reminder")
                 }
         }
     }
