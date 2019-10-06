@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="?attr/saveColor" />
+    <solid android:color="?attr/save_button_color" />
 
     <!--border radius in dp-->
     <corners android:bottomLeftRadius="@dimen/card_raduis"

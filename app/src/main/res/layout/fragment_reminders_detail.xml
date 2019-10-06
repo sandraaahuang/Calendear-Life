@@ -9,14 +9,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/background_stone2"
             android:backgroundTintMode="src_atop"
-            android:backgroundTint="?attr/stoneTint"
+            android:backgroundTint="?attr/stone_tint_color"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:cardBackgroundColor="?attr/totalWhite2Black"
+                app:cardBackgroundColor="?attr/total_white2black"
                 app:cardCornerRadius="@dimen/card_raduis"
                 app:cardElevation="@dimen/card_elevation"
                 android:elevation="@dimen/card_elevation"
@@ -40,7 +40,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/normal_text_color"
                         android:textSize="@dimen/normal_text_size"
                         android:layout_marginTop="16dp"
                         app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
                         android:id="@+id/view_spacing_line"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:background="?attr/linecolor"
+                        android:background="?attr/separate_line_color"
                         app:layout_constraintTop_toBottomOf="@+id/remindersTitle" android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
                 <Switch
@@ -59,7 +59,7 @@
                         android:textSize="@dimen/normal_text_size"
                         android:layout_height="wrap_content"
                         android:id="@+id/switchRemindDay"
-                        android:textColor="?attr/totalB2W"
+                        android:textColor="?attr/total_black2white"
                         android:fontFamily="@font/noto_sans"
                         android:checked="@{viewModel.selectedItem.hasRemindDate}"
                         app:layout_constraintStart_toStartOf="@+id/remindersTitle"
@@ -82,7 +82,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans"
-                            android:textColor="?attr/textcolor"
+                            android:textColor="?attr/normal_text_color"
                             android:textSize="@dimen/normal_text_size"
                             android:text="@{viewModel.selectedItem.remindDate.substring(0,10)}"
                             android:onClick="@{viewModel::onButtonClick}"
@@ -93,7 +93,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/noto_sans"
                             android:id="@+id/remindTime"
-                            android:textColor="?attr/textcolor"
+                            android:textColor="?attr/normal_text_color"
                             android:textSize="@dimen/normal_text_size"
                             android:text="@{viewModel.selectedItem.remindDate.substring(10)}"
                             android:onClick="@{viewModel::onButtonClick}"
@@ -106,7 +106,7 @@
                             android:fontFamily="@font/noto_sans"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/totalB2W"
+                            android:textColor="?attr/total_black2white"
                             android:textSize="@dimen/normal_text_size"
                             android:id="@+id/date" app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="8dp" android:layout_marginTop="16dp"
@@ -117,7 +117,7 @@
                         android:id="@+id/view_spacing_line2"
                         android:layout_width="0dp"
                         android:layout_height="1dp"
-                        android:background="?attr/linecolor"
+                        android:background="?attr/separate_line_color"
                         app:layout_constraintTop_toBottomOf="@+id/remindLayout" android:layout_marginTop="16dp"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -135,7 +135,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/normal_text_size"
-                            android:textColor="?attr/totalB2W"
+                            android:textColor="?attr/total_black2white"
                             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginStart="16dp" android:id="@+id/remindNote"/>
                     <EditText
@@ -146,7 +146,7 @@
                             android:textSize="@dimen/normal_text_size"
                             android:gravity="top"
                             android:ellipsize="end"
-                            android:textColor="?attr/textcolor"
+                            android:textColor="?attr/normal_text_color"
                             android:id="@+id/editText_remindNote"
                             app:layout_constraintStart_toStartOf="@+id/remindNote" android:layout_marginEnd="16dp"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -186,7 +186,7 @@
                 <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:tint="?attr/totalB2W"
+                        android:tint="?attr/total_black2white"
                         app:srcCompat="@drawable/icon_remove"
                         android:id="@+id/removeIcon" app:layout_constraintTop_toTopOf="parent"
                         android:layout_marginTop="8dp"

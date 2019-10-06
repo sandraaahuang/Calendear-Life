@@ -8,14 +8,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/background_stone2"
             android:backgroundTintMode="src_atop"
-            android:backgroundTint="?attr/stoneTint"
+            android:backgroundTint="?attr/stone_tint_color"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:cardBackgroundColor="?attr/totalWhite2Black"
+            app:cardBackgroundColor="?attr/total_white2black"
             app:cardCornerRadius="@dimen/card_raduis"
             app:cardElevation="@dimen/card_elevation"
             android:elevation="@dimen/card_elevation"
@@ -36,18 +36,18 @@
         <EditText
                 android:id="@+id/countdownTitleInput"
                 android:hint="@string/enter_title"
-                android:textColorHint="?attr/textcolor"
+                android:textColorHint="?attr/normal_text_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/noto_sans"
                 android:textSize="@dimen/enter_title_size"
-                android:textColor="?attr/totalB2W"
+                android:textColor="?attr/total_black2white"
                 android:background="@null"
                 app:layout_constraintTop_toBottomOf="@+id/removeIcon" android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"/>
         <ImageView
                 android:id="@+id/removeIcon"
-                android:tint="?attr/drawableTint"
+                android:tint="?attr/drawable_tint_color"
                 android:layout_width="16dp"
                 android:layout_height="16dp" app:srcCompat="@drawable/icon_remove"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
@@ -57,7 +57,7 @@
                 android:id="@+id/view_spacing_line2"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="?attr/linecolor"
+                android:background="?attr/separate_line_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"
@@ -70,7 +70,7 @@
 
             <ImageView
                     android:id="@+id/dateIcon"
-                    android:tint="?attr/drawableTint"
+                    android:tint="?attr/drawable_tint_color"
                     android:layout_width="24dp"
                     android:layout_height="24dp" app:srcCompat="@drawable/icon_schedule"
                     android:layout_marginTop="8dp"
@@ -78,7 +78,7 @@
                     android:layout_marginStart="16dp"/>
             <TextView
                     android:text="@string/date"
-                    android:textColor="?attr/totalB2W"
+                    android:textColor="?attr/total_black2white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/countdownDate"
@@ -94,7 +94,7 @@
                     android:textSize="@dimen/normal_text_size"
                     android:text=""
                     android:onClick="@{viewModel::onButtonClick}"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/normal_text_color"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginEnd="16dp"
                     app:layout_constraintTop_toTopOf="@+id/countdownDate"
@@ -105,13 +105,13 @@
                 android:id="@+id/view_spacing_line4"
                 android:layout_width="411dp"
                 android:layout_height="1dp"
-                android:background="?attr/linecolor"
+                android:background="?attr/separate_line_color"
                 app:layout_constraintTop_toBottomOf="@+id/editCountdownLayout" android:layout_marginTop="4dp"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
                 android:id="@+id/noteIcon"
-                android:tint="?attr/drawableTint"
+                android:tint="?attr/drawable_tint_color"
                 android:layout_width="24dp"
                 android:layout_height="24dp" app:srcCompat="@drawable/icon_note"
                 android:layout_marginTop="16dp"
@@ -119,12 +119,12 @@
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"/>
         <EditText
                 android:hint="@string/add_note"
-                android:textColorHint="?attr/textcolor"
+                android:textColorHint="?attr/normal_text_color"
                 android:background="@null"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:id="@+id/noteInput"
-                android:textColor="?attr/totalB2W"
+                android:textColor="?attr/total_black2white"
                 android:gravity="top"
                 android:ellipsize="end"
                 android:textSize="@dimen/normal_text_size"

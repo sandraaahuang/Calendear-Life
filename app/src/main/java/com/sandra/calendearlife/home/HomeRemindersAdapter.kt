@@ -22,7 +22,7 @@ class HomeRemindersAdapter(val viewModel: HomeViewModel, private val onClickList
             binding.reminders = reminders
             binding.remindersChecked.setOnClickListener {
                 viewModel.updateCheckedReminders(reminders.documentID)
-                binding.remindersTitle.setTextColor(MyApplication.instance.getColor(R.color.delete_red))
+                binding.remindersTitle.setTextColor(MyApplication.instance.getColor(R.color.primary_gray))
                 binding.checkStatus.visibility = View.VISIBLE
 
             }

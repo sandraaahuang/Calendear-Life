@@ -6,24 +6,23 @@
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/deep_gray</item>
-        <item name="backgroundcolor">@color/dark_white</item>
-        <item name="cardbackground">@color/translucent_white</item>
-        <item name="textcolor">#868686</item>
-        <item name="toolbarcolor">@color/gray</item>
-        <item name="linecolor">@android:color/darker_gray</item>
-        <item name="dotcolor">@color/black</item>
-        <item name="buttoncolor">@color/black</item>
-        <item name="drawableTint">@color/black</item>
-        <item name="stoneTint">@color/translucent_80</item>
-        <item name="saveColor">@color/black</item>
-        <item name="toolbarText">@color/deep_gray</item>
-        <item name="monthBackground">#EEEEEE</item>
-        <item name="redText">@color/delete_red</item>
-        <item name="totalWhite2Black">@color/white</item>
-        <item name="totalB2W">@color/black</item>
+        <item name="background_color">@color/dark_white</item>
+        <item name="card_background_color">@color/translucent_white</item>
+        <item name="normal_text_color">#868686</item>
+        <item name="toolbar_color">@color/gray</item>
+        <item name="separate_line_color">@android:color/darker_gray</item>
+        <item name="dot_color">@color/black</item>
+        <item name="button_color">@color/black</item>
+        <item name="drawable_tint_color">@color/black</item>
+        <item name="stone_tint_color">@color/translucent_80</item>
+        <item name="save_button_color">@color/black</item>
+        <item name="toolbar_text_color">@color/deep_gray</item>
+        <item name="month_background">#EEEEEE</item>
+        <item name="total_white2black">@color/white</item>
+        <item name="total_black2white">@color/black</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
-        <item name="homeCardColor">#fdf5e6</item>
+        <item name="home_card_color">#fdf5e6</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
     </style>
@@ -34,45 +33,44 @@
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/deep_gray</item>
-        <item name="backgroundcolor">@color/deep_gray</item>
-        <item name="cardbackground">@color/translucent_dark</item>
-        <item name="textcolor">@color/dark_white</item>
-        <item name="toolbarcolor">@color/black</item>
-        <item name="linecolor">@color/dark_white</item>
-        <item name="dotcolor">@color/dark_white</item>
-        <item name="buttoncolor">@color/dark_white</item>
-        <item name="drawableTint">@color/dark_white</item>
-        <item name="stoneTint">@color/translucent_dark</item>
-        <item name="saveColor">#299999</item>
-        <item name="toolbarText">@color/dark_white</item>
-        <item name="monthBackground">@color/black</item>
-        <item name="redText">#D6BF55</item>
-        <item name="totalWhite2Black">@color/black</item>
-        <item name="totalB2W">@color/white</item>
+        <item name="background_color">@color/deep_gray</item>
+        <item name="card_background_color">@color/translucent_dark</item>
+        <item name="normal_text_color">@color/dark_white</item>
+        <item name="toolbar_color">@color/black</item>
+        <item name="separate_line_color">@color/dark_white</item>
+        <item name="dot_color">@color/dark_white</item>
+        <item name="button_color">@color/dark_white</item>
+        <item name="drawable_tint_color">@color/dark_white</item>
+        <item name="stone_tint_color">@color/translucent_dark</item>
+        <item name="save_button_color">#299999</item>
+        <item name="toolbar_text_color">@color/dark_white</item>
+        <item name="month_background">@color/black</item>
+        <item name="total_white2black">@color/black</item>
+        <item name="total_black2white">@color/white</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
-        <item name="homeCardColor">@color/black</item>
+        <item name="home_card_color">@color/black</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">?attr/totalB2W</item>
+        <item name="color">?attr/total_black2white</item>
     </style>
 
     <style name="NavigationView">
-        <item name="android:textColorSecondary">?attr/textcolor</item>
+        <item name="android:textColorSecondary">?attr/normal_text_color</item>
     </style>
 
     <style name="SCBSwitch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
-        <item name="colorControlActivated">?attr/totalB2W</item>
+        <item name="colorControlActivated">?attr/total_black2white</item>
 
         <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">?attr/toolbarText</item>
+        <item name="colorSwitchThumbNormal">?attr/toolbar_text_color</item>
 
         <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">?attr/toolbarText</item>
+        <item name="android:colorForeground">?attr/toolbar_text_color</item>
     </style>
 
     <style name="MessageDialog">
