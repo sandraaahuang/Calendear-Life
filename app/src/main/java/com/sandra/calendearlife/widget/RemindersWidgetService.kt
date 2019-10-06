@@ -122,7 +122,7 @@ class RemindersWidgetService : RemoteViewsService() {
 
             if (position == selectedPosition) {
                 views.setViewVisibility(R.id.remindersCheckedStauts, View.VISIBLE)
-                views.setTextColor(R.id.remindersTextView, MyApplication.instance.getColor(R.color.delete_red))
+                views.setTextColor(R.id.remindersTextView, MyApplication.instance.getColor(R.color.primary_gray))
                 
                 updateItem(remindersItem[position].documentID)
 
