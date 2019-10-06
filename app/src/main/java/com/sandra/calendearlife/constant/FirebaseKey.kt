@@ -36,13 +36,13 @@ class FirebaseKey {
         const val IS_OVERDUE = "isOverdue"
 
         // Color
-        const val COLOR_REMIND = "C02942"
-        const val COLOR_COUNTDOWN = "100038"
-        const val COLOR_CAL = "8C6B8B"
-        const val COLOR_REMIND_CAL = "542437"
-        const val COLOR_COUNTDOWN_CAL = "cb9b8c"
-        const val COLOR_ALL = "A6292F"
-        const val COLOR_GOOGLE = "245E2C"
+        const val COLOR_REMIND = "C3AEC5"
+        const val COLOR_COUNTDOWN = "DFB8C1"
+        const val COLOR_CAL = "B2C18E"
+        const val COLOR_REMIND_CAL = "8CB8BE"
+        const val COLOR_COUNTDOWN_CAL = "D8CCA0"
+        const val COLOR_ALL = "B6A4A0"
+        const val COLOR_GOOGLE = "94A2C2"
 
         // Google Calendar Constant
         const val PARENTHESES = "(("
