@@ -88,9 +88,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         MyApplication.instance.getSharedPreferences(DARKMODE, Context.MODE_PRIVATE)
 
     lateinit var binding: ActivityMainBinding
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
-    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     private val viewModel: MainViewModel by lazy {
         ViewModelProviders.of(this).get(MainViewModel::class.java)
@@ -107,11 +104,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun createFlagIntent(context: Context, documentId: String?, vararg flags: Int): Intent {
 
         val intent = createIntent(context, documentId)
-
         for (flag in flags) {
             intent.flags = flag
         }
-
         return intent
 
     }
@@ -132,12 +127,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         loadLocale()
 
-        if (Locale.getDefault().language.isNullOrEmpty() && nowLanguage == ZH) {
-            setLocale(CHINESE)
+        when {
+            (Locale.getDefault().language.isNullOrEmpty() && nowLanguage == ZH) -> setLocale(CHINESE)
+            else -> loadLocale()
+        }
 
-        } else {
-            loadLocale()
-
+        when (Locale.getDefault().language) {
+            CHINESE -> updateZhEnum()
+            else -> updateEnEnum()
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -149,6 +146,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupNavController()
         setupStatusBar()
         registerConnectionReceiver()
+        setupRemindersWidgetIntent()
 
         when {
             !UserManager.isLoggedIn -> setDrawerEnabled(false)
@@ -156,7 +154,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         intent.extras?.let { extras ->
             UserManager.id?.let {
-                viewModel.getRemindersItem4Widget(extras.get(REMINDERSITEM).toString())
+                viewModel.getWidgetItemAndNavigate2Detail(extras.get(REMINDERSITEM).toString())
             }
         }
 
@@ -172,21 +170,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 requestPermission4Calendar()
             }
         })
-        
-        val widgetExtras = intent.getStringExtra(TURN)
-
-        if (!TextUtils.isEmpty(widgetExtras)) {
-            when (widgetExtras) {
-                ADDFRAGMENT -> {
-                    findNavController(R.id.myNavHostFragment)
-                        .navigate(NavigationDirections.actionGlobalRemindersFragment())
-                }
-                LOGIN -> {
-                    findNavController(R.id.myNavHostFragment)
-                        .navigate(NavigationDirections.actionGlobalPreviewFragment())
-                }
-            }
-        }
 
         UserManager.id?.let {
             viewModel.set4AlarmManagerReminderItem()
@@ -231,10 +214,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_DAY -> {
 
-                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everydayIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction(ED), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, everydayIntent.setAction(ED),
+                                    PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -244,10 +228,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_WEEK -> {
 
-                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everyweekIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction(EW), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, everyweekIntent.setAction(EW),
+                                    PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -258,10 +243,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_MONTH -> {
 
-                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everyMonthIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction(EM), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, everyMonthIntent.setAction(EM),
+                                    PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -272,10 +258,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_YEAR -> {
 
-                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everyYearIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction(EY), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234, everyYearIntent.setAction(EY),
+                                    PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setInexactRepeating(
                                     AlarmManager.RTC_WAKEUP,
@@ -307,24 +294,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         actionView.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                preferences.edit().putString(STATUS, DARK).apply()
-                restartApp()
-
-            } else if (!isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                preferences.edit().putString(STATUS, LIGHT).apply()
-                restartApp()
-
+            when (isChecked) {
+                true -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    preferences.edit().putString(STATUS, DARK).apply()
+                    restartApp()
+                }
+                else -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    preferences.edit().putString(STATUS, LIGHT).apply()
+                    restartApp()
+                }
             }
         }
+    }
 
-        Logger.d("default language = ${Locale.getDefault()}")
-        when (Locale.getDefault().language) {
-            CHINESE -> updateZhEnum()
-            else -> updateEnEnum()
+    private fun setupRemindersWidgetIntent() {
+        if (!TextUtils.isEmpty(intent.getStringExtra(TURN))) {
+            when (intent.getStringExtra(TURN)) {
+                ADDFRAGMENT -> {
+                    findNavController(R.id.myNavHostFragment)
+                        .navigate(NavigationDirections.actionGlobalRemindersFragment())
+                }
+                LOGIN -> {
+                    findNavController(R.id.myNavHostFragment)
+                        .navigate(NavigationDirections.actionGlobalPreviewFragment())
+                }
+            }
         }
     }
 
@@ -337,21 +333,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun setupToolbar() {
         binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
-        drawerLayout = binding.drawerLayout
-        navView = binding.navView
-        toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         // hide title of toolbar
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
-        drawerLayout.addDrawerListener(toggle)
+        binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        navView.setNavigationItemSelectedListener(this)
+        binding.navView.setNavigationItemSelectedListener(this)
     }
 
     override fun onBackPressed() {
@@ -417,8 +410,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-
-        drawerLayout.closeDrawer(GravityCompat.START)
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 
@@ -468,9 +460,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun loadLocale() {
-        val prefs = getSharedPreferences(SETTINGS, Context.MODE_PRIVATE)
-        val language = prefs.getString(LANG, "")
-        setLocale(language!!)
+        val languagePreference = getSharedPreferences(SETTINGS, Context.MODE_PRIVATE)
+        val language = languagePreference.getString(LANG, "")
+        language?.let {
+            setLocale(it)
+        }
     }
 
     private fun restartApp() {
@@ -497,25 +491,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun setDrawer() {
-        val drawerLayout = binding.drawerLayout
-
         // Set up header of drawer ui using data binding
         val bindingNavHeader = NavHeaderMainBinding.inflate(
-            LayoutInflater.from(this), binding.navView, false
-        )
+            LayoutInflater.from(this), binding.navView, false)
 
         bindingNavHeader.lifecycleOwner = this
         bindingNavHeader.viewModel = viewModel
         binding.navView.addHeaderView(bindingNavHeader.root)
 
-        drawerLayout.fitsSystemWindows = true
-        drawerLayout.clipToPadding = false
+        binding.drawerLayout.fitsSystemWindows = true
+        binding.drawerLayout.clipToPadding = false
 
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-
-
     }
 
     private fun getStatusBarHeight(): Int {
@@ -576,430 +565,174 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
 class AlarmReceiver : BroadcastReceiver() {
-
+    val db = FirebaseFirestore.getInstance()
     override fun onReceive(context: Context?, intent: Intent?) {
 
         when (intent?.action) {
             SharedPreferenceKey.COUNTDOWN -> {
-                val db = FirebaseFirestore.getInstance()
 
                 Logger.d("countdown trigger time = ${Timestamp.now().seconds * 1000}")
 
                 val countdownItem = ArrayList<Countdown>()
 
-                db.collection(DATA)
-                    .document(UserManager.id!!)
-                    .collection(CALENDAR)
-                    .get()
-                    .addOnSuccessListener { documents ->
+                UserManager.id?.let {
+                    db.collection(DATA)
+                        .document(it)
+                        .collection(CALENDAR)
+                        .get()
+                        .addOnSuccessListener { documents ->
 
-                        for (calendar in documents) {
+                            for (calendar in documents) {
 
-                            // get countdowns
-                            db.collection(DATA)
-                                .document(UserManager.id!!)
-                                .collection(CALENDAR)
-                                .document(calendar.id)
-                                .collection(FirebaseKey.COUNTDOWN)
-                                .whereEqualTo(IS_OVERDUE, false)
-                                .get()
-                                .addOnSuccessListener { countdownDocuments ->
+                                // get countdowns
+                                db.collection(DATA)
+                                    .document(it)
+                                    .collection(CALENDAR)
+                                    .document(calendar.id)
+                                    .collection(FirebaseKey.COUNTDOWN)
+                                    .whereEqualTo(IS_OVERDUE, false)
+                                    .get()
+                                    .addOnSuccessListener { countdownDocuments ->
 
-                                    for (countdown in countdownDocuments) {
+                                        for (countdown in countdownDocuments) {
 
-                                        getCountdownItemFromFirebase(countdown, countdownItem)
+                                            getCountdownItemFromFirebase(countdown, countdownItem)
+                                        }
+
+                                        for ((index, value) in countdownItem.withIndex()) {
+
+                                            setupNotification(
+                                                "${((value.targetTimestamp.seconds -
+                                                        Timestamp.now().seconds) / 86400)} days " +
+                                                        "before ${value.title}",
+                                                null, index)
+                                        }
+
                                     }
 
-                                    for ((index, value) in countdownItem.withIndex()) {
-
-                                        val textTitle =
-                                            "${((value.targetTimestamp.seconds - Timestamp.now().seconds) / 86400)} days " +
-                                                    "before ${value.title}"
-                                        val CHANNEL_ID = "Calendear"
-                                        val notificationId = index
-
-
-                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_line)
-                                            .setContentTitle(textTitle)
-                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                            .setAutoCancel(true)
-
-                                        // Create the NotificationChannel, but only on API 26+ because
-                                        // the NotificationChannel class is new and not in the support library
-
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            val name = getString(R.string.create_channel)
-                                            val descriptionText =
-                                                getString(R.string.create_channel)
-                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
-                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                                                description = descriptionText
-                                            }
-                                            // Register the channel with the system
-                                            val notificationManager: NotificationManager =
-                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                                            notificationManager.createNotificationChannel(channel)
-                                        }
-                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
-                                            // notificationId is a unique int for each notification that you must define
-                                            notify(notificationId, builder.build())
-                                        }
-                                    }
-
-                                }
-
+                            }
                         }
-                    }
+                }
             }
             DNR -> {
-                val db = FirebaseFirestore.getInstance()
 
                 Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
 
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection(DATA)
-                    .document(UserManager.id!!)
-                    .collection(CALENDAR)
-                    .get()
-                    .addOnSuccessListener { documents ->
-
-                        for (calendar in documents) {
-
-                            //get reminders ( only ischecked is false )
-                            db.collection(DATA)
-                                .document(UserManager.id!!)
-                                .collection(CALENDAR)
-                                .document(calendar.id)
-                                .collection(REMINDERS)
-                                .whereEqualTo(IS_CHECKED, false)
-                                .whereEqualTo(HAS_REMIND_DATE, true)
-                                .whereEqualTo(FREQUENCY, DOES_NOT_REPEAT)
-                                .get()
-                                .addOnSuccessListener { remindersDocuments ->
-
-                                    for (reminder in remindersDocuments) {
-
-                                        getRemindersItemFromFirebase(reminder, remindersItem)
-                                    }
-
-                                    for ((index, value) in remindersItem.withIndex()) {
-
-                                        val textTitle = value.title
-                                        val textContent = value.note
-                                        val CHANNEL_ID = "Calendear"
-                                        val notificationId = index
-
-
-                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_line)
-                                            .setContentTitle(textTitle)
-                                            .setContentText(textContent)
-                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                            .setAutoCancel(true)
-
-                                        // Create the NotificationChannel, but only on API 26+ because
-                                        // the NotificationChannel class is new and not in the support library
-
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            val name = getString(R.string.create_channel)
-                                            val descriptionText =
-                                                getString(R.string.create_channel)
-                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
-                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                                                description = descriptionText
-                                            }
-                                            // Register the channel with the system
-                                            val notificationManager: NotificationManager =
-                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                                            notificationManager.createNotificationChannel(channel)
-                                        }
-                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
-                                            // notificationId is a unique int for each notification that you must define
-                                            notify(notificationId, builder.build())
-                                        }
-                                    }
-
-                                }
-
-                        }
-                    }
-
+                setupRemindersAlarmItem(remindersItem, DOES_NOT_REPEAT)
             }
             ED -> {
-                val db = FirebaseFirestore.getInstance()
 
                 Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
 
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection(DATA)
-                    .document(UserManager.id!!)
-                    .collection(CALENDAR)
-                    .get()
-                    .addOnSuccessListener { remindersDocuments ->
-
-                        for (reminder in remindersDocuments) {
-
-                            getRemindersItemFromFirebase(reminder, remindersItem)
-                        }
-
-                        for ((index, value) in remindersItem.withIndex()) {
-
-                            val textTitle = value.title
-                            val textContent = value.note
-                            val CHANNEL_ID = "Calendear"
-                            val notificationId = index
-
-
-                            val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                .setSmallIcon(R.drawable.app_line)
-                                .setContentTitle(textTitle)
-                                .setContentText(textContent)
-                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                .setAutoCancel(true)
-
-                            // Create the NotificationChannel, but only on API 26+ because
-                            // the NotificationChannel class is new and not in the support library
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                val name = getString(R.string.create_channel)
-                                val descriptionText =
-                                    getString(R.string.create_channel)
-                                val importance = NotificationManager.IMPORTANCE_DEFAULT
-                                val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                                    description = descriptionText
-                                }
-                                // Register the channel with the system
-                                val notificationManager: NotificationManager =
-                                    MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                                notificationManager.createNotificationChannel(channel)
-                            }
-                            with(NotificationManagerCompat.from(MyApplication.instance)) {
-                                // notificationId is a unique int for each notification that you must define
-                                notify(notificationId, builder.build())
-                            }
-                        }
-
-                    }
-
+                setupRemindersAlarmItem(remindersItem, EVERY_DAY)
             }
             EW -> {
-                val db = FirebaseFirestore.getInstance()
 
                 Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
 
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection(DATA)
-                    .document(UserManager.id!!)
-                    .collection(CALENDAR)
-                    .get()
-                    .addOnSuccessListener { remindersDocuments ->
-
-                        for (reminder in remindersDocuments) {
-
-                            getRemindersItemFromFirebase(reminder, remindersItem)
-                        }
-
-                        for ((index, value) in remindersItem.withIndex()) {
-
-                            val textTitle = value.title
-                            val textContent = value.note
-                            val CHANNEL_ID = "Calendear"
-                            val notificationId = index
-
-
-                            val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                .setSmallIcon(R.drawable.app_line)
-                                .setContentTitle(textTitle)
-                                .setContentText(textContent)
-                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                .setAutoCancel(true)
-
-                            // Create the NotificationChannel, but only on API 26+ because
-                            // the NotificationChannel class is new and not in the support library
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                val name = getString(R.string.create_channel)
-                                val descriptionText =
-                                    getString(R.string.create_channel)
-                                val importance = NotificationManager.IMPORTANCE_DEFAULT
-                                val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                                    description = descriptionText
-                                }
-                                // Register the channel with the system
-                                val notificationManager: NotificationManager =
-                                    MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                                notificationManager.createNotificationChannel(channel)
-                            }
-                            with(NotificationManagerCompat.from(MyApplication.instance)) {
-                                // notificationId is a unique int for each notification that you must define
-                                notify(notificationId, builder.build())
-                            }
-                        }
-
-                    }
+                setupRemindersAlarmItem(remindersItem, EVERY_WEEK)
 
             }
             EM -> {
-                val db = FirebaseFirestore.getInstance()
 
                 Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
 
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection(DATA)
-                    .document(UserManager.id!!)
-                    .collection(CALENDAR)
-                    .get()
-                    .addOnSuccessListener { documents ->
-
-                        for (calendar in documents) {
-
-                            //get reminders ( only ischecked is false )
-                            db.collection(DATA)
-                                .document(UserManager.id!!)
-                                .collection(CALENDAR)
-                                .document(calendar.id)
-                                .collection(REMINDERS)
-                                .whereEqualTo(IS_CHECKED, false)
-                                .whereEqualTo(HAS_REMIND_DATE, true)
-                                .whereEqualTo(FREQUENCY, EVERY_MONTH)
-                                .get()
-                                .addOnSuccessListener { remindersDocuments ->
-
-                                    for (reminder in remindersDocuments) {
-
-                                        getRemindersItemFromFirebase(reminder, remindersItem)
-                                    }
-
-                                    for ((index, value) in remindersItem.withIndex()) {
-
-                                        val textTitle = value.title
-                                        val textContent = value.note
-                                        val CHANNEL_ID = "Calendear"
-                                        val notificationId = index
-
-
-                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_line)
-                                            .setContentTitle(textTitle)
-                                            .setContentText(textContent)
-                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                            .setAutoCancel(true)
-
-                                        // Create the NotificationChannel, but only on API 26+ because
-                                        // the NotificationChannel class is new and not in the support library
-
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            val name = getString(R.string.create_channel)
-                                            val descriptionText =
-                                                getString(R.string.create_channel)
-                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
-                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                                                description = descriptionText
-                                            }
-                                            // Register the channel with the system
-                                            val notificationManager: NotificationManager =
-                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                                            notificationManager.createNotificationChannel(channel)
-                                        }
-                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
-                                            // notificationId is a unique int for each notification that you must define
-                                            notify(notificationId, builder.build())
-                                        }
-                                    }
-
-                                }
-
-                        }
-                    }
+                setupRemindersAlarmItem(remindersItem, EVERY_MONTH)
 
             }
             EY -> {
-                val db = FirebaseFirestore.getInstance()
 
                 Logger.d("reminder trigger time = ${Timestamp.now().seconds * 1000}")
 
                 val remindersItem = ArrayList<Reminders>()
 
-                db.collection(DATA)
-                    .document(UserManager.id!!)
-                    .collection(CALENDAR)
-                    .get()
-                    .addOnSuccessListener { documents ->
-
-                        for (calendar in documents) {
-
-                            //get reminders ( only ischecked is false )
-                            db.collection(DATA)
-                                .document(UserManager.id!!)
-                                .collection(CALENDAR)
-                                .document(calendar.id)
-                                .collection(REMINDERS)
-                                .whereEqualTo(IS_CHECKED, false)
-                                .whereEqualTo(HAS_REMIND_DATE, true)
-                                .whereEqualTo(FREQUENCY, EVERY_YEAR)
-                                .get()
-                                .addOnSuccessListener { remindersDocuments ->
-
-                                    for (reminder in remindersDocuments) {
-
-                                        getRemindersItemFromFirebase(reminder, remindersItem)
-                                    }
-
-                                    for ((index, value) in remindersItem.withIndex()) {
-
-                                        val textTitle = value.title
-                                        val textContent = value.note
-                                        val CHANNEL_ID = "Calendear"
-                                        val notificationId = index
-
-
-                                        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
-                                            .setSmallIcon(R.drawable.app_line)
-                                            .setContentTitle(textTitle)
-                                            .setContentText(textContent)
-                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                            .setAutoCancel(true)
-
-                                        // Create the NotificationChannel, but only on API 26+ because
-                                        // the NotificationChannel class is new and not in the support library
-
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                            val name = getString(R.string.create_channel)
-                                            val descriptionText =
-                                                getString(R.string.create_channel)
-                                            val importance = NotificationManager.IMPORTANCE_DEFAULT
-                                            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                                                description = descriptionText
-                                            }
-                                            // Register the channel with the system
-                                            val notificationManager: NotificationManager =
-                                                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                                            notificationManager.createNotificationChannel(channel)
-                                        }
-                                        with(NotificationManagerCompat.from(MyApplication.instance)) {
-                                            // notificationId is a unique int for each notification that you must define
-                                            notify(notificationId, builder.build())
-                                        }
-                                    }
-
-                                }
-
-                        }
-                    }
-
+                setupRemindersAlarmItem(remindersItem, EVERY_YEAR)
             }
         }
 
+    }
+
+    private fun setupRemindersAlarmItem(remindersItem: ArrayList<Reminders>, frequency: String) {
+        UserManager.id?.let { userManagerId ->
+            db.collection(DATA)
+                .document(userManagerId)
+                .collection(CALENDAR)
+                .get()
+                .addOnSuccessListener { documents ->
+
+                    for (calendar in documents) {
+
+                        //get reminders ( only ischecked is false )
+                        db.collection(DATA)
+                            .document(userManagerId)
+                            .collection(CALENDAR)
+                            .document(calendar.id)
+                            .collection(REMINDERS)
+                            .whereEqualTo(IS_CHECKED, false)
+                            .whereEqualTo(HAS_REMIND_DATE, true)
+                            .whereEqualTo(FREQUENCY, frequency)
+                            .get()
+                            .addOnSuccessListener { remindersDocuments ->
+
+                                for (reminder in remindersDocuments) {
+
+                                    getRemindersItemFromFirebase(reminder, remindersItem)
+                                }
+
+                                for ((index, value) in remindersItem.withIndex()) {
+                                    value.title?.let {
+                                        setupNotification(it, value.note, index)
+                                    }
+                                }
+
+                            }
+
+                    }
+                }
+        }
+    }
+
+    private fun setupNotification(notificationTitle: String,
+                                  notificationContent: String?,
+                                  id: Int) {
+
+        val CHANNEL_ID = "Calendear"
+
+        val builder = NotificationCompat.Builder(MyApplication.instance, CHANNEL_ID)
+            .setSmallIcon(R.drawable.app_line)
+            .setContentTitle(notificationTitle)
+            .setContentText(notificationContent)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.create_channel)
+            val descriptionText =
+                getString(R.string.create_channel)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                MyApplication.instance.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            notificationManager.createNotificationChannel(channel)
+        }
+        with(NotificationManagerCompat.from(MyApplication.instance)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(id, builder.build())
+        }
     }
 }

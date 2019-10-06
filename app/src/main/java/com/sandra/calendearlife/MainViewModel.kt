@@ -41,7 +41,7 @@ class MainViewModel : ViewModel() {
     val userEmail = UserManager.userEmail
     val userPhoto = UserManager.userPhoto
 
-    lateinit var remindAdd: Reminders
+    private lateinit var remindAdd: Reminders
     private val _liveReminders = MutableLiveData<Reminders>()
     val liveReminders: LiveData<Reminders>
         get() = _liveReminders
@@ -55,7 +55,7 @@ class MainViewModel : ViewModel() {
     val hasPermission: LiveData<Boolean>
         get() = _hasPermission
 
-    fun getRemindersItem4Widget(documentId: String) {
+    fun getWidgetItemAndNavigate2Detail(documentId: String) {
 
         UserManager.id?.let {
             db.collection(DATA)
