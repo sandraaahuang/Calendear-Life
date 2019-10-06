@@ -24,9 +24,10 @@ class CalenderMonthViewModel : ViewModel() {
         get() = _liveAllCalendar
 
     private val _navigateToCalendarProperty = MutableLiveData<Calendar>()
-
     val navigateToCalendarProperty: LiveData<Calendar>
         get() = _navigateToCalendarProperty
+
+
 
     fun displayCalendarDetails(calendar: Calendar) {
         _navigateToCalendarProperty.value = calendar

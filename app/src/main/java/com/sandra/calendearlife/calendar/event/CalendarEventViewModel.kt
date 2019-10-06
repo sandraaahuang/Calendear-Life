@@ -255,7 +255,7 @@ class CalendarEventViewModel : ViewModel() {
         }
     }
 
-    fun writeGoogle(
+    fun writeEventIntoGoogleCalendar(
         googleBeginDate: Timestamp, googleEndDate: Timestamp,
         googleNote: String, googleTitle: String,
         item: Any, countdown: Any, reminders: Any
