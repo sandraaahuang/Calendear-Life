@@ -41,7 +41,7 @@ class CalenderMonthViewModel : ViewModel() {
     }
 
     // get user's today calendar
-    fun queryToday(today: Timestamp) {
+    fun queryTodayEvent(today: Timestamp) {
 
         UserManager.id?.let {
             db.collection(DATA)

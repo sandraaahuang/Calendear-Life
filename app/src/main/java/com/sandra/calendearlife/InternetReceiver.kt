@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class InternetReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -23,12 +25,14 @@ class InternetReceiver : BroadcastReceiver() {
 
     private fun buildShowInternetDialog(context: Context?): AlertDialog.Builder {
         val builder = AlertDialog.Builder(context)
-        builder.setTitle("No Internet Connection")
-        builder.setMessage("You need to have Mobile Data or wifi to access this. Press ok to Exit")
+        builder.setTitle(context?.getString(R.string.no_internet_title))
+        builder.setMessage(context?.getString(R.string.no_internet_message))
 
         builder.setPositiveButton(
             "Ok"
-        ) { dialog, which -> dialog.dismiss() }
+        ) { dialog, _ ->
+            dialog.dismiss()
+        }
 
         return builder
     }

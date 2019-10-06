@@ -20,8 +20,8 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.*
 import com.sandra.calendearlife.constant.Const.Companion.SHOW
-import com.sandra.calendearlife.constant.DateFormat.Companion.BEGINTIME
-import com.sandra.calendearlife.constant.DateFormat.Companion.ENDTIME
+import com.sandra.calendearlife.constant.DateFormat.Companion.BEGIN_TIME
+import com.sandra.calendearlife.constant.DateFormat.Companion.END_TIME
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.hour
 import com.sandra.calendearlife.constant.DateFormat.Companion.minute
@@ -63,50 +63,33 @@ class CalendarDetailFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        if (calendarProperty.color == COLOR_GOOGLE
-            ||calendarProperty.color == COLOR_CAL
-            || calendarProperty.color == COLOR_REMIND_CAL
-            ||calendarProperty.color == COLOR_ALL
-            || calendarProperty.color == COLOR_COUNTDOWN_CAL){
+        if (calendarProperty.color == COLOR_GOOGLE) {
 
             binding.allDayLayout.visibility = View.VISIBLE
-            binding.beginDate.visibility = View.VISIBLE
 
-
-            if (calendarProperty.color == COLOR_CAL
-                || calendarProperty.color == COLOR_REMIND_CAL
-                ||calendarProperty.color == COLOR_ALL
-                || calendarProperty.color == COLOR_COUNTDOWN_CAL){
-
-                if (calendarProperty.isAllDay){
-                    binding.beginTime.visibility = View.GONE
-                    binding.endDateText.visibility = View.GONE
-                    binding.endDate.visibility = View.GONE
-                    binding.endTime.visibility = View.GONE
-                }
-                else {
-                    binding.endDate.visibility = View.VISIBLE
-                    binding.endTime.visibility = View.VISIBLE
-                }
+            if ((calendarProperty.color == COLOR_CAL
+                        || calendarProperty.color == COLOR_REMIND_CAL
+                        || calendarProperty.color == COLOR_ALL
+                        || calendarProperty.color == COLOR_COUNTDOWN_CAL) && (
+                        calendarProperty.isAllDay)) {
+                binding.allDayLayout.visibility = View.VISIBLE
+                binding.beginTime.visibility = View.GONE
+                binding.endDateText.visibility = View.GONE
+                binding.endDate.visibility = View.GONE
+                binding.endTime.visibility = View.GONE
             }
 
         } else {
             binding.allDayLayout.visibility = View.GONE
         }
 
-        if (calendarProperty.color == COLOR_REMIND
-            || calendarProperty.color == COLOR_REMIND_CAL
-            || calendarProperty.color == COLOR_ALL
-            ||calendarProperty.hasReminders){
+        if (calendarProperty.hasReminders) {
             binding.remindLayout.visibility = View.VISIBLE
         } else {
             binding.remindLayout.visibility = View.GONE
         }
 
-        if (calendarProperty.color == COLOR_COUNTDOWN
-            ||calendarProperty.color == COLOR_ALL
-            ||calendarProperty.hasCountdown
-            || calendarProperty.color == COLOR_COUNTDOWN_CAL) {
+        if (calendarProperty.hasCountdown) {
             binding.countdownLayout.visibility = View.VISIBLE
         } else {
             binding.countdownLayout.visibility = View.GONE
@@ -153,6 +136,16 @@ class CalendarDetailFragment : Fragment() {
             var endDate = "${binding.endDate.text} ${binding.endTime.text}"
             val targetDate = "${binding.targetDateInput.text}"
             val remindDate = "${binding.remindDate.text} ${binding.remindTime.text}"
+
+            fun judgeEventIsAllDayOrNot() {
+                if (calendarProperty.isAllDay) {
+                    beginDate = "${binding.beginDate.text} $BEGIN_TIME ${getString(R.string.am)}"
+                    endDate = "${binding.beginDate.text} $END_TIME ${getString(R.string.pm)}"
+                } else {
+                    beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
+                    endDate = "${binding.endDate.text} ${binding.endTime.text}"
+                }
+            }
 
             val updateCalendar: HashMap<String, Any>
 
@@ -201,13 +194,8 @@ class CalendarDetailFragment : Fragment() {
                 }
 
                 COLOR_CAL -> {
-                    if (calendarProperty.isAllDay) {
-                        beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
-                        endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
-                    } else {
-                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
-                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
-                    }
+
+                    judgeEventIsAllDayOrNot()
 
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
@@ -224,13 +212,9 @@ class CalendarDetailFragment : Fragment() {
                 }
 
                 COLOR_REMIND_CAL -> {
-                    if (calendarProperty.isAllDay) {
-                        beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
-                        endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
-                    } else {
-                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
-                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
-                    }
+
+                    judgeEventIsAllDayOrNot()
+
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
                         BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
@@ -246,13 +230,9 @@ class CalendarDetailFragment : Fragment() {
                 }
 
                 COLOR_COUNTDOWN_CAL -> {
-                    if (calendarProperty.isAllDay) {
-                        beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
-                        endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
-                    } else {
-                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
-                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
-                    }
+
+                    judgeEventIsAllDayOrNot()
+
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
                         BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
@@ -268,13 +248,9 @@ class CalendarDetailFragment : Fragment() {
                 }
 
                 COLOR_ALL -> {
-                    if (calendarProperty.isAllDay) {
-                        beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
-                        endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
-                    } else {
-                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
-                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
-                    }
+
+                    judgeEventIsAllDayOrNot()
+
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
                         BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
@@ -290,13 +266,9 @@ class CalendarDetailFragment : Fragment() {
                 }
 
                 COLOR_GOOGLE -> {
-                    if (calendarProperty.isAllDay) {
-                        beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
-                        endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
-                    } else {
-                        beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
-                        endDate = "${binding.endDate.text} ${binding.endTime.text}"
-                    }
+
+                    judgeEventIsAllDayOrNot()
+
                     updateCalendar = hashMapOf(
                         DATE to timeFormat2SqlTimestamp(SIMPLE_DATE_FORMAT, beginDate),
                         BEGIN_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT, beginDate),
@@ -394,30 +366,5 @@ class CalendarDetailFragment : Fragment() {
             (activity as MainActivity),
             arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1
         )
-    }
-
-    private fun isAllDayEvent() {
-
-        binding.allDayLayout.visibility = View.VISIBLE
-        binding.beginDate.visibility = View.VISIBLE
-        binding.beginDateText.text = context?.getString(R.string.date_b)
-    }
-
-    private fun isNotAllDayEvent() {
-
-        binding.allDayLayout.visibility = View.VISIBLE
-        binding.beginDate.visibility = View.VISIBLE
-        binding.endDate.visibility = View.VISIBLE
-        binding.endTime.visibility = View.VISIBLE
-    }
-
-    private fun showRemindLayout() {
-
-        binding.remindLayout.visibility = View.VISIBLE
-    }
-
-    private fun showCountdownLayout() {
-
-        binding.countdownLayout.visibility = View.VISIBLE
     }
 }

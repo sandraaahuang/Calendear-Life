@@ -92,4 +92,6 @@
     <string name="until">Until......</string>
     <string name="target_date__">Target Date：</string>
     <string name="open_permission">Please open the permission of Calendar in settings</string>
+    <string name="no_internet_title">No Internet Connection</string>
+    <string name="no_internet_message">You need to have Mobile Data or wifi to access this. Press ok to Exit</string>
 </resources>

@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         intent.extras?.let { extras ->
             UserManager.id?.let {
-                viewModel.getItem(extras.get(REMINDERSITEM).toString())
+                viewModel.getRemindersItem4Widget(extras.get(REMINDERSITEM).toString())
             }
         }
 
@@ -169,10 +169,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         viewModel.hasPermission.observe(this, Observer {
             it?.let {
-                requestPermission()
+                requestPermission4Calendar()
             }
         })
-
+        
         val widgetExtras = intent.getStringExtra(TURN)
 
         if (!TextUtils.isEmpty(widgetExtras)) {
@@ -328,13 +328,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun requestPermission() {
+    private fun requestPermission4Calendar() {
         ActivityCompat.requestPermissions(
             (this),
             arrayOf(Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR), 1
         )
     }
-
 
     private fun setupToolbar() {
         binding.toolbar.setPadding(0, getStatusBarHeight(), 0, 0)
@@ -406,7 +405,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.sync -> {
-                viewModel.queryCalendar()
+                viewModel.queryGoogleCalendar()
             }
 
             R.id.changeLanguage -> {
