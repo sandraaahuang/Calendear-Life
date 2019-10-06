@@ -23,7 +23,9 @@ import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.Const.Companion.TYPE_CALENDAR
 import com.sandra.calendearlife.constant.Const.Companion.putType
-import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
+import com.sandra.calendearlife.constant.calendarTitleFormatter
+import com.sandra.calendearlife.constant.selectionDateFormatter
+import com.sandra.calendearlife.constant.timeSameYearFormatter
 import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
@@ -33,31 +35,13 @@ import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.YearMonth
-import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.WeekFields
 import java.util.*
 
 class CalendarMonthFragment : Fragment() {
 
-    companion object {
-        const val month = "MMM"
-        const val monthYear = "MMM yyyy"
-        const val date = "yyyy-MMM-dd"
-    }
-
-    private val locale: Locale =
-        if (Locale.getDefault().toString() == CHINESE) {
-            Locale.TAIWAN
-        } else {
-            Locale.ENGLISH
-        }
-
     private var selectedDate: LocalDate? = null
     private val today = LocalDate.now()
-
-    private val titleSameYearFormatter = DateTimeFormatter.ofPattern(month, locale)
-    private val titleFormatter = DateTimeFormatter.ofPattern(monthYear, locale)
-    private val selectionFormatter = DateTimeFormatter.ofPattern(date, locale)
 
     private val viewModel: CalenderMonthViewModel by lazy {
         ViewModelProviders.of(this).get(CalenderMonthViewModel::class.java)
@@ -85,10 +69,10 @@ class CalendarMonthFragment : Fragment() {
         })
 
         // floating action button
-        val fabOpen = AnimationUtils.loadAnimation(this.context, R.anim.fab_open)
-        val fabClose = AnimationUtils.loadAnimation(this.context, R.anim.fab_close)
-        val rotateForward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_forward)
-        val rotateBackward = AnimationUtils.loadAnimation(this.context, R.anim.rotate_backward)
+        val fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open)
+        val fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close)
+        val rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward)
+        val rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward)
         var isOpen = false
 
         binding.fabAdd.setOnClickListener {
@@ -174,10 +158,10 @@ class CalendarMonthFragment : Fragment() {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.day = day
-                val textView = container.view.dayText
+                val dayText = container.view.dayText
                 val dotView = container.view.dotView
 
-                textView.text = day.date.dayOfMonth.toString()
+                dayText.text = day.date.dayOfMonth.toString()
 
                 viewModel.liveAllCalendar.observe(this@CalendarMonthFragment,
                     androidx.lifecycle.Observer { calendar ->
@@ -191,28 +175,28 @@ class CalendarMonthFragment : Fragment() {
                 })
 
                 if (day.owner == DayOwner.THIS_MONTH) {
-                    textView.visibility = View.VISIBLE
+                    dayText.visibility = View.VISIBLE
                     when (day.date) {
                         today -> {
 
-                            textView.setTextColor(MyApplication.instance.getColor(R.color.white))
-                            textView.setBackgroundResource(R.drawable.today_bg)
+                            dayText.setTextColor(MyApplication.instance.getColor(R.color.white))
+                            dayText.setBackgroundResource(R.drawable.today_bg)
                             dotView.visibility = View.INVISIBLE
                         }
                         selectedDate -> {
 
-                            textView.setBackgroundResource(R.drawable.selected_bg)
+                            dayText.setBackgroundResource(R.drawable.selected_bg)
                             dotView.visibility = View.INVISIBLE
                         }
 
                         else -> {
 
-                            textView.setBackgroundResource(R.color.translucent_80)
+                            dayText.setBackgroundResource(R.color.translucent_80)
                         }
                     }
                 } else {
 
-                    textView.visibility = View.INVISIBLE
+                    dayText.visibility = View.INVISIBLE
                     dotView.visibility = View.INVISIBLE
                 }
             }
@@ -221,9 +205,9 @@ class CalendarMonthFragment : Fragment() {
         calendar.monthScrollListener = {
 
             requireActivity().textView.text = if (it.year == today.year) {
-                titleSameYearFormatter.format(it.yearMonth)
+                timeSameYearFormatter(it.yearMonth)
             } else {
-                titleFormatter.format(it.yearMonth)
+                calendarTitleFormatter(it.yearMonth)
             }
 
             // Select the first day of the month when
@@ -241,8 +225,8 @@ class CalendarMonthFragment : Fragment() {
                 if (container.legendLayout.tag == null) {
                     container.legendLayout.tag = month.yearMonth
                     container.legendLayout.children.map { it as TextView }
-                        .forEachIndexed { index, textView ->
-                        textView.text = daysOfWeek[index].name.first().toString()
+                        .forEachIndexed { index, monthHeader ->
+                        monthHeader.text = daysOfWeek[index].name.first().toString()
                     }
                 }
             }
@@ -254,7 +238,7 @@ class CalendarMonthFragment : Fragment() {
             val oldDate = selectedDate
             selectedDate = date
 
-            viewModel.queryToday(Timestamp(DateTimeUtils.toSqlDate(date)))
+            viewModel.queryTodayEvent(Timestamp(DateTimeUtils.toSqlDate(date)))
             adapter.notifyDataSetChanged()
 
             oldDate?.let { calendar.notifyDateChanged(it) }
@@ -264,7 +248,7 @@ class CalendarMonthFragment : Fragment() {
     }
 
     private fun updateAdapterForDate(date: LocalDate) {
-        selectedDateText.text = selectionFormatter.format(date)
+        selectedDateText.text = selectionDateFormatter(date)
     }
 
     private fun daysOfWeekFromLocale(): Array<DayOfWeek> {
@@ -272,9 +256,9 @@ class CalendarMonthFragment : Fragment() {
         var daysOfWeek = DayOfWeek.values()
         // Order `daysOfWeek` array so that firstDayOfWeek is at index 0.
         if (firstDayOfWeek != DayOfWeek.MONDAY) {
-            val rhs = daysOfWeek.sliceArray(firstDayOfWeek.ordinal..daysOfWeek.indices.last)
-            val lhs = daysOfWeek.sliceArray(0 until firstDayOfWeek.ordinal)
-            daysOfWeek = rhs + lhs
+
+            daysOfWeek = daysOfWeek.sliceArray(firstDayOfWeek.ordinal..daysOfWeek.indices.last) +
+                    daysOfWeek.sliceArray(0 until firstDayOfWeek.ordinal)
         }
         return daysOfWeek
     }

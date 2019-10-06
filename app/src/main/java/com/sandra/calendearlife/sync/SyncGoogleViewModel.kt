@@ -118,7 +118,8 @@ class SyncGoogleViewModel : ViewModel() {
                             FirebaseKey.DOCUMENT_ID to eventID,
                             FirebaseKey.HAS_COUNTDOWN to false,
                             FirebaseKey.HAS_REMINDERS to false,
-                            FirebaseKey.REMINDERS_DATE to beginDate
+                            FirebaseKey.REMINDERS_DATE to beginDate,
+                            FirebaseKey.LOCATION to ""
                         )
                         writeGoogleItem(item, eventID)
                     }

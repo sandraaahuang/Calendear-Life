@@ -22,6 +22,7 @@ import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.SET_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.LOCATION
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.contentResolver
 import com.sandra.calendearlife.data.Reminders
@@ -54,7 +55,7 @@ class MainViewModel : ViewModel() {
     val hasPermission: LiveData<Boolean>
         get() = _hasPermission
 
-    fun getItem(documentId: String) {
+    fun getRemindersItem4Widget(documentId: String) {
 
         UserManager.id?.let {
             db.collection(DATA)
@@ -123,7 +124,7 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun queryCalendar() {
+    fun queryGoogleCalendar() {
 
         // search calendar
         val cur: Cursor?
@@ -134,7 +135,7 @@ class MainViewModel : ViewModel() {
 
         // give permission to read
         if (GoogleCalendarProvider.permissionReadCheck == PackageManager.PERMISSION_GRANTED) {
-            cur = contentResolver?.query(
+            cur = contentResolver.query(
                 GoogleCalendarProvider.contentUri,
                 GoogleCalendarProvider.eventProjection,
                 GoogleCalendarProvider.SELECTION,
@@ -224,7 +225,8 @@ class MainViewModel : ViewModel() {
                                     DOCUMENT_ID to eventID,
                                     FirebaseKey.HAS_COUNTDOWN to false,
                                     FirebaseKey.HAS_REMINDERS to false,
-                                    FirebaseKey.REMINDERS_DATE to beginDate
+                                    FirebaseKey.REMINDERS_DATE to beginDate,
+                                    LOCATION to ""
                                 )
                                 writeGoogleItem(item, eventID)
                             }

@@ -49,9 +49,10 @@
                         android:ellipsize="end"
                         android:textColor="?attr/totalB2W"
                         android:layout_marginStart="16dp"
-                        app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="16dp"
                         app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="16dp"
-                        app:layout_constraintEnd_toStartOf="@+id/removeIcon"/>
+                        app:layout_constraintEnd_toStartOf="@+id/removeIcon" android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toTopOf="@+id/view_spacing_line2"/>
                 <ImageView
                         android:id="@+id/removeIcon"
                         android:backgroundTint="?attr/totalB2W"
@@ -70,7 +71,7 @@
                         android:background="?attr/linecolor"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="4dp"
+                        app:layout_constraintHorizontal_bias="0.0" android:layout_marginTop="8dp"
                         app:layout_constraintTop_toBottomOf="@+id/detailTitleInput"/>
                 <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/allDayLayout"
@@ -234,7 +235,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintTop_toBottomOf="@+id/remindLayout"
-                />
+                        android:layout_marginBottom="7dp" app:layout_constraintBottom_toTopOf="@+id/locationInput"/>
                 <ImageView
 
                         android:id="@+id/locationIcon"
@@ -243,7 +244,8 @@
                         android:layout_height="24dp" app:srcCompat="@drawable/icon_location"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/view_spacing_line7" android:layout_marginTop="16dp"
-                        android:layout_marginStart="16dp"/>
+                        android:layout_marginStart="16dp" android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toTopOf="@+id/view_spacing_line5"/>
                 <EditText
                         android:id="@+id/locationInput"
                         android:background="@null"

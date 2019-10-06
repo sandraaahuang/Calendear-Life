@@ -92,4 +92,7 @@
     <string name="until">距離......</string>
     <string name="target_date__">目標日：</string>
     <string name="open_permission">請至設定中打開行事曆的權限</string>
+
+    <string name="no_internet_title">目前沒有網路連接</string>
+    <string name="no_internet_message">請前往設定開啟網路</string>
 </resources>

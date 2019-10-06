@@ -31,8 +31,8 @@ import com.sandra.calendearlife.constant.Const.Companion.RESPONSE
 import com.sandra.calendearlife.constant.Const.Companion.RESPONSE_EVALUATE
 import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.Const.Companion.value
-import com.sandra.calendearlife.constant.DateFormat.Companion.BEGINTIME
-import com.sandra.calendearlife.constant.DateFormat.Companion.ENDTIME
+import com.sandra.calendearlife.constant.DateFormat.Companion.BEGIN_TIME
+import com.sandra.calendearlife.constant.DateFormat.Companion.END_TIME
 import com.sandra.calendearlife.constant.DateFormat.Companion.dayOfMonth
 import com.sandra.calendearlife.constant.DateFormat.Companion.hour
 import com.sandra.calendearlife.constant.DateFormat.Companion.minute
@@ -155,8 +155,8 @@ class CalendarEventFragment : Fragment() {
 
                 if (binding.allDaySwitch.isChecked) {
                     date = "${binding.beginDate.text}"
-                    beginDate = "${binding.beginDate.text} $BEGINTIME ${getString(R.string.am)}"
-                    endDate = "${binding.beginDate.text} $ENDTIME ${getString(R.string.pm)}"
+                    beginDate = "${binding.beginDate.text} $BEGIN_TIME ${getString(R.string.am)}"
+                    endDate = "${binding.beginDate.text} $END_TIME ${getString(R.string.pm)}"
                 } else {
                     date = "${binding.beginDate.text}"
                     beginDate = "${binding.beginDate.text} ${binding.beginTime.text}"
