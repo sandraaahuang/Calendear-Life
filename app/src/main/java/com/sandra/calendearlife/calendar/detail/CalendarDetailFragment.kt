@@ -63,36 +63,66 @@ class CalendarDetailFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        if (calendarProperty.color == COLOR_GOOGLE) {
+        if (calendarProperty.color == COLOR_GOOGLE
+            || calendarProperty.color == COLOR_CAL
+            || calendarProperty.color == COLOR_REMIND_CAL
+            || calendarProperty.color == COLOR_ALL
+            || calendarProperty.color == COLOR_COUNTDOWN_CAL
+        ) {
 
+            Logger.w("hello 1")
             binding.allDayLayout.visibility = View.VISIBLE
 
-            if ((calendarProperty.color == COLOR_CAL
-                        || calendarProperty.color == COLOR_REMIND_CAL
-                        || calendarProperty.color == COLOR_ALL
-                        || calendarProperty.color == COLOR_COUNTDOWN_CAL) && (
-                        calendarProperty.isAllDay)) {
-                binding.allDayLayout.visibility = View.VISIBLE
-                binding.beginTime.visibility = View.GONE
-                binding.endDateText.visibility = View.GONE
-                binding.endDate.visibility = View.GONE
-                binding.endTime.visibility = View.GONE
+            if (calendarProperty.color == COLOR_CAL
+                || calendarProperty.color == COLOR_REMIND_CAL
+                || calendarProperty.color == COLOR_ALL
+                || calendarProperty.color == COLOR_COUNTDOWN_CAL
+            ) {
+                Logger.w("hello 2")
+
+                when (calendarProperty.isAllDay) {
+                    true -> {
+                        Logger.w("hello 3")
+                        binding.beginDateText.text = context?.getString(R.string.date_b)
+                        binding.beginTime.visibility = View.GONE
+                        binding.endDateText.visibility = View.GONE
+                        binding.endDate.visibility = View.GONE
+                        binding.endTime.visibility = View.GONE
+                    }
+                    else -> {
+                        Logger.w("hello 4")
+                        binding.endDate.visibility = View.VISIBLE
+                        binding.endTime.visibility = View.VISIBLE
+                        binding.beginTime.visibility = View.VISIBLE
+                    }
+                }
             }
-
         } else {
+            Logger.w("hello 5")
             binding.allDayLayout.visibility = View.GONE
+
         }
 
-        if (calendarProperty.hasReminders) {
-            binding.remindLayout.visibility = View.VISIBLE
-        } else {
-            binding.remindLayout.visibility = View.GONE
+        when (calendarProperty.hasReminders) {
+            true -> {
+                Logger.w("hello 6")
+                binding.remindLayout.visibility = View.VISIBLE
+            }
+            else -> {
+                Logger.w("hello 7")
+                binding.remindLayout.visibility = View.GONE
+            }
         }
 
-        if (calendarProperty.hasCountdown) {
-            binding.countdownLayout.visibility = View.VISIBLE
-        } else {
-            binding.countdownLayout.visibility = View.GONE
+        when (calendarProperty.hasCountdown) {
+            true -> {
+                Logger.w("hello 8")
+                binding.countdownLayout.visibility = View.VISIBLE
+            }
+            else -> {
+                Logger.w("hello 9")
+                binding.countdownLayout.visibility = View.GONE
+            }
         }
 
         viewModel.showDatePicker.observe(this, androidx.lifecycle.Observer { clickedDate ->

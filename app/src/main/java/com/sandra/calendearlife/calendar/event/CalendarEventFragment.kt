@@ -216,7 +216,7 @@ class CalendarEventFragment : Fragment() {
                         )
                     } else {
 
-                        viewModel.writeGoogle(
+                        viewModel.writeEventIntoGoogleCalendar(
                             googleBeginDate, googleEndDate, googleNote, googleTitle,
                             item, countdown, reminders
                         )

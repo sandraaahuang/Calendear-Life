@@ -27,6 +27,7 @@ import com.sandra.calendearlife.constant.calendarTitleFormatter
 import com.sandra.calendearlife.constant.selectionDateFormatter
 import com.sandra.calendearlife.constant.timeSameYearFormatter
 import com.sandra.calendearlife.databinding.FragmentCalendarMonthBinding
+import com.sandra.calendearlife.util.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.calendar_month_day.view.*
 import kotlinx.android.synthetic.main.calendar_month_header.view.*
@@ -65,6 +66,7 @@ class CalendarMonthFragment : Fragment() {
             calendar?.let {
                 this.findNavController().navigate(NavigationDirections.actionGlobalCalendarDetailFragment(it))
                 viewModel.displayCalendarDetailsComplete()
+                Logger.e("calendarProperty = $it")
             }
         })
 
