@@ -3,7 +3,6 @@ package com.sandra.calendearlife.home
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.recyclerview.widget.DiffUtil
