@@ -4,6 +4,8 @@ The Calendear Life App combines both Reminders and Countdown events. <br />
 
 The main features include Reminders, Countdown, Sync with Google Calendar, App Widget, Month View, Dark Mode, Localization to manage personal schedule much easier.
 
+[<img src="https://i.imgur.com/uiaZPdU.png" width="180"  >](https://play.google.com/store/apps/details?id=com.sandra.calendearlife)
+
 ## Features
 * Interface focused on Reminders and Countdown
 * Set Reminders that will alert you at a specific time
@@ -14,7 +16,7 @@ The main features include Reminders, Countdown, Sync with Google Calendar, App W
 * Support Dark Mode to reduce the light emitted by the device and enhance visual ergonomics
 * Support both English and Chinese
 ## Screenshot
-    
+<img src="https://i.imgur.com/hSgIoDX.jpg" width="210"  > <img src="https://i.imgur.com/ZyMKqA6.png" width="210"  > <img src="https://i.imgur.com/Ye53Fns.png" width="210"  > <img src="https://i.imgur.com/m5HNMKX.png" width="210"  > <img src="https://i.imgur.com/Clqn5Ps.png" width="210"  > <img src="https://i.imgur.com/dN6QqGv.png" width="210"  >
 
 ## Implemented
 ### Design Patterns
