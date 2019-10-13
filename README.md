@@ -15,6 +15,7 @@ The main features include Reminders, Countdown, Sync with Google Calendar, App W
 * Check your schedule in Month view
 * Support Dark Mode to reduce the light emitted by the device and enhance visual ergonomics
 * Support both English and Chinese
+
 ## Screenshot
 <img src="https://i.imgur.com/hSgIoDX.jpg" width="210"  > <img src="https://i.imgur.com/ZyMKqA6.png" width="210"  > <img src="https://i.imgur.com/Ye53Fns.png" width="210"  > <img src="https://i.imgur.com/m5HNMKX.png" width="210"  > <img src="https://i.imgur.com/Clqn5Ps.png" width="210"  > <img src="https://i.imgur.com/dN6QqGv.png" width="210"  >
 
@@ -24,6 +25,7 @@ The main features include Reminders, Countdown, Sync with Google Calendar, App W
 * Model-View-ViewModel (MVVM)
 * Observer
 * Singleton
+
 ### Core Functions
 * App Widget
 * Notification
@@ -45,16 +47,19 @@ The main features include Reminders, Countdown, Sync with Google Calendar, App W
 * Dialog
 * DatePicker
 * TimePicker
+
 ### Storage
 * Firebase Storage
-* Room
 * SharedPreferences
+
 ### Analysis
 * Crashlytics
+
 ### Unit Test
 * JUnit
 * Mockito
 * Espresso
+
 ### Others
 * Dark Mode
 * Localization
