@@ -73,6 +73,8 @@ Optimize the bug of sync Google Calendar
 Initial release version 
 ## Requirement
 * Android 6.0+
+* Android Studio 3.4.1
+* Gradle Version 5.1.1
 
 ## Contacts
 Sandra Huang <br />
