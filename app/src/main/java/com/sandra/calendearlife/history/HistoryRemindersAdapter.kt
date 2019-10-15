@@ -30,6 +30,7 @@ class HistoryRemindersAdapter :
 
             if (reminders.hasRemindDate){
                 binding.remindersTime.visibility = View.VISIBLE
+                binding.remindDateTextView.visibility = View.VISIBLE
             }
             else {
                 binding.remindersTime.visibility = View.GONE
