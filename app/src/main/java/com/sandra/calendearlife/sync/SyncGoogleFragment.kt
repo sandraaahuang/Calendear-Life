@@ -13,12 +13,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
+import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
@@ -83,7 +85,7 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
         binding.lifecycleOwner = this
 
         binding.askMeLaterButton.setOnClickListener {
-            restart()
+            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
         binding.nextButton.setOnClickListener {
@@ -92,7 +94,7 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
 
         viewModel.writeCompleted.observe(this, androidx.lifecycle.Observer {
             it?.let {
-                restart()
+                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
             }
         })
 
@@ -118,13 +120,4 @@ class SyncGoogleFragment : AppCompatDialogFragment() {
             }
         }
     }
-
-
-
-    private fun restart(){
-        val intent = Intent(this.context, MainActivity::class.java)
-        startActivity(intent)
-
-    }
-
 }
