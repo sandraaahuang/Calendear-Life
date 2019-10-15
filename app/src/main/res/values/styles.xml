@@ -24,6 +24,7 @@
         <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
         <item name="home_card_color">#fdf5e6</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="countdown_background_color">#0E2E33</item>
 
     </style>
 
@@ -51,6 +52,7 @@
         <item name="android:scrollbarThumbVertical">@android:color/transparent</item>
         <item name="home_card_color">@color/black</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="countdown_background_color">#DFA480</item>
 
     </style>
 

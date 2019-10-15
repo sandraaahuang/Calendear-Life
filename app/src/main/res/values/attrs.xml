@@ -17,5 +17,6 @@
         <attr name="total_white2black" format="color"/>
         <attr name="total_black2white" format="color"/>
         <attr name="home_card_color" format="color"/>
+        <attr name="countdown_background_color" format="color"/>
     </declare-styleable>
 </resources>
