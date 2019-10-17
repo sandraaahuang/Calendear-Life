@@ -66,7 +66,7 @@ class PreviewFragment : Fragment() {
             attachToRecyclerView(binding.recyclerView)
         }
 
-        when {UserManager.isLoggedIn ->
+        UserManager.id?.let {
             findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 

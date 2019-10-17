@@ -157,6 +157,7 @@ class RemindersFragment : Fragment() {
     private fun restartApp() {
 
         val intent = Intent(this.context, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
 
     }

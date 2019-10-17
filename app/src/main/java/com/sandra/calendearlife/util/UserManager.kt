@@ -4,6 +4,7 @@ import android.content.Context
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.GOOGLEINFO
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ID
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ISLOGIN
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.USEREMAIL
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.USERNAME
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.USERPHOTO
@@ -49,6 +50,12 @@ object UserManager {
             field = preferences.edit().putString(USERPHOTO, value)?.apply().toString()
         }
 
-    val isLoggedIn: Boolean
-        get() = id != null
+    var isLoggedIn: String? = null
+        get() {
+
+            return preferences.getString(ISLOGIN, null)
+        }
+        set(value) {
+            field = preferences.edit().putString(ISLOGIN, value)?.apply().toString()
+        }
 }

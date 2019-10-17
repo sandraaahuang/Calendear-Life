@@ -2,6 +2,7 @@ package com.sandra.calendearlife.sync
 
 import android.Manifest
 import android.content.ContentUris
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -53,6 +55,8 @@ import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.PROJEC
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.SELECTION
 import com.sandra.calendearlife.constant.GoogleCalendarProvider.Companion.selectionArgs
 import com.sandra.calendearlife.constant.SIMPLE_DATE_FORMAT
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.GOOGLEINFO
+import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ISLOGIN
 import com.sandra.calendearlife.constant.timeFormat2FirebaseTimestamp
 import com.sandra.calendearlife.constant.timeFormat2SqlTimestamp
 import com.sandra.calendearlife.constant.transferTimestamp2String
@@ -62,17 +66,12 @@ import com.sandra.calendearlife.util.UserManager
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SyncGoogleFragment : AppCompatDialogFragment() {
+class SyncGoogleFragment : Fragment() {
 
     lateinit var binding: FragmentSyncGoogleBinding
 
     private val viewModel: SyncGoogleViewModel by lazy {
         ViewModelProviders.of(this).get(SyncGoogleViewModel::class.java)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_FRAME, R.style.MessageDialog)
     }
 
     override fun onCreateView(

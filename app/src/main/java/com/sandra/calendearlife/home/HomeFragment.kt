@@ -1,6 +1,8 @@
 package com.sandra.calendearlife.home
 
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +15,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearSnapHelper
+import com.sandra.calendearlife.MainActivity
+import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
 import com.sandra.calendearlife.constant.Const.Companion.TYPE_HOME
-import com.sandra.calendearlife.databinding.FragmentHomeBinding
 import com.sandra.calendearlife.constant.Const.Companion.putType
+import com.sandra.calendearlife.constant.SharedPreferenceKey
+import com.sandra.calendearlife.databinding.FragmentHomeBinding
+import com.sandra.calendearlife.util.UserManager
 
 
 class HomeFragment : Fragment() {
@@ -29,7 +35,6 @@ class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val countdownAdapter = HomeCountdownAdapter(HomeCountdownAdapter.OnClickListener{
             putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalCountdownDetailFragment2(it))
@@ -122,15 +127,40 @@ class HomeFragment : Fragment() {
             }
         })
 
+        if (UserManager.isLoggedIn == null) {
+            changeLoginStatus()
+            restartApp()
+        } else {
+            changeLoginStatus()
+        }
+
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                activity?.finish()
+                (activity as MainActivity).finishAffinity()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         return binding.root
+
     }
+
+    private fun changeLoginStatus() {
+        val preferences =
+            MyApplication.instance.getSharedPreferences(SharedPreferenceKey.GOOGLEINFO, Context.MODE_PRIVATE)
+        preferences.edit().putString(SharedPreferenceKey.ISLOGIN, "true").apply()
+        preferences.getString(SharedPreferenceKey.ISLOGIN, "true")
+        UserManager.isLoggedIn = "true"
+    }
+
+    private fun restartApp() {
+
+        val intent = Intent(this.context, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+
+    }
+
 }
 
 

@@ -11,6 +11,7 @@ class SharedPreferenceKey {
         const val USERNAME = "userName"
         const val USEREMAIL = "userEmail"
         const val USERPHOTO = "userPhoto"
+        const val ISLOGIN = "isLogin"
 
         // Widget
         // extra key

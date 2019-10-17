@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setupRemindersWidgetIntent()
 
         when {
-            !UserManager.isLoggedIn -> setDrawerEnabled(false)
+            UserManager.id == null -> setDrawerEnabled(false)
         }
 
         intent.extras?.let { extras ->
