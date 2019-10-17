@@ -65,10 +65,12 @@ The main features include Reminders, Countdown, Sync with Google Calendar, App W
 * Localization
 
 ## Version
+* [relesase] 1.0.4 - 2018/10/17 <br />
+Fix the bug of HomeFragment back key problem
 * [relesase] 1.0.3 - 2018/10/07 <br />
 Optimize notification in App 
 * [relesase] 1.0.2 - 2018/09/30 <br />
-Optimize the bug of sync Google Calendar
+Fix the bug of sync Google Calendar
 * [relesase] 1.0.0 - 2019/09/24 <br />
 Initial release version 
 ## Requirement
