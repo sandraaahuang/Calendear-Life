@@ -93,6 +93,19 @@ class HomeFragment : Fragment() {
                 true
             }
         }
+
+        binding.translucentBackground.setOnClickListener {
+            isOpen = false
+            binding.fabAdd.startAnimation(rotateBackward)
+            binding.remindersFab.startAnimation(fabClose)
+            binding.countdownsFab.startAnimation(fabClose)
+            binding.calendarFab.startAnimation(fabClose)
+            binding.addReminderText.startAnimation(fabClose)
+            binding.addCountdownText.startAnimation(fabClose)
+            binding.addEventText.startAnimation(fabClose)
+            binding.translucentBackground.visibility = View.GONE
+        }
+
         binding.remindersFab.setOnClickListener {
             putType(TYPE_HOME)
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())

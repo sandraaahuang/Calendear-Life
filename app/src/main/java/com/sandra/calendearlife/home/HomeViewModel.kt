@@ -63,6 +63,7 @@ class HomeViewModel : ViewModel() {
 
     private fun getNotOverdueCountdown(calendar: QueryDocumentSnapshot) {
         // get countdowns
+        countdownItem.clear()
         UserManager.id?.let {
             db.collection(DATA)
                 .document(it)
@@ -87,6 +88,7 @@ class HomeViewModel : ViewModel() {
 
     private fun getNotCheckReminders(calendar: QueryDocumentSnapshot) {
         //get reminders ( only is_checked is false )
+        remindersItem.clear()
         UserManager.id?.let {
             db.collection(DATA)
                 .document(it)
