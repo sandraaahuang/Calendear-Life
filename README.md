@@ -65,6 +65,8 @@ The main features include Reminders, Countdown, Sync with Google Calendar, App W
 * Localization
 
 ## Version
+* [relesase] 1.0.5 - 2018/10/21 <br />
+Fix the bug of refreshing home page item
 * [relesase] 1.0.4 - 2018/10/17 <br />
 Fix the bug of HomeFragment back key problem
 * [relesase] 1.0.3 - 2018/10/07 <br />
