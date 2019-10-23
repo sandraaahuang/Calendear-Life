@@ -82,7 +82,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/setReminderswitch"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/setRemindLayout"
-                tools:visibility="visible" app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="16dp">
 
             <ImageView

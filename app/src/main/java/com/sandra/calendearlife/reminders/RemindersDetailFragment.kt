@@ -19,6 +19,7 @@ import com.sandra.calendearlife.constant.*
 import com.sandra.calendearlife.constant.Const.Companion.SHOW
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.BEGIN_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATE
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.NOTE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.TITLE
@@ -55,6 +56,7 @@ class RemindersDetailFragment : Fragment() {
             val updateItem = hashMapOf(
                 TITLE to "${binding.remindersTitle.text}".trim(),
                 NOTE to "${binding.editTextRemindNote.text}".trim(),
+                HAS_REMIND_DATE to binding.switchRemindDay.isChecked,
                 REMIND_DATE to timeFormat2SqlTimestamp(DATE_TIME_FORMAT,
                     "${binding.remindDate.text} ${binding.remindTime.text}" )
             )
