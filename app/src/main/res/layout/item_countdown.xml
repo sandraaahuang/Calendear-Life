@@ -31,43 +31,46 @@
                     android:id="@+id/imageView5" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:srcCompat="@drawable/countdown_ui"/>
+                    app:srcCompat="@drawable/countdown_ui" app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintVertical_bias="0.0"/>
 
             <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    app:layout_constraintCircleRadius="@dimen/card_raduis"
                     android:id="@+id/imageView6" app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:srcCompat="@drawable/countdown_day_circle" app:layout_constraintVertical_bias="0.701"
             />
+
             <com.yy.mobile.rollingtextview.RollingTextView
                     android:id="@+id/countdownDate"
+                    tools:text="365"
+                    android:gravity="center_horizontal"
                     android:textSize="40sp"
                     android:fontFamily="@font/noto_sans"
                     android:textStyle="bold"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
                     android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="@+id/imageView5"
-                    app:layout_constraintEnd_toEndOf="@+id/imageView5"
                     app:layout_constraintTop_toTopOf="@+id/imageView6"
-                    app:layout_constraintBottom_toBottomOf="@+id/imageView6"/>
-            <TextView
-                    android:id="@+id/days"
-                    android:text="@string/days"
-                    android:textSize="20sp"
-                    android:fontFamily="@font/noto_sans"
-                    android:textStyle="bold"
-                    android:textColor="?attr/normal_text_color"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toEndOf="@+id/countdownDate"
-                    app:layout_constraintBottom_toBottomOf="@+id/countdownDate"/>
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                    app:layout_constraintStart_toStartOf="@+id/imageView6"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView6"/>
+
+                <TextView
+                        android:id="@+id/days"
+                        android:text="@string/days"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/noto_sans"
+                        android:textStyle="bold"
+                        android:textColor="?attr/normal_text_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/countdownDate"
+                        app:layout_constraintStart_toEndOf="@+id/countdownDate"/>
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"

@@ -38,10 +38,13 @@ class HomeCountdownAdapter(private val onClickListener: OnClickListener, val vie
                     }
                 })
 
-                if ((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400 == 0L) {
-                    setText("1")
-                } else {
-                    setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}")
+                when {
+                    (countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400 == 0L ->
+                        setText("01")
+                    (countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400 < 10 ->
+                        setText("0"+"${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}")
+                    else ->
+                        setText("${((countdown.targetTimestamp.seconds - Timestamp.now().seconds)/86400)}")
                 }
             }
 
