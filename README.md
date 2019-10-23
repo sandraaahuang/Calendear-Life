@@ -65,6 +65,8 @@ The main features include Reminders, Countdown, Sync with Google Calendar, App W
 * Localization
 
 ## Version
+* [relesase] 1.0.6 - 2018/10/23 <br />
+Adjust Countdown UI in home page
 * [relesase] 1.0.5 - 2018/10/21 <br />
 Fix the bug of refreshing home page item
 * [relesase] 1.0.4 - 2018/10/17 <br />
