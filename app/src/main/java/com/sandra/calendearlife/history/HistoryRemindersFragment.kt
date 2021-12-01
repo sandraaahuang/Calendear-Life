@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.sandra.calendearlife.NavigationDirections
@@ -16,6 +17,7 @@ class HistoryRemindersFragment : Fragment() {
     private val viewModel: HistoryRemindersViewModel by lazy{
         ViewModelProviders.of(this).get(HistoryRemindersViewModel::class.java)
     }
+    private var adapter: HistoryRemindersAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -23,7 +25,13 @@ class HistoryRemindersFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        binding.historyReminderRecyclerview.adapter = HistoryRemindersAdapter()
+        adapter = HistoryRemindersAdapter()
+        binding.historyReminderRecyclerview.adapter = adapter
+
+        viewModel.liveReminders.observe(viewLifecycleOwner, Observer {
+            adapter?.submitList(it)
+            adapter?.notifyDataSetChanged()
+        })
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

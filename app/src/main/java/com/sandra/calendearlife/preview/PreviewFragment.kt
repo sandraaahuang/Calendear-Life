@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -21,6 +22,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.sandra.calendearlife.MainActivity
 import com.sandra.calendearlife.MyApplication
 import com.sandra.calendearlife.NavigationDirections
 import com.sandra.calendearlife.R
@@ -66,8 +68,9 @@ class PreviewFragment : Fragment() {
             attachToRecyclerView(binding.recyclerView)
         }
 
-        UserManager.id?.let {
-            findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
+        UserManager.isLoggedIn?.let {
+            if (it == "true")
+                findNavController().navigate(NavigationDirections.actionGlobalHomeFragment())
         }
 
         binding.connect.setOnClickListener {
@@ -75,6 +78,13 @@ class PreviewFragment : Fragment() {
             setLogin(true)
             updateWidgetWhenIsLogin()
         }
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                (activity as MainActivity).finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
 
         return binding.root
     }

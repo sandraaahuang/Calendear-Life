@@ -63,6 +63,10 @@
             <item
                     android:id="@+id/changeLanguage"
                     android:title="@string/chinese_mode"/>
+
+            <item
+                    android:id="@+id/logout"
+                    android:title="@string/logout"/>
         </menu>
     </item>
 

@@ -50,7 +50,7 @@
                 android:text="@{viewModel.userEmail}"
                 android:fontFamily="@font/noto_sans"
                 android:textColor="?attr/button_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@+id/nav_header_image" android:layout_marginStart="8dp"

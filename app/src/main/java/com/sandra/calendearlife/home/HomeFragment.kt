@@ -4,6 +4,7 @@ package com.sandra.calendearlife.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import com.sandra.calendearlife.constant.Const.Companion.putType
 import com.sandra.calendearlife.constant.SharedPreferenceKey
 import com.sandra.calendearlife.databinding.FragmentHomeBinding
 import com.sandra.calendearlife.util.UserManager
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment() {
@@ -130,15 +132,18 @@ class HomeFragment : Fragment() {
             findNavController().navigate(NavigationDirections.actionGlobalRemindersFragment())
         }
 
-        binding.swipeFreshHome.setOnRefreshListener {
-            viewModel.getItem()
-        }
+//        binding.swipeFreshHome.setOnRefreshListener {
+//            viewModel.getItem()
+//        }
 
-        viewModel.isRefreshing.observe(this , Observer {
-            it?.let {
-                binding.swipeFreshHome.isRefreshing = false
-            }
-        })
+//        viewModel.isRefreshing.observe(this , Observer {
+//            it?.let {
+//                binding.swipeFreshHome.isRefreshing = false
+//            }
+//        })
+
+
+
 
         if (UserManager.isLoggedIn == null) {
             changeLoginStatus()
@@ -153,6 +158,27 @@ class HomeFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+
+        viewModel.liveCountdown.observe(viewLifecycleOwner, Observer{
+//            Log.d("debuggg", "observe liveCountdown: $it")
+            countdownAdapter.submitList(it)
+            countdownAdapter.notifyDataSetChanged()
+            if (it.isEmpty()) {
+                binding.noCountdown.visibility = View.VISIBLE
+            } else {
+                binding.noCountdown.visibility = View.GONE
+            }
+        })
+        viewModel.liveReminders.observe(viewLifecycleOwner, Observer {
+//            Log.d("debuggg", "observe liveReminders: $it")
+            remindersAdapter.submitList(it)
+            remindersAdapter.notifyDataSetChanged()
+            if (it.isEmpty()) {
+                binding.noReminder.visibility = View.VISIBLE
+            } else {
+                binding.noReminder.visibility = View.GONE
+            }
+        })
 
         return binding.root
 
