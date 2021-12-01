@@ -11,6 +11,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -32,6 +33,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -47,10 +50,10 @@ import com.sandra.calendearlife.constant.Const.Companion.putType
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.CALENDAR
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.DATA
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.FREQUENCY
+import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_CHECKED
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.IS_OVERDUE
 import com.sandra.calendearlife.constant.FirebaseKey.Companion.REMINDERS
-import com.sandra.calendearlife.constant.FirebaseKey.Companion.HAS_REMIND_DATE
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.ADDFRAGMENT
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.CHINESE
 import com.sandra.calendearlife.constant.SharedPreferenceKey.Companion.DARK
@@ -161,7 +164,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         viewModel.liveReminders.observe(this, Observer {
             it?.let { remindersProperty ->
                 findNavController(R.id.myNavHostFragment)
-                    .navigate(NavigationDirections.actionGlobalRemindersDetailFragment(remindersProperty))
+                    .navigate(
+                        NavigationDirections.actionGlobalRemindersDetailFragment(
+                            remindersProperty
+                        )
+                    )
             }
         })
 
@@ -202,10 +209,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         when (reminders.frequency) {
                             DOES_NOT_REPEAT -> {
 
-                                val dnrIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val dnrIntent = Intent(
+                                    MyApplication.instance,
+                                    AlarmReceiver::class.java
+                                )
                                 val dnrPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
-                                    1234, dnrIntent.setAction(DNR), PendingIntent.FLAG_UPDATE_CURRENT
+                                    1234,
+                                    dnrIntent.setAction(DNR),
+                                    PendingIntent.FLAG_UPDATE_CURRENT
                                 )
                                 alarmManager.setExact(
                                     AlarmManager.RTC_WAKEUP,
@@ -214,7 +226,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_DAY -> {
 
-                                val everydayIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everydayIntent = Intent(
+                                    MyApplication.instance,
+                                    AlarmReceiver::class.java
+                                )
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
                                     1234, everydayIntent.setAction(ED),
@@ -228,7 +243,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_WEEK -> {
 
-                                val everyweekIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everyweekIntent = Intent(
+                                    MyApplication.instance,
+                                    AlarmReceiver::class.java
+                                )
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
                                     1234, everyweekIntent.setAction(EW),
@@ -243,7 +261,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_MONTH -> {
 
-                                val everyMonthIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everyMonthIntent = Intent(
+                                    MyApplication.instance,
+                                    AlarmReceiver::class.java
+                                )
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
                                     1234, everyMonthIntent.setAction(EM),
@@ -258,7 +279,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             }
                             EVERY_YEAR -> {
 
-                                val everyYearIntent = Intent(MyApplication.instance, AlarmReceiver::class.java)
+                                val everyYearIntent = Intent(
+                                    MyApplication.instance,
+                                    AlarmReceiver::class.java
+                                )
                                 val edPending = PendingIntent.getBroadcast(
                                     MyApplication.instance,
                                     1234, everyYearIntent.setAction(EY),
@@ -339,7 +363,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val toggle = ActionBarDrawerToggle(
-            this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -405,6 +433,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 showChangeLanguageList()
             }
 
+            R.id.logout -> {
+                logout()
+                UserManager.isLoggedIn = "false"
+                findNavController(R.id.myNavHostFragment)
+                    .navigate(NavigationDirections.actionGlobalPreviewFragment())
+            }
+
             R.id.changeMode -> {
                 return true
             }
@@ -421,6 +456,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             DrawerLayout.LOCK_MODE_LOCKED_CLOSED
         }
         binding.drawerLayout.setDrawerLockMode(lockMode)
+    }
+
+    private fun logout() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+
+        val googleSignInClient = GoogleSignIn.getClient(this, gso)
+        googleSignInClient.signOut()
+
     }
 
     private fun showChangeLanguageList() {
@@ -493,7 +536,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setDrawer() {
         // Set up header of drawer ui using data binding
         val bindingNavHeader = NavHeaderMainBinding.inflate(
-            LayoutInflater.from(this), binding.navView, false)
+            LayoutInflater.from(this), binding.navView, false
+        )
 
         bindingNavHeader.lifecycleOwner = this
         bindingNavHeader.viewModel = viewModel
@@ -602,10 +646,13 @@ class AlarmReceiver : BroadcastReceiver() {
                                         for ((index, value) in countdownItem.withIndex()) {
 
                                             setupNotification(
-                                                "${((value.targetTimestamp.seconds -
-                                                        Timestamp.now().seconds) / 86400)} days " +
+                                                "${
+                                                    ((value.targetTimestamp.seconds -
+                                                            Timestamp.now().seconds) / 86400)
+                                                } days " +
                                                         "before ${value.title}",
-                                                null, index)
+                                                null, index
+                                            )
                                         }
 
                                     }
@@ -700,9 +747,11 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun setupNotification(notificationTitle: String,
-                                  notificationContent: String?,
-                                  id: Int) {
+    private fun setupNotification(
+        notificationTitle: String,
+        notificationContent: String?,
+        id: Int
+    ) {
 
         val CHANNEL_ID = "Calendear"
 

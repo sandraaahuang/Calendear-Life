@@ -10,104 +10,94 @@
     <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                        android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:layout_width="match_parent"
-                                                               android:layout_height="match_parent"
-                                                               app:layout_constraintStart_toStartOf="parent"
-                                                               app:layout_constraintTop_toTopOf="parent"
-                                                               app:layout_constraintEnd_toEndOf="parent"
-                                                               app:layout_constraintBottom_toBottomOf="parent"
-                                                               android:id="@+id/swipeFreshHome">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:orientation="vertical"
+                android:background="?attr/stone_tint_color"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                    android:orientation="vertical"
-                    android:background="?attr/stone_tint_color"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout2"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:backgroundTintMode="src_atop"
+                    android:backgroundTint="?attr/stone_tint_color"
+                    android:background="@drawable/background_stone2">
 
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout2"
-                        android:layout_width="0dp"
-                        android:layout_height="300dp"
-                        android:backgroundTintMode="src_atop"
-                        android:backgroundTint="?attr/stone_tint_color"
-                        android:background="@drawable/background_stone2">
-
-
-                    <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/countdownRecyclerView"
-                            android:orientation="horizontal"
-                            tools:listitem="@layout/item_countdown"
-                            app:listCountdown="@{viewModel.liveCountdown}"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            android:layout_height="match_parent" android:layout_width="match_parent"
-                            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
-                            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp">
-                    </androidx.recyclerview.widget.RecyclerView>
-
-
-                    <TextView
-                            android:id="@+id/no_countdown"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:text='@{viewModel.liveCountdown != null ? @string/no_countdown : ""}'
-                            android:textSize="20sp"
-                            android:textColor="?attr/normal_text_color"
-                            android:gravity="center"
-                            android:visibility="@{viewModel.liveCountdown.size == 0 ? View.VISIBLE : View.GONE}"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"/>
-
-                    <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
-                            android:id="@+id/indicator"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:spi_dotSelectedColor="?attr/dot_color"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                            android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/countdownRecyclerView"/>
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/remindersRecyclerView"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:orientation="vertical"
-                        tools:listitem="@layout/item_reminders"
-                        app:listReminder="@{viewModel.liveReminders}"
+                        android:id="@+id/countdownRecyclerView"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/item_countdown"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_height="match_parent" android:layout_width="match_parent"
+                        app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                         app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp">
+                </androidx.recyclerview.widget.RecyclerView>
+
 
                 <TextView
-                        android:id="@+id/no_reminder"
+                        android:id="@+id/no_countdown"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
-                        android:text='@{viewModel.liveReminders != null ? @string/no_reminder : ""}'
+                        android:text="@string/no_countdown"
                         android:textSize="20sp"
                         android:textColor="?attr/normal_text_color"
                         android:gravity="center"
-                        android:visibility="@{viewModel.liveReminders.size == 0 ? View.VISIBLE : View.GONE}"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+                <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
+                        android:id="@+id/indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:spi_dotSelectedColor="?attr/dot_color"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/remindersRecyclerView"/>
+                        android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/countdownRecyclerView"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/remindersRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    tools:listitem="@layout/item_reminders"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                    android:id="@+id/no_reminder"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/no_reminder"
+                    android:textSize="20sp"
+                    android:textColor="?attr/normal_text_color"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/remindersRecyclerView"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/translucent_background"

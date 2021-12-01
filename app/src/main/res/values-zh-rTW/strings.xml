@@ -95,4 +95,5 @@
 
     <string name="no_internet_title">目前沒有網路連接</string>
     <string name="no_internet_message">請前往設定開啟網路</string>
+    <string name="logout">登出</string>
 </resources>
